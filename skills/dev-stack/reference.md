@@ -239,22 +239,20 @@ Document in script header which keys are read and their fallbacks.
 
 ---
 
-## AC Billing System (this repo)
+## Example instance (customize per repo)
 
-| Item | Value |
-|------|--------|
-| Compose file | `docker-compose.yml` (repo root) |
-| Script | `bin/start.sh` — full interactive menu + headless subcommands |
-| Menu sections | Stack · Logs & health · Development · Database · Danger |
-| Headless extras | `validate`, `health`, `logs:<svc>`, `shell:<svc>`, `pytest`, `ruff`, `wait-pg`, `drop-schema`, `rebuild-schema`, `pull` |
-| Project isolation | `COMPOSE_PROJECT_NAME` from `.env` (default `system-billing-acb`) |
-| Stack suffix | `ACB_STACK_SUFFIX` (default `acb`) → `container_name` pattern `{role}-${suffix}` e.g. `api-acb` |
-| Compose **service keys** | `pg`, `redis`, `localstack`, `keycloak`, `api`, `worker`, `fiscal_worker`, `beat`, `dashboard` (stable in-network DNS) |
-| Host ports | `ACB_HOST_PORT_PG`, `ACB_HOST_PORT_API`, `ACB_HOST_PORT_DASHBOARD`, … |
-| DB service for `exec` | `pg` |
-| API service for `exec` / tests | `api` |
-| `urls_hint` | `PUBLIC_HOST` + `ACB_HOST_PORT_*` |
+Document your project's values in `.cursorrules` and here after `@dev-stack` generates the script:
+
+| Item | Typical placeholder |
+|------|---------------------|
+| Compose file | `docker-compose.yml` at repo root |
+| Script | `REPLACE:DEV_STACK_SCRIPT` (e.g. `bin/start.sh`) |
+| Project isolation | `COMPOSE_PROJECT_NAME` from `.env` |
+| Stack suffix | `REPLACE:STACK_SUFFIX_VAR` → `container_name` `{role}-${suffix}` |
+| Service keys | `REPLACE:SERVICE_API`, `REPLACE:SERVICE_DB`, … |
+| Host ports | `*_HOST_PORT` vars in `.env` |
+| `urls_hint` | `PUBLIC_HOST` + port vars |
 
 **Never** `source .env`. `load_env` reads keys via `read_dotenv_value` (see §Safe `.env` parsing).
 
-After compose changes, run `sh -n bin/start.sh` and `./bin/start.sh urls` with a populated `.env`.
+After compose changes, run `sh -n` on the script and a smoke command (`urls`, `health`, or equivalent).

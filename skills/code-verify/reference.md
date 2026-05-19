@@ -66,10 +66,10 @@ Tests always run in Docker against the **current** checkout unless you add an op
 
 | Milestone scope | Behavior when no second model | Block complete? |
 |-----------------|--------------------------------|-----------------|
-| M1–M3 (platform, fixtures, master_data/commercial stubs) | `skipped — single-model session` | No |
-| **M4+ or any milestone touching `fiscal/`, Hacienda integration, signing, XML submission** | **fail** unless owner records a **human architect review** in `{HANDOFF}` (name + date) | **Yes** until waiver recorded |
+| Early milestones (platform, fixtures, domain stubs per master plan) | `skipped — single-model session` | No |
+| **Milestones touching high-risk modules** (threat model / `.cursorrules`) | **fail** unless owner records a **human architect review** in `{HANDOFF}` (name + date) | **Yes** until waiver recorded |
 
-Waivers do not carry forward to the next fiscal milestone.
+Waivers do not carry forward to the next high-risk milestone.
 
 ---
 
@@ -77,7 +77,7 @@ Waivers do not carry forward to the next fiscal milestone.
 
 | Situation | MOD-06 row result |
 |-----------|--------------------|
-| Cursor/agent session with code changes in `apis/src/` or `apis/tests/`, no output attached | **fail** — `skip` is forbidden |
+| Cursor/agent session with code changes in application source/tests, no output attached | **fail** — `skip` is forbidden |
 | Cursor/agent session, MOD-06 output attached (PR, task `Notes`, iteration registry) | **pass** |
 | Human declared **`human-only`** in the same message authoring the edits | **n/a** with quoted human declaration as evidence |
 

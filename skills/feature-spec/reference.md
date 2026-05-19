@@ -9,21 +9,21 @@ Supplement to `skill.md`. Invocation examples, mode comparison, and edge cases.
 ### Cursor
 
 ```
-@feature-spec create — fiscal-pipeline
-@feature-spec review — .work/features/fiscal-pipeline/20260517-SPEC.md
-@feature-spec amend — .work/features/commercial-documents/20260517-SPEC.md
+@feature-spec create — user-auth
+@feature-spec review — .work/features/user-auth/YYYYMMDD-SPEC.md
+@feature-spec amend — .work/features/<slug>/YYYYMMDD-SPEC.md
 @feature-spec status — master-data
-@feature-spec approve — .work/features/master-data/20260517-SPEC.md
+@feature-spec approve — .work/features/<slug>/YYYYMMDD-SPEC.md
 ```
 
 ### Claude Code / opencode / Codex
 
 ```
-Follow .ai/skills/feature-spec/skill.md — create — fiscal-pipeline.
+Follow .ai/skills/feature-spec/skill.md — create — user-auth.
 ```
 
 ```
-Follow .ai/skills/feature-spec/skill.md — review — .work/features/master-data/20260517-SPEC.md.
+Follow .ai/skills/feature-spec/skill.md — review — .work/features/<slug>/YYYYMMDD-SPEC.md.
 ```
 
 ```
@@ -51,13 +51,13 @@ Follow .ai/skills/feature-spec/skill.md — status — master-data. Read-only.
 {FEATURE_SPEC_ROOT}/<slug>/YYYYMMDD-SPEC.md
 ```
 
-Examples for this repo (`.work/features/`):
-- `.work/features/fiscal-pipeline/20260517-SPEC.md`
-- `.work/features/master-data/20260517-SPEC.md`
-- `.work/features/commercial-documents/20260517-SPEC.md`
-- `.work/features/peripherals/20260517-SPEC.md`
-- `.work/features/synthetic-fixtures/20260517-SPEC.md`
-- `.work/features/inbound-reception/20260517-SPEC.md`
+Examples (`.work/features/` in the adopting repo):
+- `.work/features/<slug>/YYYYMMDD-SPEC.md`
+- `.work/features/<slug>/YYYYMMDD-SPEC.md`
+- `.work/features/<slug>/YYYYMMDD-SPEC.md`
+- `.work/features/<another-slug>/YYYYMMDD-SPEC.md`
+- `.work/features/<another-slug>/YYYYMMDD-SPEC.md`
+- `.work/features/<slug>/YYYYMMDD-SPEC-amendment-01.md`
 
 Amendment filenames:
 ```
@@ -73,8 +73,8 @@ Amendment filenames:
 | SPEC exists but is Draft | Review returns `needs-revision` until all §3 sections filled |
 | §15 missing at approve | Approve blocked until §15 filled or N/A justified per concept id |
 | Approved SPEC has defect | Use **amend** — never edit the Approved SPEC in place |
-| Single reviewer on fiscal SPEC | Flag in review; gate blocks approve unless ADR/owner waives |
-| Slug collision with another SPEC | Block create; suggest distinguishing slug (e.g. `fiscal-xml-signing` vs `fiscal-pipeline`) |
+| Single reviewer on high-risk SPEC (threat model) | Flag in review; gate blocks approve unless ADR/owner waives |
+| Slug collision with another SPEC | Block create; suggest distinguishing slug (e.g. `oauth-login` vs `user-auth`) |
 | FEATURE_STANDARD path moved | Read `.ai/standards/` for latest `*FEATURE_STANDARD*` by date prefix |
 | No concept pack in repo | §15 required anyway; mark each MOD row `N/A — no pack` with reason |
 | §2 Out of scope empty | Review fails — must be explicit, not `TBD` |

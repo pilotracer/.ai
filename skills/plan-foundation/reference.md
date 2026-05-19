@@ -150,24 +150,22 @@ After master plan exists:
 
 ---
 
-## AC Billing System — expected results (2026-05-17 baseline)
+## Example — post-foundation sequence
 
-| Check | Expected | Notes |
-|-------|----------|-------|
-| foundation-complete | **yes** | P0–P6 done |
-| plan-master-ready | **yes** after certify + integrity | Run certify if not yet recorded in HANDOFF |
-| Master plan | **missing** or Draft | Run `@plan-master greenfield` next |
-| implementation-ready | Ask **@plan-master status** — not plan-foundation | M1 skeleton may proceed after plan-master-ready per NEXT |
-
-**Recommended sequence for this repo:**
+| Check | Typical next step |
+|-------|-------------------|
+| foundation-complete | **no** → `@plan-foundation greenfield` or `continue` |
+| plan-master-ready | **no** → `@plan-foundation certify plan-master-ready` |
+| Master plan missing | `@plan-master greenfield` |
+| implementation-ready | `@plan-master status` (authoritative) |
 
 ```
-1. @plan-foundation status          ← foundation-complete + plan-master-ready
+1. @plan-foundation status
 2. @plan-foundation certify plan-master-ready
 3. @plan-master greenfield
 4. (owner reviews) → master plan Approved
-5. @plan-master status               ← implementation-ready
-6. @session-control start — implement M1
+5. @plan-master status
+6. @session-control start → @code-implementation plan-iteration — M1
 ```
 
 ---
@@ -272,7 +270,7 @@ Use for **foundation-complete** artifact presence — **not** for plan-master-re
 | P2 ADRs | `{DECISIONS_ROOT}/20*.md` | ≥4 excluding README |
 | P3 conventions | `.ai/standards/*CONVENTIONS*.md` | 1 |
 | P3 features | `{FEATURE_SPEC_ROOT}/*/20*-SPEC.md` | ≥1 |
-| P4 stack | `DOCS_TECH_STACK.md` | 1 |
+| P4 stack | `REPLACE:TECH_STACK_DOC` | 1 |
 | P5 compose | `docker-compose.yml` OR `*docker-compose-proposal*` | 1 |
 | P6 ops | `README.md`, `HANDOFF.md`, `NEXT.md` | 3 |
 | Registries | `ASSUMPTIONS.md`, `RISK_REGISTRY.md`, `UNKNOWNS.md` | 3 |
@@ -288,7 +286,7 @@ Use for **foundation-complete** artifact presence — **not** for plan-master-re
 | No `plan-master integrity` run | plan-master-ready | `@plan-master integrity` |
 | Master plan missing | implementation-ready | `@plan-master greenfield` |
 | Master plan Draft | implementation-ready | Owner review → Approved |
-| CPA / ADR 009 open | implementation-ready only (optional waiver for M1) | HANDOFF, UNKNOWNS |
+| Open compliance / legal ADR | implementation-ready only (optional waiver for M1) | HANDOFF, UNKNOWNS |
 | Docker not approved | foundation P5 | continue P5 |
 
 ---
@@ -299,7 +297,7 @@ Use for **foundation-complete** artifact presence — **not** for plan-master-re
 |--------|---------|-------------|
 | `@plan-master greenfield` before certify | Master plan on weak foundation | `@plan-foundation certify` first |
 | "@plan-foundation implementation-ready?" | Wrong skill | `@plan-foundation status` then `@plan-master status` |
-| "foundation status" + write fiscal SPEC | Mixed modes | status, then continue |
+| "foundation status" + write domain SPEC | Mixed modes | status, then continue |
 | "start foundation" with full HANDOFF | Re-runs P0 | continue |
 | Glob-only check | False pass | status + certify |
 

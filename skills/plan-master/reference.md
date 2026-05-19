@@ -1,6 +1,6 @@
 # plan-master — reference
 
-Supplement to `skill.md`. Invocation examples, AC Billing paths, and edge cases.
+Supplement to `skill.md`. Invocation examples and edge cases.
 
 ---
 
@@ -12,7 +12,7 @@ Supplement to `skill.md`. Invocation examples, AC Billing paths, and edge cases.
 | Continue | `plan-master` **continue** |
 | New plan | `@plan-master` **greenfield** |
 | Integrity only | `plan-master` **integrity** |
-| Revise | `plan-master` **revise** — add fiscal sandbox milestone |
+| Revise | `plan-master` **revise** — add integration sandbox milestone |
 | With mode | `plan-master greenfield` — **enterprise** |
 | Look up a task | `plan-master` **task** M1-T3 |
 | All tasks for a milestone | `plan-master` **task** M4 |
@@ -47,36 +47,23 @@ Follow .ai/skills/plan-master/skill.md — continue. Update `{PLANS_ROOT}/full/Y
 
 ---
 
-## AC Billing System — foundation inputs
+## Foundation inputs (adopting repo)
 
-When planning for this repo, **prefer cite over rewrite**:
+When planning, **prefer cite over rewrite**:
 
 | Topic | Primary evidence |
 |-------|------------------|
-| Scope | `{PLANS_ROOT}/foundation/20260517-01-*.md` |
-| Hacienda integration | `20260517-02-*.md`, `.ai/docs/integration/MANIFEST.txt` |
-| ERP lanes | `20260517-03-*.md` |
-| Architecture | `20260517-04-foundation-architecture.md` |
-| Stack | `DOCS_TECH_STACK.md` |
-| Layout | `.ai/standards/20260517-DIRECTORY_MAP.md` |
-| Fiscal | `{FEATURE_SPEC_ROOT}/fiscal-pipeline/20260517-SPEC.md` |
-| Commercial / MD | `commercial-documents`, `master-data` SPECs |
-| Interaction | ADR 012 + archived `decision_012_*.md` (read-only) |
-| Threats / data | `threat-model`, `data-classification` |
-| Local infra | `docker-compose.yml`, `20260517-docker-compose-proposal.md` |
-| Personas | `{PLANS_ROOT}/20260517-personas-v1.md` |
+| Scope | `{PLANS_ROOT}/foundation/*-01-*.md` |
+| Integrations | `*-02-*.md`, `.ai/docs/integration/MANIFEST.txt` (if any) |
+| Product lanes | `*-03-*.md` (if any) |
+| Architecture | `*-04-foundation-architecture.md` |
+| Stack | `REPLACE:TECH_STACK_DOC` |
+| Layout | `.ai/standards/*-DIRECTORY_MAP.md` |
+| Feature SPECs | `{FEATURE_SPEC_ROOT}/<slug>/*-SPEC.md` |
+| Threats / data | threat-model, data-classification standards |
+| Local infra | compose files, ops proposals under `{PLANS_ROOT}/operations/` |
 
-**Suggested milestone order (v1 — validate in Phase 5):**
-
-1. M1 — `apis/` platform skeleton (health, settings, migration runner)
-2. M2 — Synthetic fixtures F1–F6
-3. M3 — `master_data` + `commercial` API stubs
-4. M4 — Fiscal pipeline worker shell (no production keys)
-5. M5 — Hacienda sandbox E2E (runbook steps)
-6. M6 — Dashboard shell + i18n scaffold
-7. M7 — Counter profile vertical slice (ADR 012)
-
-Adjust after integrity review; do not treat this list as authoritative without repo evidence.
+Derive milestone order from foundation + SPECs in Phase 5 integrity — do not copy a generic list without repo evidence.
 
 ---
 
@@ -86,36 +73,32 @@ Task IDs use the globally unique **`M{N}-T{N}`** format. Shorthand `T{N}` is acc
 
 | Goal | FR/NFR | Component | Task ID | Description | Test | Acceptance |
 |------|--------|-----------|---------|-------------|------|------------|
-| Issue valid FE | FR-12 | `fiscal` | M4-T1 | implement state machine R1–R5 | `test_fiscal_sm_*.py` | Sandbox 201 + Accepted |
-| Multi-tenant isolation | NFR-03 | `platform` | M3-T11 | tenant middleware | `test_tenant_isolation` | Cross-tenant read fails |
+| User signup | FR-01 | `identity` | M2-T1 | register flow R1–R3 | `test_signup_*.py` | 201 + email sent |
+| Multi-tenant isolation | NFR-03 | `platform` | M3-T2 | tenant middleware | `test_tenant_isolation` | Cross-tenant read fails |
 
 ---
 
-## YAML input example (AC Billing)
+## YAML input example (generic)
 
 ```yaml
-project: AC Billing System
-description: Multi-business invoicing with Costa Rica Hacienda electronic documents
+project: REPLACE:PROJECT_NAME
+description: One-line product summary
 requirements:
-  - Multi-tenant SaaS
-  - FE issuance v4.4
-  - Counter + desk profiles (ADR 012)
-  - EN/ES/ZH/RU UI
+  - Core capability 1
+  - Core capability 2
 non_functional:
-  - Fiscal correctness non-negotiable
-  - Tenant crypto isolation
+  - Availability target
+  - Security / compliance constraint
 foundation_docs:
   - {HANDOFF}
-  - {PLANS_ROOT}/foundation/20260517-04-foundation-architecture.md
-  - DOCS_TECH_STACK.md
+  - {PLANS_ROOT}/foundation/*-04-foundation-architecture.md
+  - REPLACE:TECH_STACK_DOC
 constraints:
-  - Docker-only dev per .cursorrules
+  - Dev workflow per .cursorrules
   - No secrets in repo
 target_users:
-  - Counter clerk, desk user, business owner
-additional_notes:
-  - CPA ADRs 009/010 open; do not block M1 skeleton
-advanced_mode: enterprise
+  - Primary persona
+advanced_mode: standard | enterprise
 ```
 
 ---
@@ -151,7 +134,7 @@ Run `plan-foundation status` before `plan-master greenfield` on mature repos.
 | Situation | Behavior |
 |-----------|----------|
 | No `*-full-plan.md` | **continue** → suggest **greenfield** |
-| Foundation not ready | Draft plan; waivers in Assumptions; list blockers |
+| Foundation not ready (plan-master-ready: no) | **Stop** — do not draft plan; run `@plan-foundation certify` first (see skill § Prerequisite gate) |
 | Plan contradicts ADR | **fail** P5; do not Approve until ADR amended |
 | User wants code in same message | Stop plan mode; switch to implementation with SPEC refs |
 | Huge traceability matrix | Split to `*-full-plan-trace.md` |
@@ -177,8 +160,8 @@ plan-master **includes** P5/P6; companions are optional splits if skills grow to
 | Prompt | Problem | Use instead |
 |--------|---------|-------------|
 | `plan-master` write apis code | Wrong skill | Implementation + SPEC |
-| Skip foundation on AC Billing | Reinvents ADRs | Read `{PLANS_ROOT}/foundation/` + ADRs |
-| Approve with open U1 fiscal | Unsafe | Waivers explicit or resolve |
+| Skip foundation on mature repo | Reinvents ADRs | Read `{PLANS_ROOT}/foundation/` + ADRs |
+| Approve with open high-risk unknowns | Unsafe | Waivers explicit or resolve |
 | `greenfield` during status request | Mode violation | `status` only |
 
 ---

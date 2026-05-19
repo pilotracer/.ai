@@ -11,7 +11,7 @@ Supplement to `skill.md`. Invocation examples, HANDOFF templates, and edge cases
 | Action | Prompt |
 |--------|--------|
 | Open | `@session-control` **start** |
-| Open + goal | `session-control` **start** — bootstrap apis/ skeleton |
+| Open + goal | `session-control` **start** — bootstrap platform skeleton |
 | Close | `@session-control` **close** |
 | Close + commit | `session-control` **close** **commit** |
 | Close + commit + push | `session-control` **close** **commit** **push** |
@@ -61,12 +61,12 @@ Default `close` never runs `git commit` or `git push`. User runs git manually fr
 | `close commit push` | close + commit + push |
 | `status` / am I loaded | status |
 
-### AC Billing System examples
+### Examples
 
 **Start:**
 
 ```
-@session-control start — implement apis/ health route
+@session-control start — implement platform health route
 ```
 
 **Close (default — no git write):**
@@ -116,7 +116,7 @@ Expect: commit then `git push -u` if needed; report shows push result or error.
 ```markdown
 ## Session status
 
-**Open:** 2026-05-18 — goal: bootstrap apis/ health route
+**Open:** 2026-05-18 — goal: bootstrap platform health route
 
 **Updated:** 2026-05-18
 
@@ -128,7 +128,7 @@ Treat prior closed sessions as historical only; see "What this cycle produced" b
 ```markdown
 ## Session status
 
-**Closed:** 2026-05-18 — apis/ skeleton landed; pytest not yet run
+**Closed:** 2026-05-18 — platform skeleton landed; tests not yet run
 
 **Updated:** 2026-05-18
 
@@ -176,7 +176,7 @@ Session bookends for context load and close hygiene; no application code.
 ```
 docs: close planning session — docker compose approved
 
-HANDOFF and NEXT updated; compose files on disk; apis/ not started.
+HANDOFF and NEXT updated; compose files on disk; application source not started.
 ```
 
 **Feature work (when user commits separately):**

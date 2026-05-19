@@ -48,7 +48,7 @@ These documents are **inputs** to plan-master. They are **not** the plan-master 
 | **01** scope | Unambiguous product scope, audience, assumption ledger, risks | In/out scope, adaptation notes | Full FR/NFR numbered list for whole system (plan-master §3–4) |
 | **02** integration | Verified external facts (URLs, APIs, XSDs, OAuth) | Evidence, MANIFEST alignment | Implementation tasks or sandbox run steps (runbook stays in `{PLANS_ROOT}/operations/`) |
 | **03** adjacency | Optional product lanes, phased ERP seams, v1 out-of-scope | Integration seams, deferred modules | Execution milestone schedule |
-| **04** architecture | Bounded contexts, fiscal pipeline, stack, repo layout, decisions §13, foundation gate §14 | Proposal status, cross-links to 01–03 | **Incremental execution roadmap** (plan-master §19); agent task lists (§24) |
+| **04** architecture | Bounded contexts, stack, repo layout, decisions §13, foundation gate §14 | Proposal status, cross-links to 01–03 | **Incremental execution roadmap** (plan-master §19); agent task lists (§24) |
 
 **Cross-cutting foundation outputs (other paths, same phase):**
 
@@ -56,7 +56,7 @@ These documents are **inputs** to plan-master. They are **not** the plan-master 
 |----------|------|
 | `{DECISIONS_ROOT}/` | Record **Decided** architectural choices |
 | `{FEATURE_SPEC_ROOT}/*/SPEC` | Per-context **what** (rules R1…, test plan) — not **when/order** |
-| `DOCS_TECH_STACK.md` | Pinned stack versions |
+| `REPLACE:TECH_STACK_DOC` | Pinned stack versions |
 | `{PLANS_ROOT}/ASSUMPTIONS.md`, `RISK_REGISTRY.md`, `UNKNOWNS.md` | Persistent planning memory (linked by plan-master) |
 | `{HANDOFF}`, `{ITERATION_CARRIER}` | Session continuity; NEXT = **one** tactical next action only |
 
@@ -258,7 +258,7 @@ Agents **MUST**:
 - Avoid inventing undocumented APIs, framework capabilities, or compliance rules.
 - Mark speculative decisions in ASSUMPTIONS and Decision log (ADR).
 - Request clarification when uncertain; do not fake certainty.
-- Verify critical technical claims against `DOCS_TECH_STACK.md`, ADRs, `.ai/docs/integration/`, or official vendor docs.
+- Verify critical technical claims against `REPLACE:TECH_STACK_DOC`, ADRs, `.ai/docs/integration/`, or official vendor docs.
 
 Prefer proven stack pins and operational simplicity over speculative designs.
 
@@ -276,7 +276,7 @@ At **GATE p3, p4, p5, p6** (and when foundation doc 04 changes), evaluate and re
 | Coupling | Forbidden cross-context imports avoided? |
 | SPOFs | Single points of failure identified? |
 | Extensibility | Feature flags / adjacency lanes documented? |
-| Deployment realism | Compose/proposal matches DOCS_TECH_STACK? |
+| Deployment realism | Compose/proposal matches `REPLACE:TECH_STACK_DOC`? |
 | Observability | Metrics/traces named for new contexts? |
 | Rollback | Migrations, feature flags, deploy order? |
 | Security | Threat model + data classification alignment? |
@@ -310,13 +310,13 @@ Foundation artifacts **MUST** support downstream coding agents:
 - NEXT.md: **one** clear recommended next action
 - Tasks in plan-master (post-P6): bounded scope, file paths, acceptance criteria
 
-**Critical paths** (fiscal, signing, KMS, tenancy): recommend cross-model review in HANDOFF or RISK_REGISTRY.
+**Critical paths** (regulated domain, signing, KMS, tenancy): recommend cross-model review in HANDOFF or RISK_REGISTRY.
 
 ---
 
 ## Cross-model verification
 
-For **Decided** ADRs on stack, tenancy, fiscal/signing, KMS, or interaction mode:
+For **Decided** ADRs on stack, tenancy, regulated/signing paths, KMS, or interaction mode:
 
 - Recommend independent review (second model or human) before treating as immutable.
 - Record review outcome in ADR or ASSUMPTIONS (**Confirmed** after review).
@@ -337,6 +337,34 @@ Detect from the user message. If ambiguous, ask once:
 
 **Do not** run greenfield INTERACTIONs when the user asked for **status** only.
 
+**Registry:** Full matrix — [`.ai/skills/SKILL_DEPENDENCIES.md`](../SKILL_DEPENDENCIES.md).
+
+---
+
+## Prerequisite gate
+
+| Mode | Gate |
+|------|------|
+| **greenfield** | [GF0](#gf0--bootstrap-artifacts) |
+| **certify** | [CF0](#cf0--foundation-complete) |
+| **continue** | Foundation started (≥1 foundation doc or HANDOFF notes P0); else suggest **greenfield** |
+| **status** | — (read-only) |
+
+### GF0 — Bootstrap artifacts
+
+Before P0 INTERACTIONs:
+
+1. If `{HANDOFF}` missing → **stop**. Recommend `@project-bootstrap init` (or `@session-control` minimal HANDOFF only if user refuses bootstrap in the same message).
+2. If `.cursorrules` missing at repo root → **stop**. Recommend `@project-bootstrap init`.
+3. If `REPLACE:` tokens remain in `.cursorrules` → warn; foundation may proceed but record unfilled tokens in the greenfield report.
+
+### CF0 — Foundation-complete
+
+Before **certify**:
+
+1. Evaluate [Foundation-complete (artifact check)](#s3b--foundation-complete-artifact-check).
+2. If **foundation-complete: no** → **stop**. Recommend `@plan-foundation continue` with the failing phase/gate list. Do **not** certify plan-master-ready.
+
 ---
 
 ## Status protocol
@@ -355,7 +383,7 @@ Detect from the user message. If ambiguous, ask once:
 | `{HANDOFF}` | Session boundary, explicit unknowns, gate snapshot |
 | `{ITERATION_CARRIER}` | Backlog, recommended next, owner blockers |
 | `{DECISIONS_ROOT}/README.md` | ADR index |
-| `DOCS_TECH_STACK.md` | Stack pins + TODOs |
+| `REPLACE:TECH_STACK_DOC` | Stack pins + TODOs |
 | `{PLANS_ROOT}/foundation/*-04-*.md` | §13 decisions + §14 foundation gate |
 | `{PLANS_ROOT}/ASSUMPTIONS.md` | Assumption governance |
 | `{PLANS_ROOT}/RISK_REGISTRY.md` | Risk lifecycle |
@@ -372,7 +400,7 @@ For each phase, set: **done** | **partial** | **not started**. Use the [Gate com
 | P1 | Foundation discovery | `{PLANS_ROOT}/foundation/` docs 01–04; optional `02` + `MANIFEST.txt` |
 | P2 | ADRs | `{DECISIONS_ROOT}/README.md`, `YYYYMMDD-001` … (core four decided) |
 | P3 | Specifications | `CONVENTIONS`, `FEATURE_STANDARD`, `DIRECTORY_MAP`, `{FEATURE_SPEC_ROOT}/*/SPEC` |
-| P4 | Cross-cutting | `DOCS_TECH_STACK`, threat-model, data-classification, observability, api-style-guide |
+| P4 | Cross-cutting | `REPLACE:TECH_STACK_DOC`, threat-model, data-classification, observability, api-style-guide |
 | P5 | Infrastructure | docker-compose **proposal** or committed compose; sandbox runbook if external API |
 | P6 | Operations | `README.md`, `HANDOFF.md`, `NEXT.md`, `.gitignore` |
 
@@ -400,7 +428,7 @@ Answer **plan-master-ready: yes** only when **all** are true:
 
 1. **foundation-complete: yes** (P0–P6 gates done per gate completion model).
 2. Core ADRs **Decided** (stack, hosting, tenancy — project defines "core"; deferred ADRs documented in `UNKNOWNS.md`).
-3. Highest-risk bounded context(s) have SPECs with numbered rules (project defines — e.g. fiscal/compliance).
+3. Highest-risk bounded context(s) have SPECs with numbered rules (project defines — e.g. payments, compliance).
 4. Directory map exists and aligns with foundation doc 04 bounded contexts.
 5. Registries populated and reviewed: `ASSUMPTIONS.md`, `RISK_REGISTRY.md`, `UNKNOWNS.md`.
 6. No **unresolved architectural contradictions** (ADR ↔ foundation doc 04 ↔ SPECs), or waivers in HANDOFF.
@@ -492,6 +520,7 @@ If the user asks "implementation-ready?" or "ready to code?":
 
 Use when the user asks to **certify**, **verify for plan-master**, or **plan-master-ready**.
 
+0. Run [CF0 — Foundation-complete](#cf0--foundation-complete).
 1. Run **Status protocol** S1–S3 (full evaluation).
 2. Run `@plan-master integrity` on foundation artifacts (read-only if status-only; update HANDOFF on certify).
 3. Evaluate [S4 — Plan-master readiness](#s4--plan-master-readiness) criterion by criterion with evidence.
@@ -523,6 +552,7 @@ Use when the user asks to **certify**, **verify for plan-master**, or **plan-mas
 
 ## Greenfield protocol
 
+0. Run [GF0 — Bootstrap artifacts](#gf0--bootstrap-artifacts).
 1. **Project name first** — run `p0-name` before any other INTERACTION unless user already gave the name in the same message.
 2. Create the **P0 initial scope** mini-plan at `{PLANS_ROOT}/foundation/YYYYMMDD-01-<project-slug>-initial-scope.md` (foundation doc 01). Capture the raw product idea verbatim in a **Founder intent** subsection under **Assumption ledger**; add placeholder sections for audience, scope expansion, and architecture directions (filled in P1). **Do not** write `{PROMPTS_ROOT}/initial.md` — that path is user-owned scratch; skills read doc 01 instead.
 3. Create empty planning registries: `ASSUMPTIONS.md`, `RISK_REGISTRY.md`, `UNKNOWNS.md` (templates in reference.md).
@@ -745,14 +775,14 @@ SPEC sections: Purpose · In/Out scope · Domain language · Rules (R1…) · Da
 - [ ] Traceability: each SPEC lists ADRs + testable R1… rules
 - [ ] [Architecture fitness review](#architecture-fitness-review) recorded
 
-**Includes:** [Shared gate integrity](#shared-gate-integrity-every-gate) · Run `plan-master integrity` subset if fiscal/compliance SPEC present
+**Includes:** [Shared gate integrity](#shared-gate-integrity-every-gate) · Run `plan-master integrity` subset if high-risk / compliance SPEC present
 
 ---
 
 ## Phase 4 — Cross-cutting
 
 ```
-DOCS_TECH_STACK.md
+REPLACE:TECH_STACK_DOC
 .ai/standards/YYYYMMDD-threat-model.md
 .ai/standards/YYYYMMDD-data-classification.md
 .ai/standards/YYYYMMDD-observability-spec.md
@@ -897,20 +927,16 @@ Foundation orchestration certifies **plan-master-ready**; **plan-master** author
 
 ---
 
-## Reference: AC Billing System (example instance)
+## Reference: fully bootstrapped project (example)
 
-Use to sanity-check **status** on this repo — not required for other projects.
+When foundation is complete on an adopting repo, **status** typically shows:
 
 | Phase | Expected |
 |-------|----------|
-| P0–P4 | Done (foundation doc 01–04, ADRs 001–012, SPECs, cross-cutting docs) |
-| P5 | Done — compose approved and created 2026-05-17 |
-| P6 | Done |
+| P0–P4 | Foundation docs 01–04, ADRs, SPECs, cross-cutting standards customized |
+| P5–P6 | Environments / ops gates per your checklist |
 | **Foundation-complete** | **yes** |
-| **Plan-master-ready** | Run `plan-master integrity` then certify — expect **yes** if integrity passes |
-| **Master plan** | **Approved v1.2** (`.work/plans/full/20260517-full-plan.md`) |
-| **Implementation-ready** | **yes with waivers** — use `@plan-master status` for authoritative status |
-| **Registries** | `ASSUMPTIONS.md`, `RISK_REGISTRY.md`, `UNKNOWNS.md` |
-| **Next orchestration step** | `@code-implementation continue` (M1-T7+) — master plan Approved; use `@plan-master status` / `@plan-master continue` for plan edits only |
-
-**Archived (do not edit):** `{PROMPTS_ROOT}/decision_012_v1_interaction_mode.md`
+| **Plan-master-ready** | **yes** after `certify plan-master-ready` + integrity |
+| **Master plan** | **Approved** under `{PLANS_ROOT}/full/` |
+| **Implementation-ready** | Ask `@plan-master status` |
+| **Next step** | `@session-control start` → `@code-implementation plan-iteration — M1` |

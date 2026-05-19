@@ -4,12 +4,12 @@ description: >-
   Run implementation verification gates: milestone audit (plan + SPEC matrix),
   uncommitted diff audit, or last commit/push audit. Use when the user says
   code-verify, verify, verify uncommitted, verify last, or legacy
-  code-implementation verify. Tool-agnostic; all test/lint commands in Docker.
+  code-implementation verify. Tool-agnostic; verification commands from .cursorrules.
 ---
 
 # code-verify
 
-Verification layer for the AC Billing implementation workflow. **Does not implement features** and **does not** own `NEXT.md` iteration planning (that is `code-implementation`).
+Verification layer for the implementation workflow. **Does not implement features** and **does not** own `NEXT.md` iteration planning (that is `code-implementation`).
 
 **Pairs with:** `code-implementation` (task gates + calls milestone verify before **complete**), `session-control` (pre-commit), `concept-run` (MOD rows in milestone verify), `.cursorrules` Completion Gate.
 
@@ -18,7 +18,7 @@ Verification layer for the AC Billing implementation workflow. **Does not implem
 **Hard rules:**
 
 - **Evidence-first** — cite file paths, `git` output, and command exit codes; never claim pass without output.
-- **Docker only** for pytest / ruff / pyright (same as `code-implementation`).
+- **Verification commands** from `{AGENT_RULES_FILE}` § Docker or local/CI section (same as `code-implementation`).
 - **Secrets scan** is mandatory on every mode that inspects a diff.
 - **No HANDOFF/NEXT writes** except optional update to `### Cross-LLM verification` when user explicitly asks to record milestone verify result.
 - **Protected files** (`.cursorrules` §Protected Files): modified in diff without owner permission → **fail**.
@@ -58,19 +58,13 @@ Normalize to **mode** + optional scope.
 
 ---
 
-## Shared gates (Docker)
+## Shared gates (verification)
 
-**Canonical paths:** `src/` and `tests/` — same lint/type commands as `code-implementation` task gate and iteration **Validation steps** (`.ai/skills/code-implementation/skill.md` § Task gate).
+Same commands as `code-implementation` task gate (`.ai/skills/code-implementation/skill.md` § Task gate): read `{AGENT_RULES_FILE}` for `REPLACE:TEST_COMMAND`, `REPLACE:LINT_COMMAND`, and `REPLACE:TYPECHECK_COMMAND`.
 
-Run when diff touches `apis/src/` or `apis/tests/` (skip with reason if not):
+Run when diff touches application source or tests per `{BOUNDARY_MAP}` / DIRECTORY_MAP (skip with reason if not).
 
-```bash
-docker compose exec api bash -c "cd /code/apis && pip install -q -e '.[dev]' && python -m pytest tests/ -m 'not sandbox' -q"
-docker compose exec api bash -c "cd /code/apis && ruff check src/ tests/"
-docker compose exec api bash -c "cd /code/apis && pyright src/ tests/"
-```
-
-**Honesty:** pytest/lint run against the **current workspace**, not a detached checkout, unless **last** mode used a worktree (optional, see [Last verify](#last-verify-protocol)).
+**Honesty:** Commands run against the **current workspace**, not a detached checkout, unless **last** mode used a worktree (optional, see [Last verify](#last-verify-protocol)).
 
 ---
 
@@ -95,14 +89,7 @@ When `NEXT.md` has a valid `## Current iteration` block:
 
 ## Shared: protected files (S5)
 
-Per `.cursorrules` §Protected Files — **fail** if the diff touches any of these without documented owner permission in HANDOFF or an explicit user approval in the session:
-
-- `package.json` (dependencies, devDependencies, engines)
-- `docker-compose*.yml`
-- `Dockerfile.*`
-- `dashboard/next.config.js` (and variants)
-- `dashboard/tsconfig.json`
-- `.env*` (except `.env.example`)
+Per `{AGENT_RULES_FILE}` §Protected Files — **fail** if the diff touches any listed path without documented owner permission in HANDOFF or explicit user approval in the session.
 
 Infra paths changed for iteration work still require explicit owner approval — flag **High** in milestone verify; **fail** in **uncommitted** / **last** before commit.
 
@@ -134,7 +121,7 @@ Deep cross-check of the **active iteration** vs master plan and SPECs. Use befor
 | Observability | SPEC §9 + observability spec on touched paths? | pass / fail / gap / skip |
 | Concept / NFR registry | `Applies=yes` not left `pending`? | pass / fail / gap |
 | Coupling / blast | Cross-boundary edits per concept pack rules? | pass / fail / gap / skip |
-| AI-assisted safety | MOD-06 output attached when iteration touched `apis/src/` or `apis/tests/`? | pass / fail / gap — **`skip` forbidden** when code changed; **`human-only`** opt-out requires explicit human declaration |
+| AI-assisted safety | MOD-06 output attached when iteration touched application source/tests? | pass / fail / gap — **`skip` forbidden** when code changed; **`human-only`** opt-out requires explicit human declaration |
 | Docs alignment | Matches plan-master task text? | pass / drift |
 
 ### M3 — Cross-LLM
@@ -145,10 +132,10 @@ If a second model is available: focused prompt (milestone objective, tasks, R1�
 
 | Milestone scope | Result | Requirement |
 |-----------------|--------|-------------|
-| M1–M3 (platform, fixtures, master_data/commercial stubs) | `skipped — single-model session` | Note in milestone report only |
-| **M4+** or any milestone touching **`fiscal/`**, Hacienda integration, signing, or XML submission | **fail** unless waived | Owner must document **human architect review** in `{HANDOFF}` (name + date) or run cross-LLM before **complete** |
+| Early milestones (platform, fixtures, domain stubs) | `skipped — single-model session` | Note in milestone report only |
+| Milestones touching **high-risk modules** (per threat model / `.cursorrules`) | **fail** unless waived | Owner must document **human architect review** in `{HANDOFF}` (name + date) or run cross-LLM before **complete** |
 
-Waivers for M4+ compliance milestones do not carry forward to the next fiscal milestone.
+Waivers for high-risk milestones do not carry forward to the next high-risk milestone.
 
 ### M4 — Milestone report
 
@@ -195,7 +182,7 @@ If clean → report `clean` and **stop** (verdict: pass — nothing to audit).
 
 ### U2 — S1 secrets, S2 scope, S5 protected files
 
-### U3 — Shared Docker gates (if apis touched)
+### U3 — Shared verification gates (if application source/tests touched)
 
 ### U4 — Report
 

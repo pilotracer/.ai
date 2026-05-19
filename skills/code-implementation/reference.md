@@ -97,64 +97,54 @@ Diff-only audit: secrets, scope, tests/lint/type on changed files.
 
 ---
 
-## AC Billing System — milestone map
+## Example milestone map (illustrative)
 
-Suggested milestone order (from plan-master reference.md — validate with `@plan-master status`):
+Validate with `@plan-master status` and the **approved** `{PLANS_ROOT}/full/YYYYMMDD-full-plan.md` task section — do not copy this table into a live project without aligning to your master plan.
 
-| Milestone | Name | Key SPECs |
-|-----------|------|-----------|
-| M1 | `apis/` platform skeleton | platform CONVENTIONS, DIRECTORY_MAP |
-| M2 | Synthetic fixtures F1–F6 | `synthetic-fixtures/SPEC` |
-| M3 | `master_data` + `commercial` API stubs | `master-data`, `commercial-documents` SPECs |
-| M4 | Fiscal pipeline worker shell | `fiscal-pipeline/SPEC` |
-| M5 | Hacienda sandbox E2E | `fiscal-pipeline/SPEC` + integration mirror |
-| M6 | Dashboard shell + i18n scaffold | CONVENTIONS §frontend |
-| M7 | Counter profile vertical slice | ADR 012 + interaction SPEC |
-
-Always derive actual task lists from the **approved** `{PLANS_ROOT}/full/YYYYMMDD-full-plan.md §19`; the above is illustrative.
+| Milestone | Name (example) | Key artifacts |
+|-----------|----------------|---------------|
+| M1 | Platform skeleton | CONVENTIONS, DIRECTORY_MAP, health route, migration runner |
+| M2 | Core domain module A | `<slug-a>/SPEC` |
+| M3 | Core domain module B + API stubs | `<slug-b>/SPEC` |
+| M4 | External integration shell | integration SPEC + `docs/integration/MANIFEST.txt` |
+| M5 | Integration E2E (sandbox) | Same SPEC + runbook |
+| M6 | Frontend shell (if any) | UI conventions |
 
 ---
 
 ## NEXT.md iteration block — quick template
 
 ```markdown
-## Current iteration — M1: apis/ platform skeleton
+## Current iteration — M1: platform skeleton (example)
 
-**Milestone ref:** M1 · `{PLANS_ROOT}/full/20260517-full-plan.md §19`
+**Milestone ref:** M1 · `{PLANS_ROOT}/full/YYYYMMDD-full-plan.md` (task section)
 **Status:** in-progress
 **Started:** YYYY-MM-DD
 
 ### In scope
-- `pyproject.toml`, `acb_platform/` layer, health route, idempotent migration runner, Docker entrypoint (plan-master M1 §19)
+- App manifest, `REPLACE:PLATFORM_PACKAGE/` layer, health route, idempotent migration runner, dev entrypoint (per master plan M1)
 
 ### Out of scope (explicit)
-- Business domain tables (M3+)
-- Tenant middleware (M3-T11)
-- Dashboard (M6)
+- Business domain tables (later milestones)
+- Optional frontend (later milestone)
 
 ### Tasks
 | ID | Description | Files | Status | Notes |
 |----|-------------|-------|--------|-------|
-| M1-T1 | Create `pyproject.toml` (no Alembic) | `apis/pyproject.toml` | pending | |
-| M1-T2 | `acb_platform/settings.py` | `apis/src/acb_platform/settings.py` | pending | |
-| M1-T3 | `acb_platform/database.py` | `apis/src/acb_platform/database.py` | pending | |
-| M1-T4 | `acb_platform/logging.py` | `apis/src/acb_platform/logging.py` | pending | |
-| M1-T5 | `acb_platform/time.py` | `apis/src/acb_platform/time.py` | pending | |
-| M1-T6 | `acb_platform/errors.py` | `apis/src/acb_platform/errors.py` | pending | |
-| M1-T7 | `migration_runner.py` + `001_init.sql` | `apis/src/acb_platform/migration_runner.py`, `apis/migrations/001_init.sql` | pending | |
-| M1-T8 | `main.py` health + lifespan migrations | `apis/src/main.py` | pending | |
-| M1-T9 | Docker entrypoint (PG/Redis wait) | `apis/docker/entrypoint.sh` | pending | |
+| M1-T1 | App dependency manifest | `REPLACE:APP_ROOT/...` | pending | |
+| M1-T2 | Platform settings | `REPLACE:PLATFORM_PATH/settings.*` | pending | |
+| M1-T3 | Database bootstrap | `REPLACE:PLATFORM_PATH/database.*` | pending | |
+| M1-T4 | Migration runner + `001_init.sql` | runner + `REPLACE:MIGRATIONS_DIR/001_init.sql` | pending | |
+| M1-T5 | HTTP health + lifespan migrations | app entry `main.*` | pending | |
 
 ### Acceptance criteria
-- [ ] `docker compose up api` healthy; `curl /health` → 200
+- [ ] Dev stack healthy; `curl /health` → 200
 - [ ] Migration runner idempotent on restart
-- [ ] `ruff check` and `pyright --strict` pass on `apis/src/`
+- [ ] Task gate from `.cursorrules` passes
 
 ### Validation steps
-- [ ] `docker compose exec api bash -c "cd /code/apis && python -m pytest tests/unit/ -m 'not sandbox' -x"`
-- [ ] `docker compose exec api bash -c "cd /code/apis && ruff check src/ tests/"`
-- [ ] `docker compose exec api bash -c "cd /code/apis && pyright src/ tests/"` (strict; per CONVENTIONS §1)
-- [ ] Manual: `curl http://localhost:${ACB_HOST_PORT_API:-8000}/health` → `{"status":"ok"}` (expand to `/health/ready` with DB check in M1-T8)
+- [ ] Commands from `.cursorrules` § Docker / verification (test, lint, type)
+- [ ] Manual: health URL on host port from `.env` / dev-stack script
 
 ### Owner blockers
 - none
@@ -192,15 +182,14 @@ Always derive actual task lists from the **approved** `{PLANS_ROOT}/full/YYYYMMD
 ### Compact datagrid (illustrative — not live status)
 
 ```
-## M1 — apis/ platform skeleton — in-progress
+## M1 — platform skeleton — in-progress (example)
 
 | ID    | Task                                | Status (example) |
 |-------|-------------------------------------|------------------|
-| M1-T1 | pyproject.toml                      | done             |
-| M1-T2 | acb_platform/settings.py            | done             |
-| M1-T7 | migration_runner + 001_init.sql     | pending          |
-| M1-T8 | main.py + /health                   | pending          |
-| M1-T9 | docker entrypoint                   | pending          |
+| M1-T1 | app manifest                        | done             |
+| M1-T2 | platform settings                   | done             |
+| M1-T4 | migration_runner + 001_init.sql     | pending          |
+| M1-T5 | main + /health                      | pending          |
 
 Verify: not yet triggered
 Owner blockers: none
@@ -260,7 +249,7 @@ Return: pass | fail | gaps-found, with specific file/rule citations.
 | Verify returns `fail` | Fix all high/med gaps; re-run verify; only skip low gaps with waiver |
 | User asks for implementation-ready check | Redirect: `@plan-master status` — not code-implementation |
 | Second model unavailable for cross-LLM (M1–M3) | Log `skipped — single-model session`; does not block complete |
-| Second model unavailable for cross-LLM (**M4+ or fiscal/Hacienda milestone**) | **fail** unless owner records a **human architect review** waiver in `{HANDOFF}` (name + date) per `code-verify` § M3 |
+| Second model unavailable for cross-LLM (**high-risk milestone** per threat model) | **fail** unless owner records a **human architect review** waiver in `{HANDOFF}` (name + date) per `code-verify` |
 | Cursor/agent session: MOD-06 skipped | **fail** at CO1; run `@concept-run — MOD-06` or attach output before complete. **`human-only`** opt-out requires explicit human declaration in the same message |
 | Protected file change needed | Stop; explain why; ask explicit permission; only proceed after yes |
 
@@ -271,11 +260,13 @@ Return: pass | fail | gaps-found, with specific file/rule citations.
 | Prompt | Problem | Use instead |
 |--------|---------|-------------|
 | `@code-implementation start` with no NEXT.md iteration block | No scope | `plan-iteration — M{N}` first |
+| `@code-implementation start` when implementation-ready: no | Prerequisite | `@plan-master status`; HANDOFF waiver or approve plan |
+| `@plan-master greenfield` when plan-master-ready: no | Prerequisite | `@plan-foundation certify` first |
 | `@code-implementation complete` with failing tests | Violates gate | Fix tests; rerun gate |
 | Marking task done without running tests | Violates hard rule | Run task gate |
 | `@code-implementation` for planning-only work | Wrong skill | `@plan-master continue` |
 | Asking code-implementation if plan is "implementation-ready" | Wrong skill | `@plan-master status` |
-| Using `ruff` / `pytest` without `docker compose exec` | Host environment | Always use Docker exec |
+| Running verification on host when `.cursorrules` requires containers | Wrong environment | Follow `{AGENT_RULES_FILE}` § Docker |
 
 ---
 

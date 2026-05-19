@@ -9,7 +9,7 @@ description: >-
 
 # feature-spec
 
-Orchestrate **feature SPEC** artifacts under `{FEATURE_SPEC_ROOT}/<feature-slug>/` per `.ai/standards/20260517-FEATURE_STANDARD.md`.
+Orchestrate **feature SPEC** artifacts under `{FEATURE_SPEC_ROOT}/<feature-slug>/` per `.ai/standards/*FEATURE_STANDARD*` (path from `.cursorrules` `REPLACE:FEATURE_STANDARD_FILE`).
 
 **Tool-agnostic.** **Pairs with:** `concept-run` (§15 registry), `plan-foundation` P3, `code-implementation` (reads Approved SPECs).
 
@@ -20,7 +20,7 @@ Orchestrate **feature SPEC** artifacts under `{FEATURE_SPEC_ROOT}/<feature-slug>
 - **SPEC template:** use FEATURE_STANDARD §3 H2 headings exactly — no omissions.
 - **§15 required** before **Approved** (or explicit N/A with reason).
 - **Approved SPECs are immutable** — changes go in `YYYYMMDD-SPEC-amendment-NN-<slug>.md` siblings.
-- **Fiscal-impacting** SPECs need ≥2 reviewers before Approved (FEATURE_STANDARD §2).
+- **High-risk** SPECs (threat model / FEATURE_STANDARD §2) need ≥2 reviewers before Approved.
 - **No code** in this skill unless user explicitly asks to implement after Approved.
 - **Filename:** `{FEATURE_SPEC_ROOT}/<slug>/YYYYMMDD-SPEC.md` (date = today when creating).
 
@@ -36,7 +36,7 @@ Orchestrate **feature SPEC** artifacts under `{FEATURE_SPEC_ROOT}/<feature-slug>
 | `@feature-spec` **status** — \<path or slug\> | status | Read-only: exists? status header? §15? |
 | `@feature-spec` **approve** — \<path\> | approve | Set header Approved after review passes |
 
-**Slug:** kebab-case, informative (`fiscal-pipeline`, not `feature1`).
+**Slug:** kebab-case, informative (`user-auth`, not `feature1`).
 
 ---
 
@@ -72,7 +72,7 @@ Orchestrate **feature SPEC** artifacts under `{FEATURE_SPEC_ROOT}/<feature-slug>
 2. Check every mandatory H2 present (§3 template).
 3. Check §15 filled or justified N/A.
 4. Check ADR references exist and are not contradicted.
-5. Fiscal features: flag if single-reviewer approval requested.
+5. High-risk features: flag if single-reviewer approval requested.
 6. Output review report:
 
 ```markdown

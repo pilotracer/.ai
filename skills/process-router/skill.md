@@ -51,6 +51,7 @@ description: >-
 
 1. Read the user question (text after `—` or remainder of message).
 2. Classify into one primary bucket (see [reference.md](reference.md) § Routing table):
+   - **bootstrap** — first-time setup, empty `.work`, install `.cursorrules`
    - **orient** — where am I / what's next
    - **session** — start / close / status
    - **plan** — foundation / master plan / ADR

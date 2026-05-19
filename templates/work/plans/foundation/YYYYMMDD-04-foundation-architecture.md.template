@@ -1,0 +1,115 @@
+# REPLACE:PROJECT_NAME — Foundation and architecture (proposal)
+
+**Doc:** foundation **04** · **Created:** YYYY-MM-DD  
+**Status:** proposal — owner approval before broad implementation  
+**Status gate:** foundation-complete when §14 checklist passes
+
+**References:**
+
+- Doc 01 — `*-01-*-initial-scope.md`
+- Doc 02 — `*-02-*` (if integrations)
+- Doc 03 — `*-03-*` (if adjacency)
+- `.cursorrules` · `REPLACE:TECH_STACK_DOC` · `.ai/standards/*`
+
+---
+
+## 1. First principles (binding)
+
+1. REPLACE:PRINCIPLE_1
+2. Evidence over memory (`.cursorrules` §5).
+3. Tenant / data isolation per threat model.
+
+---
+
+## 2. Bounded contexts (proposed)
+
+| Context | Responsibility | Owns | Talks via |
+|---------|----------------|------|-----------|
+| `REPLACE:PLATFORM_PACKAGE` | Cross-cutting platform | settings, logging, DB bootstrap | all contexts |
+| REPLACE:CONTEXT_A | | | ports / events |
+
+Folder layout must match `.ai/standards/*-DIRECTORY_MAP.md` after customization.
+
+---
+
+## 3. Highest-risk path
+
+Describe the one path where failure is unacceptable (payments, auth, regulated submission, etc.).
+
+- State machine (diagram or bullet transitions)
+- Idempotency keys
+- External callbacks / polling
+
+---
+
+## 4. Recommended technology stack
+
+| Layer | Choice | ADR |
+|-------|--------|-----|
+| Backend | REPLACE:BACKEND | pending |
+| Frontend | REPLACE:FRONTEND or n/a | |
+| Data | REPLACE:DATABASE | |
+| Async | REPLACE:QUEUE or n/a | |
+
+---
+
+## 5. Repository layout
+
+```
+REPLACE:APP_ROOT/
+├── REPLACE:MIGRATIONS_DIR/
+├── src/
+│   ├── REPLACE:PLATFORM_PACKAGE/
+│   └── <context>/
+└── tests/
+```
+
+---
+
+## 6. Security summary
+
+Link `.ai/standards/*threat-model*` and `*data-classification*`.
+
+---
+
+## 7. Observability summary
+
+Link `{OBSERVABILITY_SPEC}` — metrics/traces/logs expectations.
+
+---
+
+## 8. Testing strategy
+
+| Layer | Tooling | Gate |
+|-------|---------|------|
+| Unit | REPLACE:TEST_RUNNER | task gate |
+| Integration | | milestone verify |
+
+---
+
+## 9. ADR register (§13)
+
+| ADR | Topic | Status |
+|-----|-------|--------|
+| 001 | Backend stack | Proposed |
+
+**Rule:** ADR headers win on conflict with this register.
+
+---
+
+## 10. Foundation gate checklist (§14)
+
+- [ ] Docs 01–04 consistent
+- [ ] Registries seeded (`ASSUMPTIONS`, `RISK`, `UNKNOWNS`)
+- [ ] High-risk SPECs drafted or scheduled
+- [ ] `REPLACE:TECH_STACK_DOC` pins versions
+- [ ] Directory map updated
+- [ ] No application code required for **plan-master-ready** (skeleton may follow after certify)
+
+---
+
+## 11. Explicit deferrals
+
+| Item | Deferred to | Owner |
+|------|-------------|-------|
+| | | |

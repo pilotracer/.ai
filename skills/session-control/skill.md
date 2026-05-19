@@ -13,6 +13,8 @@ Bookend AI work sessions so the next chat (or human) can resume without guessing
 
 **Pairs with:** `.cursorrules`, `plan-foundation` skill (optional status on start/close), `{ITERATION_CARRIER}`.
 
+**Registry:** [`.ai/skills/SKILL_DEPENDENCIES.md`](../SKILL_DEPENDENCIES.md).
+
 **Canonical path:** `.ai/skills/session-control/skill.md` · **Invocation examples:** `reference.md`
 
 **Hard rules:**
@@ -55,7 +57,7 @@ Normalize the user message to **verb** + optional **modifiers**. The word `sessi
 | **close** | `close` [commit] [push] | [Close protocol](#close-protocol) |
 | **status** | `status` | [Status protocol](#status-protocol) — compact snapshot; no HANDOFF writes |
 
-If the user gives a **task goal** with start (e.g. `start — work on fiscal SPEC`), capture it in the start report and use HANDOFF's conditional reading table.
+If the user gives a **task goal** with start (e.g. `start — work on payments SPEC`), capture it in the start report and use HANDOFF's conditional reading table.
 
 ---
 
@@ -91,8 +93,8 @@ If HANDOFF §"Fresh start" lists extras, or the user named a domain, read those 
 | Task touches | Read |
 |--------------|------|
 | Code / new feature | `.ai/standards/*CONVENTIONS*`, `.ai/standards/*FEATURE_STANDARD*` |
-| Stack / infra | `DOCS_TECH_STACK.md`, `.ai/standards/*DIRECTORY_MAP*` |
-| Fiscal / Hacienda | fiscal SPEC, `{PLANS_ROOT}/foundation/*-02-*.md`, integration mirror on demand |
+| Stack / infra | `REPLACE:TECH_STACK_DOC` (from `.cursorrules`), `.ai/standards/*DIRECTORY_MAP*` |
+| External integration | domain SPEC, `{PLANS_ROOT}/foundation/*-02-*.md`, `.ai/docs/integration/MANIFEST.txt` on demand |
 | Foundation planning | `plan-foundation` skill → **status** mode (read-only) |
 | Security / new columns | threat-model, data-classification |
 
@@ -120,6 +122,14 @@ Capture goal from (in order): text after `start —`, else HANDOFF **Recommended
 **Q:** What is the primary goal for this session? (one line)
 
 Do **not** ask if goal is already clear from invocation or HANDOFF. Store in start report only; do not rewrite HANDOFF unless user asks.
+
+### S4b — Coding goal readiness (when goal implies implementation)
+
+If the session goal mentions coding, M1, implementation, or a feature task:
+
+1. Run `@plan-master status` (read-only) or read HANDOFF for **Implementation-ready** and milestone waivers.
+2. If **implementation-ready: no** and no HANDOFF waiver for the named milestone → note in start report under **### Readiness (do not implement yet)** with redirect: `@plan-master status` → approve plan, or add HANDOFF waiver, or `@code-implementation plan-iteration — M{N}` only after prerequisites pass.
+3. Do **not** invoke `@code-implementation start` from session-control — route the user to that skill after gates pass.
 
 ### S5 — Mark session open (HANDOFF)
 
@@ -232,7 +242,7 @@ Detect and list:
 - [ ] Uncommitted work needing commit (or intentional WIP)
 - [ ] HANDOFF / NEXT out of date vs actual repo
 - [ ] Open ADRs blocking the work touched
-- [ ] Owner actions (CPA, approvals, ETSI schema, etc.)
+- [ ] Owner actions (legal review, vendor approvals, schema packs, etc.)
 - [ ] Docker/infra left running (optional note)
 - [ ] Temp files under `tmp/` that should be deleted
 - [ ] SPECs promised but not written
@@ -353,7 +363,7 @@ If the repo uses plan-foundation conventions, run **status** (read-only) and att
 | **Start** | HANDOFF already **Open**, new `start —` goal differs | Update Open line with new goal + date; do not silently drop prior goal (note change in start report) |
 | **Close** | Large uncommitted diff → suggest commit split |
 | **Close** | User says "close without updating HANDOFF" → only allowed if they confirm; mark checklist item `skip` with reason |
-| **Close** | Protected files changed (`package.json`, `docker-compose*.yml`, `Dockerfile.*`, `dashboard/next.config.js`, `dashboard/tsconfig.json`, `.env*`) → flag for explicit owner review — see `.cursorrules` §Protected Files for the authoritative list |
+| **Close** | Protected files changed → flag for explicit owner review — see `{AGENT_RULES_FILE}` §Protected Files |
 | **Close** | `close commit` / `close commit push` → run C4b after HANDOFF/NEXT; always echo message used |
 | **Close** | `push` without network → report failure; do not claim pushed |
 

@@ -48,6 +48,45 @@ If **plan-master-ready** is **no**, stop — run `@plan-foundation certify` firs
 
 **implementation-ready** is certified by **this skill** (status mode) after the master plan is **Approved** — do not conflate with **plan-master-ready** (plan-foundation certifies that).
 
+**Registry:** Full matrix — [`.ai/skills/SKILL_DEPENDENCIES.md`](../SKILL_DEPENDENCIES.md).
+
+---
+
+## Prerequisite gate (mutating modes)
+
+Run **before** **greenfield**, **continue**, or **revise** (not before **status**, **task**, or **integrity** when plan-foundation invoked integrity on foundation artifacts only).
+
+### PG1 — Plan-master-ready
+
+1. Read `{HANDOFF}` § Repository state (or gate snapshot) for `Plan-master-ready: <date>` **or** run `@plan-foundation status` and read **Plan-master-ready:** line.
+2. If **no** and user did not supply complete structured YAML with `foundation_docs:` **and** explicit same-message confirmation that foundation was completed out-of-band → **stop**. Output:
+
+```markdown
+## plan-master — blocked (prerequisite)
+
+**Plan-master-ready:** no
+
+### Run next
+1. `@plan-foundation status` — list foundation blockers
+2. `@plan-foundation continue` — finish P0–P6 gates
+3. `@plan-foundation certify plan-master-ready`
+4. Re-invoke `@plan-master greenfield` (or `continue`)
+```
+
+3. If **yes** → proceed to the mode protocol.
+
+**Anti-pattern:** Drafting or extending `*-full-plan.md` when PG1 fails. Do not use "waivers in Assumptions" to bypass plan-master-ready — only HANDOFF-documented **plan-master-ready** date or certify pass unlocks mutating plan-master modes.
+
+### PG2 — Mode-specific (after PG1 passes)
+
+| Mode | Additional check |
+|------|------------------|
+| **greenfield** | No `*-full-plan.md` **or** user explicitly asked to replace; if Approved plan exists without **revise** → recommend **revise** instead |
+| **continue** | Latest `*-full-plan.md` exists (Draft or partial) |
+| **revise** | Latest `*-full-plan.md` exists |
+| **integrity** | Foundation artifacts and/or master plan exist for the requested scope |
+| **status** / **task** | — (read-only; PG1 not required) |
+
 ---
 
 ## Parse invocation
@@ -146,10 +185,10 @@ Execute in order. At **each phase gate**, run [Continuous integrity rules](#cont
 | 3 | `{PLANS_ROOT}/foundation/*-01-*-initial-scope.md` — **read if present; skip if absent** (do **not** read `{PROMPTS_ROOT}/initial.md` unless user explicitly names it) |
 | 4 | `{PLANS_ROOT}/foundation/YYYYMMDD-01-*-scope*.md` |
 | 5 | `{PLANS_ROOT}/foundation/YYYYMMDD-04-foundation-arch*.md` |
-| 6 | `DOCS_TECH_STACK.md` |
+| 6 | `REPLACE:TECH_STACK_DOC` (stack doc) |
 | 7 | `{DECISIONS_ROOT}/README.md` + relevant ADRs |
 | 8 | `.ai/standards/*CONVENTIONS*` + `*FEATURE_STANDARD*` (dated filenames per repo) |
-| 9 | Risk-critical SPECs (e.g. `fiscal-pipeline`, `commercial-documents`) |
+| 9 | Risk-critical SPECs (per threat model / foundation doc 01) |
 
 **Actions:**
 
@@ -192,7 +231,7 @@ Execute in order. At **each phase gate**, run [Continuous integrity rules](#cont
 
 **Each major choice:** rationale, alternatives, rejection reasoning → Decision log.
 
-**Gate P1:** No FR1… without traceability stub; NFRs cover fiscal/compliance path if applicable.
+**Gate P1:** No FR1… without traceability stub; NFRs cover regulated/compliance path if applicable.
 
 ---
 
@@ -230,7 +269,7 @@ Execute in order. At **each phase gate**, run [Continuous integrity rules](#cont
 
 **Avoid:** unnecessary complexity, hidden critical paths.
 
-**Gate P3:** Critical user journeys mapped to FR ids; fiscal flows show Spanish legal field rules where required.
+**Gate P3:** Critical user journeys mapped to FR ids; regulated flows show locale/legal field rules where required.
 
 ---
 
@@ -263,8 +302,8 @@ Every task in the master plan uses the globally unique ID **`M{N}-T{N}`** (e.g. 
 
 | ID | Description | Files | FR/NFR | Complexity | Status |
 |----|-------------|-------|--------|------------|--------|
-| M{N}-T1 | … | `apis/src/…` | FR-{N} | S/M/L | pending |
-| M{N}-T2 | … | `apis/src/…` | NFR-{N} | S/M/L | pending |
+| M{N}-T1 | … | `REPLACE:APP_ROOT/…` | FR-{N} | S/M/L | pending |
+| M{N}-T2 | … | `REPLACE:APP_ROOT/…` | NFR-{N} | S/M/L | pending |
 ```
 
 **Rules:**
@@ -279,7 +318,7 @@ Every task in the master plan uses the globally unique ID **`M{N}-T{N}`** (e.g. 
 
 **Sync:** Update `{ITERATION_CARRIER}` **Recommended next** to `M1-T1` (first task of M1) when plan is **Approved**.
 
-**Gate P4:** Every FR1… maps to ≥1 task (`M{N}-T{N}`); every fiscal-critical task has validation in Phase 5 table.
+**Gate P4:** Every FR1… maps to ≥1 task (`M{N}-T{N}`); every high-risk task has validation in Phase 5 table.
 
 ---
 
@@ -313,14 +352,14 @@ Every task in the master plan uses the globally unique ID **`M{N}-T{N}`** (e.g. 
 **Must:**
 
 - Decompose into agent-friendly tasks with explicit file paths and constraints
-- State architectural invariants (cite CONVENTIONS + fiscal SPEC)
+- State architectural invariants (cite CONVENTIONS + relevant SPECs)
 - Define validation expectations per task
 - Flag dangerous assumptions
 
 **Should:**
 
 - Tag tasks: `model:tier` (light | standard | strong) where helpful
-- Recommend cross-model review for fiscal/signing/KMS paths
+- Recommend cross-model review for regulated/signing/KMS paths
 
 **Gate P6:** Agent execution appendix present; session-control **start** checklist referenced for implementers.
 
@@ -398,8 +437,8 @@ After every major phase, answer **yes/no** with evidence:
 
 - Label: **Confirmed** (file path + snippet or test command + exit code), **Inference**, **Unverified**, **Estimate**.
 - **Confirmed without cite** → downgrade to **Inference** in review; do not ship code on uncited Confirmed claims.
-- Prefer proven stack from `DOCS_TECH_STACK.md` and ADRs.
-- For Hacienda/integration: cite `.ai/docs/integration/` + `MANIFEST.txt`; do not invent endpoints.
+- Prefer proven stack from `REPLACE:TECH_STACK_DOC` and ADRs.
+- For external integration: cite `.ai/docs/integration/` + `MANIFEST.txt` when present; do not invent endpoints.
 - Request clarification when uncertain; do not invent XSD fields or annex rules.
 
 ---
@@ -440,7 +479,7 @@ Answer **implementation-ready: yes** only when **all** are true:
 
 If master plan **missing** → **implementation-ready: no** — run **greenfield**. If **Draft** → **no** until Approved.
 
-**Not the same as:** M1 `apis/` skeleton when foundation certified plan-master-ready and NEXT recommends it.
+**Not the same as:** M1 platform skeleton when foundation certified plan-master-ready and NEXT recommends it.
 
 ### Status report format
 
@@ -484,6 +523,7 @@ If master plan **missing** → **implementation-ready: no** — run **greenfield
 
 ## Continue protocol
 
+0. Run [Prerequisite gate](#prerequisite-gate-mutating-modes) **PG1** (and **PG2** continue row).
 1. Run abbreviated **status**.
 2. Find **first phase** not `done`.
 3. Complete that phase per workflow; update plan artifact.
@@ -495,11 +535,22 @@ If master plan **missing** → **implementation-ready: no** — run **greenfield
 
 ## Greenfield protocol
 
+0. Run [Prerequisite gate](#prerequisite-gate-mutating-modes) **PG1** (and **PG2** greenfield row).
 1. Collect [Initial input](#initial-input-greenfield-or-supplement).
 2. Create `{PLANS_ROOT}/full/YYYYMMDD-full-plan.md` with header **Draft**.
 3. Walk P0→P6; present **one phase INTERACTION** at a time when owner input required.
 4. Do not mark **Approved** until P5 **pass** (or documented waivers).
 5. Update HANDOFF **Repository state** only if user asks or `session-control` **close** runs.
+
+---
+
+## Revise protocol
+
+0. Run [Prerequisite gate](#prerequisite-gate-mutating-modes) **PG1** (and **PG2** revise row).
+1. Read latest `{PLANS_ROOT}/full/YYYYMMDD-full-plan.md` and the user's stated reason (after `—`).
+2. Apply delta; bump version note in plan header; re-run Phase 5 integrity subset.
+3. Do not set **Approved** until P5 **pass** (or documented waivers).
+4. Output completion checklist.
 
 ---
 
@@ -526,7 +577,8 @@ If master plan **missing** → **implementation-ready: no** — run **greenfield
 - Skipping Phase 5 to save time
 - Tasks without file paths or acceptance criteria
 - Duplicate ADR decisions with different conclusions
-- Marking Approved with open unknowns blocking fiscal work (without waiver)
+- Marking Approved with open unknowns blocking high-risk work (without waiver)
+- Running **greenfield** / **continue** / **revise** when **plan-master-ready: no** (see § Prerequisite gate)
 - Editing archived decision prompts during plan cleanup
 - Claiming plan complete without checklist evidence
 
@@ -570,9 +622,9 @@ Read-only. No writes to plan or HANDOFF.
 The plan SHOULD recommend:
 
 - Periodic architecture reviews (quarterly or per milestone)
-- Cross-model verification for fiscal/security tasks
+- Cross-model verification for high-risk / security tasks
 - Milestone audits before merge to `main`
 - Implementation retrospectives
-- Security review before production Hacienda credentials
+- Security review before production integration credentials
 - Load testing before scale-up
 - Staged deployments and progressive hardening

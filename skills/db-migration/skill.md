@@ -71,7 +71,7 @@ Bootstraps the entire idempotent SQL migration system into a project. This mode 
 
 ### I0 — Detect the database dialect
 
-1. Read `DOCS_TECH_STACK.md` (or equivalent stack document). Look for the primary database.
+1. Read `REPLACE:TECH_STACK_DOC` (stack document from `.cursorrules`). Look for the primary database.
 2. If PostgreSQL → use **plpgsql**. All `DO $$ … END $$` blocks, `CREATE OR REPLACE FUNCTION`, `SERIAL`/`BIGSERIAL` types, `TIMESTAMPTZ`, `UUID`, `IF NOT EXISTS` (PG 9.6+ syntax).
 3. If SQLite → use SQLite-compatible idempotent patterns (`CREATE TABLE IF NOT EXISTS`, no `DO $$` blocks, no stored procedures).
 4. If MySQL/MariaDB → use `CREATE TABLE IF NOT EXISTS`, `CREATE PROCEDURE IF NOT EXISTS`, `SIGNAL` for conditional guards.
@@ -80,7 +80,7 @@ Bootstraps the entire idempotent SQL migration system into a project. This mode 
 
 ### I1 — Remove Alembic (if present)
 
-1. Delete `apis/alembic/` directory and all contents.
+1. Delete `REPLACE:APP_ROOT/alembic/` (or equivalent) directory and all contents.
 2. Delete `alembic.ini` from project root (if present).
 3. Remove `alembic` from `pyproject.toml` dependencies.
 4. Remove any `alembic upgrade head` commands from `Dockerfile.*`, `docker-compose.yml`, entrypoint scripts, CI configs.
@@ -89,7 +89,7 @@ Bootstraps the entire idempotent SQL migration system into a project. This mode 
 ### I2 — Create directory structure
 
 ```
-apis/migrations/
+REPLACE:MIGRATIONS_DIR/
 ├── 001_init.sql
 ├── 002_schema_changes.sql       ← empty ledger — ALTER TABLE changes go here
 ├── 003_triggers.sql             ← empty — CREATE OR REPLACE FUNCTION/TRIGGER
@@ -103,7 +103,7 @@ Header comment documenting the database dialect. Contents:
 
 ```sql
 -- 001: Initial schema setup — PostgreSQL / plpgsql (idempotent)
--- Dialect detected from: DOCS_TECH_STACK.md → PostgreSQL 16
+-- Dialect detected from: `REPLACE:TECH_STACK_DOC` (stack document from `.cursorrules`) → PostgreSQL 16
 -- Every statement is safe to re-run.
 
 -- Extensions
@@ -116,7 +116,7 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 ### I4 — Write `migration_runner.py`
 
-Create `apis/src/acb_platform/migration_runner.py` using the reference implementation from `reference.md`. Adapt paths to the project's actual layout:
+Create `REPLACE:MIGRATION_RUNNER_PATH` using the reference implementation from `reference.md`. Adapt paths to the project's actual layout:
 - `WORKDIR` → resolved from `pyproject.toml` or `Dockerfile` WORKDIR directive
 - `MIGRATIONS_DIR` → `Path(__file__).resolve().parent.parent.parent / "migrations"`
 - Use `asyncpg` or `psycopg` (async) per the project's SQLAlchemy configuration
@@ -124,15 +124,15 @@ Create `apis/src/acb_platform/migration_runner.py` using the reference implement
 
 ### I5 — Wire into application startup
 
-Update `apis/src/main.py` (or equivalent entrypoint).
+Update the application entrypoint (e.g. `REPLACE:APP_ENTRYPOINT`).
 
 **FastAPI ≥ 0.93 (lifespan — preferred):**
 
 ```python
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from acb_platform.migration_runner import run_migrations
-from acb_platform.database import get_engine
+from REPLACE:PLATFORM_PACKAGE.migration_runner import run_migrations
+from REPLACE:PLATFORM_PACKAGE.database import get_engine
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -159,17 +159,17 @@ Remove any `alembic upgrade head` or `sleep && alembic` lines. The migration run
 ### I7 — Update project configuration
 
 1. **`pyproject.toml`:** Remove `alembic` dependency. No replacement needed (runner uses SQLAlchemy's `text()` execution — already a dependency).
-2. **`DOCS_TECH_STACK.md`:** Replace Alembic row with idempotent SQL scripts.
+2. **`REPLACE:TECH_STACK_DOC`:** Replace Alembic row with idempotent SQL scripts.
 3. **`CONVENTIONS`:** Ensure §17 (Migration strategy) references this skill.
 4. **`.cursorrules`:** Update Schema Changes Ledger section to point to `migrations/`.
-5. **`DIRECTORY_MAP`:** Update to show `apis/migrations/` instead of `alembic/`.
+5. **`DIRECTORY_MAP`:** Update to show `REPLACE:MIGRATIONS_DIR/` instead of `alembic/`.
 
 ### I8 — Init report (mandatory output)
 
 ```markdown
 ## db-migration init — <Project>
 
-**Database:** PostgreSQL (plpgsql) · **Directory:** `apis/migrations/`
+**Database:** PostgreSQL (plpgsql) · **Directory:** `REPLACE:MIGRATIONS_DIR/`
 
 ### Actions taken
 | # | Action | Result |
@@ -185,7 +185,7 @@ Remove any `alembic upgrade head` or `sleep && alembic` lines. The migration run
 | 9 | `main.py` wired with startup hook | pass |
 | 10 | Docker entrypoint cleaned | pass/skip |
 | 11 | `pyproject.toml` cleaned (Alembic removed) | pass/skip |
-| 12 | `DOCS_TECH_STACK.md` updated | pass |
+| 12 | `REPLACE:TECH_STACK_DOC` updated | pass |
 | 13 | `.cursorrules` updated | pass |
 | 14 | `DIRECTORY_MAP` updated | pass |
 
@@ -251,7 +251,7 @@ migrations/
 
 ### C5 — Register in DIRECTORY_MAP
 
-If this script introduces a new directory or a new bounded-context module, update `.ai/standards/20260517-DIRECTORY_MAP.md`.
+If this script introduces a new directory or a new bounded-context module, update `{BOUNDARY_MAP}` / `.ai/standards/*DIRECTORY_MAP*` (path from `.cursorrules`).
 
 ### C6 — Output checklist
 
@@ -280,16 +280,16 @@ For small changes to **existing** structures (e.g., adding one column to an exis
 
 ### R1 — Locate the runner
 
-Find `apis/src/acb_platform/migration_runner.py` (or equivalent). If it doesn't exist, draft one before running scripts.
+Find `REPLACE:MIGRATION_RUNNER_PATH` (or equivalent). If it doesn't exist, draft one before running scripts.
 
 ### R2 — Dry-run (optional but recommended)
 
-For production/staging: `docker compose exec api bash -c "cd /code/apis && python -m acb_platform.migration_runner --dry-run"` prints each script and the first 3 lines without executing.
+For production/staging: run the migration runner in dry-run mode per `.cursorrules` (e.g. `docker compose exec REPLACE:SERVICE_API … --dry-run`).
 
 ### R3 — Execute
 
 ```bash
-docker compose exec api bash -c "cd /code/apis && python -m acb_platform.migration_runner"
+docker compose exec REPLACE:SERVICE_API bash -c "cd REPLACE:APP_WORKDIR && REPLACE:MIGRATION_RUN_CMD"
 ```
 
 The runner:
@@ -353,7 +353,7 @@ Read-only. No writes to scripts or database.
 Confirms every script is truly idempotent:
 
 1. Start a fresh test database (or use `ci` environment with recorded fixtures).
-2. Run all scripts: `docker compose exec api bash -c "cd /code/apis && python -m acb_platform.migration_runner"`.
+2. Run all scripts: `docker compose exec REPLACE:SERVICE_API bash -c "cd REPLACE:APP_WORKDIR && REPLACE:MIGRATION_RUN_CMD"`.
 3. Run all scripts a second time.
 4. Assert: zero errors on second run.
 5. Compare schema (`pg_dump --schema-only`) before and after second run — must be identical.
@@ -365,19 +365,19 @@ Failures produce a report listing the script name and the error message. The scr
 ## Directory structure
 
 ```
-apis/
+REPLACE:APP_ROOT/
 ├── migrations/
 │   ├── 001_init.sql              ← schemas, extensions, base tables
 │   ├── 002_platform_audit_log.sql
 │   ├── 003_identity_*.sql
-│   ├── 004_master_data_*.sql
-│   ├── 005_commercial_*.sql
-│   ├── 006_fiscal_*.sql
+│   ├── 004_domain_a_*.sql
+│   ├── 005_domain_c_*.sql
+│   ├── 006_domain_b_*.sql
 │   ├── 007_triggers.sql          ← all CREATE OR REPLACE FUNCTION/TRIGGER
 │   ├── 008_inserts.sql           ← idempotent reference data
 │   └── 009_constraints.sql       ← ADD CONSTRAINT IF NOT EXISTS
 ├── src/
-│   └── acb_platform/
+│   └── REPLACE:PLATFORM_PACKAGE/
 │       └── migration_runner.py   ← executes scripts on startup
 ```
 
@@ -415,7 +415,7 @@ For schema-per-tenant (PostgreSQL with multiple schemas), the runner iterates te
 | # | Check | Result | Evidence |
 |---|-------|--------|----------|
 | 1 | Mode detected correctly | pass/fail | |
-| 2 | Database dialect detected (init mode) | pass/skip | from DOCS_TECH_STACK.md |
+| 2 | Database dialect detected (init mode) | pass/skip | from `REPLACE:TECH_STACK_DOC` (stack document from `.cursorrules`) |
 | 3 | Alembic fully removed (init mode) | pass/skip | no remaining references |
 | 4 | Scripts numbered in correct order | pass/skip | |
 | 5 | Every statement is idempotent | pass/fail | |

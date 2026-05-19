@@ -10,7 +10,7 @@ Supplement to `skill.md`. Invocation examples, SQL templates, and edge cases.
 |--------|--------|
 | Init / bootstrap | `@db-migration init` |
 | Init (alias) | `@db-migration implement` |
-| Create a table | `@db-migration create — add fiscal_documents table` |
+| Create a table | `@db-migration create — add orders table` |
 | Add a column | `@db-migration add — add column email to master_parties` |
 | Run migrations | `@db-migration run` |
 | Check status | `@db-migration status` |
@@ -70,9 +70,9 @@ CREATE TABLE IF NOT EXISTS commercial_documents (
     subtotal NUMERIC(19,5) NOT NULL DEFAULT 0,
     tax_total NUMERIC(19,5) NOT NULL DEFAULT 0,
     total NUMERIC(19,5) NOT NULL DEFAULT 0,
-    fiscal_document_id UUID,
+    order_id UUID,
     clave CHAR(50),
-    fiscal_state TEXT,
+    order_state TEXT,
     source_document_id UUID,
     idempotency_key UUID,
     interaction_profile TEXT,
@@ -165,7 +165,7 @@ CREATE POLICY tenant_isolation ON commercial_documents
 DO $$ BEGIN
     CREATE TYPE document_state AS ENUM (
         'Draft', 'Confirmed', 'Voided',
-        'FiscalPending', 'FiscalAccepted', 'FiscalRejected'
+        'Pending', 'Accepted', 'Rejected'
     );
 EXCEPTION
     WHEN duplicate_object THEN NULL;
@@ -177,7 +177,7 @@ END $$;
 ## Migration runner (reference implementation)
 
 ```python
-# apis/src/acb_platform/migration_runner.py
+# REPLACE:MIGRATION_RUNNER_PATH (example: src/platform/migration_runner.py)
 import os
 import logging
 from pathlib import Path
@@ -244,7 +244,7 @@ async def run_migrations(engine: AsyncEngine) -> None:
 └── reference.md      ← this file
 
 (Project migrations — not in .ai/)
-apis/migrations/
+REPLACE:MIGRATIONS_DIR/
 ├── 001_init.sql
 ├── 002_*.sql
 └── ...

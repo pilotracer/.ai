@@ -48,6 +48,7 @@ Use `@process-router` for *how-to* questions; use the line above for *where am I
 @process-router ask — which concept prompt for an AI-assisted PR?
 @process-router route — I'm ready to code M1, what do I run first?
 @process-router — what's the difference between plan-foundation and plan-master?
+@process-router — how do I set up Agent OS in a new repo?
 @process-router help
 ```
 
@@ -59,6 +60,7 @@ The verb is optional — `@process-router — <question>` is enough. Aliases: `a
 
 | Situation | Use |
 |-----------|-----|
+| First-time / empty `.work` | `@project-bootstrap init` · `bash .ai/templates/bootstrap.sh` |
 | Lost in the workflow | `@process-router — I'm lost` |
 | How-to for a specific step | `@process-router — how do I fix NEXT.md?` |
 | Which concept (MOD) applies | `@process-router — AI-assisted PR, which prompt?` |
@@ -100,6 +102,6 @@ Full registry: [`.ai/skills/README.md`](skills/README.md)
 ## `.ai/` vs `.work/`
 
 - **`.ai/`** — agnostic skills, standards, concepts, guides (including this doc and `process-router` skill).
-- **`.work/`** — project plans, SPECs, ADRs, prompts, HANDOFF (see [`.work/README.md`](../.work/README.md)).
+- **`.work/`** — project plans, SPECs, ADRs, prompts, HANDOFF (see [`.work/README.md`](.work/README.md) at repo root).
 
 The router links to both layers but never duplicates their content.

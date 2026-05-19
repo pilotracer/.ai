@@ -15,7 +15,9 @@ Execute implementation iterations derived from an **Approved master plan** (`{PL
 
 **Tool-agnostic** (Cursor, Claude Code, opencode, Codex). **Requires:** `implementation-ready: yes` from `@plan-master status`, or an explicit HANDOFF waiver noting which milestones may proceed early.
 
-**Pairs with:** `session-control` (bookends), `plan-master` (milestone source and revisions), `code-verify` (milestone / uncommitted / last audits), `db-migration` (all schema changes), `.ai/standards/CONVENTIONS`, `.ai/standards/FEATURE_STANDARD`.
+**Pairs with:** `session-control` (bookends), `plan-master` (milestone source and revisions), `code-verify` (milestone / uncommitted / last audits), `db-migration` (all schema changes), `.ai/standards/*CONVENTIONS*`, `.ai/standards/*FEATURE_STANDARD*` (paths from `.cursorrules`).
+
+**Registry:** [`.ai/skills/SKILL_DEPENDENCIES.md`](../SKILL_DEPENDENCIES.md).
 
 **Canonical path:** `.ai/skills/code-implementation/skill.md` · **Invocation examples:** `reference.md`
 
@@ -26,12 +28,12 @@ Execute implementation iterations derived from an **Approved master plan** (`{PL
 - **No task is `done` until its gate passes.** Tests + lint + type-check must exit 0 before advancing.
 - **Scope discipline.** Do not modify any file not declared in the task's file list. Undo and document any accidental out-of-scope change.
 - **Schema changes go through `db-migration`.** Stop the task, create the migration script, resume. No inline DDL in application code.
-- **All commands run in Docker containers.** Never bare `python`, `pytest`, `npm`, `pyright`, or `ruff` on the host.
-- **Protected files** (`package.json`, `docker-compose*.yml`, `Dockerfile.*`, `dashboard/next.config.js`, `dashboard/tsconfig.json`, `.env*`) require explicit user permission before modification. Stop and ask.
+- **Verification commands** come from `{AGENT_RULES_FILE}` § Docker (or § local/CI from `REPLACE:TECH_STACK_DOC` when not containerized). Never hardcode another project's service name, workdir, or toolchain.
+- **Protected files** per `{AGENT_RULES_FILE}` §Protected Files — require explicit user permission before modification. Stop and ask.
 - **No secrets in code, tests, or comments.** Use `.env` variables or KMS references.
 - **Completion Gate is non-negotiable.** Per `.cursorrules`: code changed → checks run → output reviewed → residual risks listed. Cannot be skipped.
 - **AI-assisted default:** Cursor/agent sessions are **AI-assisted: yes** for MOD-06 unless the human explicitly declares **`human-only`** in the same message. Agents must not skip MOD-06 by self-classifying.
-- **MOD-06 before complete:** `@concept-run — MOD-06` (or documented output path) is **required** before `@code-implementation complete` when any task in the iteration touched `apis/src/` or `apis/tests/`.
+- **MOD-06 before complete:** `@concept-run — MOD-06` (or documented output path) is **required** before `@code-implementation complete` when any task in the iteration touched application source or tests (per DIRECTORY_MAP).
 - **Every mode ends with a Completion checklist** — each item `pass` | `fail` | `skip` with evidence.
 
 ---
@@ -94,17 +96,17 @@ The `## Current iteration` section is owned by this skill. `session-control` and
 ### Tasks
 | ID | Description | Files | Status | Notes |
 |----|-------------|-------|--------|-------|
-| M{N}-T1 | … | `apis/src/…` | pending | |
-| M{N}-T2 | … | `apis/src/…` | in-progress | |
-| M{N}-T3 | … | `apis/src/…` | done 2026-05-18 | |
+| M{N}-T1 | … | `REPLACE:APP_ROOT/…` | pending | |
+| M{N}-T2 | … | `REPLACE:APP_ROOT/…` | in-progress | |
+| M{N}-T3 | … | `REPLACE:APP_ROOT/…` | done 2026-05-18 | |
 
 ### Acceptance criteria
 - [ ] …
 
 ### Validation steps
-- [ ] `docker compose exec api bash -c "cd /code/apis && python -m pytest tests/ -m 'not sandbox'"`
-- [ ] Lint: `docker compose exec api bash -c "cd /code/apis && ruff check src/ tests/"`
-- [ ] Type: `docker compose exec api bash -c "cd /code/apis && pyright src/ tests/"` (strict, per CONVENTIONS §1)
+- [ ] Tests: `{AGENT_RULES_FILE}` § Docker — `REPLACE:TEST_COMMAND` (containerized or local per project)
+- [ ] Lint: `REPLACE:LINT_COMMAND`
+- [ ] Type: `REPLACE:TYPECHECK_COMMAND` (strictness per CONVENTIONS)
 - [ ] Manual: …
 
 ### Owner blockers
@@ -134,7 +136,7 @@ An iteration block is **valid** when all of the following are true:
 2. In scope / out of scope sections are explicit (not empty).
 3. At least one task row with at least one declared file path.
 4. Acceptance criteria section present with at least one item.
-5. Validation steps include at least one runnable Docker test command.
+5. Validation steps include at least one runnable test command from `{AGENT_RULES_FILE}`.
 6. **`### Concept / NFR registry (this iteration)`** subsection is present with one row per architecture concept id **or** explicit `N/A` for each id with reason (if the repository has no concept pack, one row: `N/A — no pack`).
 
 If any criterion fails → iteration block is **invalid** → run **plan-iteration** before **start**.
@@ -147,10 +149,13 @@ Generates or validates the `## Current iteration` block in `NEXT.md` from the ne
 
 ### PI1 — Verify prerequisites
 
-1. Read `{PLANS_ROOT}/full/YYYYMMDD-full-plan.md` (latest by date prefix). Confirm **Status: Approved** (or owner waiver recorded in HANDOFF for early M1 start).
-2. If no approved plan → **stop**. Recommend `@plan-master status` then `@plan-master continue` or user approval.
-3. Read `{HANDOFF}` — note owner blockers, waivers, M1-only authorizations.
-4. Read `{ITERATION_CARRIER}` — find `## Done this iteration` and `## Recommended next` to determine which milestone is next.
+1. Read `{HANDOFF}` — note owner blockers, waivers, M1-only authorizations.
+2. Read `{PLANS_ROOT}/full/YYYYMMDD-full-plan.md` (latest by date prefix). Confirm **Status: Approved** (or owner waiver recorded in HANDOFF for early M{N} start).
+3. If no plan file → **stop**. Recommend `@plan-master greenfield` after `@plan-foundation certify plan-master-ready`.
+4. If plan is **Draft** and HANDOFF has **no** waiver naming milestone **M{N}** → **stop**. Recommend `@plan-master status` → approve plan or add HANDOFF waiver.
+5. Read `{ITERATION_CARRIER}` — find `## Done this iteration` and `## Recommended next` to determine which milestone is next.
+
+**Note:** **implementation-ready** is checked at [ST0](#st0--implementation-gate) (**start** / **continue**), not at plan-iteration — you may build the iteration block once the plan is **Approved** (or milestone-waived per steps 2–4).
 
 ### PI2 — Select target milestone
 
@@ -208,6 +213,18 @@ Include a **`### Concept / NFR registry (this iteration)`** subsection (table or
 ---
 
 ## Start protocol
+
+### ST0 — Implementation gate
+
+Before ST1 (and before first line of application code):
+
+1. Read `{HANDOFF}` for milestone waivers (e.g. M1 platform skeleton).
+2. If HANDOFF waives the active iteration milestone → **pass** (note waiver in start report).
+3. Else run `@plan-master status` (or read last recorded **Implementation-ready:** in HANDOFF if dated today).
+4. If **implementation-ready: no** → **stop**. Output redirect to `@plan-master status`; list blockers (Draft plan, missing plan, plan-master-ready expired).
+5. If **yes** → proceed to ST1.
+
+**Anti-pattern:** **start** or **continue** when only **plan-master-ready** is set — that unlocks planning and M1 *prep*, not broad implementation unless HANDOFF says so.
 
 ### ST1 — Mandatory reads
 
@@ -278,23 +295,24 @@ All mandatory checks (1–5, 7–8) are **pass**. If any **fail**, fix before pr
 
 ## Continue protocol
 
-0. **Unblock check:** Read `{PLANS_ROOT}/UNKNOWNS.md` and `{HANDOFF}`. Scan the iteration block for any task with status `blocked`:
+1. Run [ST0 — Implementation gate](#st0--implementation-gate) (abbreviated if start ran in the same session with no plan/HANDOFF change).
+2. **Unblock check:** Read `{PLANS_ROOT}/UNKNOWNS.md` and `{HANDOFF}`. Scan the iteration block for any task with status `blocked`:
    a. For each `blocked` task: find the blocker entry in `### Owner blockers` and/or `UNKNOWNS.md` (entries with `blocks: T{N}`).
    b. Check if the condition has changed: ADR decided, owner action completed, dependency landed, or HANDOFF lists the blocker as resolved.
    c. If resolved → flip task status from `blocked` to `pending`; annotate `unblocked YYYY-MM-DD — <reason>`. If the corresponding UNKNOWNS row is resolved, update its `Status` to `Resolved` with date.
    d. If unchanged → leave as `blocked`. If all tasks are `blocked` with no changes → do not advance; recommend `@session-control close` with blocker list.
-1. Read `NEXT.md §Current iteration`. Find the first task with status `in-progress` or `pending`.
-2. If `in-progress`: resume that task with file evidence (read the file before editing).
-3. If all tasks `pending`: treat as a fresh start — run ST1–ST5 abbreviated.
-4. Per task loop:
+3. Read `NEXT.md §Current iteration`. Find the first task with status `in-progress` or `pending`.
+4. If `in-progress`: resume that task with file evidence (read the file before editing).
+5. If all tasks `pending`: treat as a fresh start — run ST0–ST5 abbreviated.
+6. Per task loop:
    a. Read every file to be modified **before** making any change.
    b. Implement per CONVENTIONS, FEATURE_STANDARD, and the SPEC rules (R1…) that govern this context.
    c. Do not modify files outside the task's declared file list.
    d. When implementation complete → run [Task gate](#task-gate).
    e. On gate **pass**: update task status to `done YYYY-MM-DD`; move to next pending task.
    f. On gate **fail**: report exact error; diagnose; fix; re-run gate. Do not advance until pass.
-5. **Schema change detected mid-task:** stop the task, invoke `@db-migration create` for the required migration script, then resume.
-6. **Blocked task:** see [Blocked task protocol](#blocked-task-protocol).
+7. **Schema change detected mid-task:** stop the task, invoke `@db-migration create` for the required migration script, then resume.
+8. **Blocked task:** see [Blocked task protocol](#blocked-task-protocol).
 7. Every 3 tasks or on user request: output abbreviated [status](#status-protocol).
 8. When all tasks are `done`: recommend **complete** mode. Do not auto-finalize.
 
@@ -306,10 +324,10 @@ Run after every task implementation before marking `done`. All checks must pass.
 
 | Check | Command | Pass criteria |
 |-------|---------|---------------|
-| Unit tests for changed context | `docker compose exec api bash -c "cd /code/apis && python -m pytest tests/<context>/ -m 'not sandbox' -x"` | Exit 0 |
-| Full suite (smoke) | `docker compose exec api bash -c "cd /code/apis && python -m pytest tests/ -m 'not sandbox' -q"` | Exit 0 |
-| Lint | `docker compose exec api bash -c "cd /code/apis && ruff check src/ tests/"` | Exit 0 |
-| Type check | `docker compose exec api bash -c "cd /code/apis && pyright src/ tests/"` | Exit 0 (strict mode per CONVENTIONS §1) or documented baseline exceptions |
+| Unit tests (scoped) | `{AGENT_RULES_FILE}` § Docker — scoped `REPLACE:TEST_COMMAND` | Exit 0 |
+| Full suite (smoke) | Same section — full `REPLACE:TEST_COMMAND` | Exit 0 |
+| Lint | `REPLACE:LINT_COMMAND` (via compose exec when containerized) | Exit 0 |
+| Type check | `REPLACE:TYPECHECK_COMMAND` | Exit 0 per CONVENTIONS or documented baseline exceptions |
 | No secrets in diff | `git diff --unified=0` reviewed | Same rules as `code-verify` S1 — no keys, tokens, passwords, PEM material |
 | Protected files | `git diff --name-only` reviewed | No `.cursorrules` §Protected Files paths unless user explicitly approved |
 | Scope discipline | `git diff --name-only` | All paths in declared task file list |
@@ -318,7 +336,7 @@ Run after every task implementation before marking `done`. All checks must pass.
 **Also verify (manual — no single exit code):**
 
 - **Residual risks / deferred sub-work:** Before marking a task `done`, any follow-up work, untested edge cases, or known limitations discovered during implementation must be captured in the task's `Notes` column or appended to `{PLANS_ROOT}/UNKNOWNS.md` with a new U* row. Do not let deferred sub-work exist only in the agent report — promote it to a tracked artifact.  
-- **Observability:** If the task touches HTTP handlers, jobs, logging, or outbound calls: confirm fields and correlation/trace behavior match the feature SPEC §9 and the project observability standard; otherwise note `n/a — no observability surfaces touched`. Note: the project observability standard is **Draft** (`.ai/standards/20260517-observability-spec.md`); verify against observable dimensions listed there, not as a binding schema.  
+- **Observability:** If the task touches HTTP handlers, jobs, logging, or outbound calls: confirm fields and correlation/trace behavior match the feature SPEC §9 and `{OBSERVABILITY_SPEC}` (once customized for the project); otherwise note `n/a — no observability surfaces touched`.  
 - **Concept / MOD prompts:** Cursor/agent sessions are **AI-assisted: yes** by default (see `.ai/concepts/README.md` § Trigger table). Run MOD-06 per task or batch before **complete**; attach output skeleton to PR or iteration `Notes`. For multi-package edits, attach coupling-audit (MOD-01) when boundaries crossed. Rows in `### Concept / NFR registry` with `Applies=yes` must not remain `pending` before **complete** (CO1).
 
 **On any gate failure:** report exact output. Diagnose root cause. Fix. Re-run. Do not mark task `done` or proceed to the next task until all checks pass.
@@ -351,7 +369,7 @@ Read-only. No file writes.
 | T2 | … | done 2026-05-18 | `…` | |
 | T3 | … | in-progress | `…` | |
 | T4 | … | pending | | |
-| T5 | … | blocked | | owner: CPA approval |
+| T5 | … | blocked | | owner: legal / compliance approval |
 
 ### Acceptance criteria
 | Criterion | Status |
@@ -398,19 +416,13 @@ Run **`@code-verify milestone`** if not run since the last task was completed. V
 
 Run remaining iteration validation steps (manual checks and any steps not covered by CO2 shared Docker gates).
 
-**Skip duplicate suite:** If CO2 shared Docker gates (pytest, ruff, pyright on `src/ tests/`) already **passed** on the **current working tree** (no file changes since the milestone verify report), skip re-running them — record **skip — covered by CO2**. Otherwise run:
-
-```bash
-docker compose exec api bash -c "cd /code/apis && python -m pytest tests/ -m 'not sandbox'"
-docker compose exec api bash -c "cd /code/apis && ruff check src/ tests/"
-docker compose exec api bash -c "cd /code/apis && pyright src/ tests/"
-```
+**Skip duplicate suite:** If CO2 shared gates (`REPLACE:TEST_COMMAND`, `REPLACE:LINT_COMMAND`, `REPLACE:TYPECHECK_COMMAND` per `{AGENT_RULES_FILE}`) already **passed** on the **current working tree** (no file changes since the milestone verify report), skip re-running them — record **skip — covered by CO2**. Otherwise run all three from `{AGENT_RULES_FILE}` § Docker (or local equivalents from `REPLACE:TECH_STACK_DOC`).
 
 All **manual** validation steps in the iteration block (e.g. `curl /health`) must still pass. Failures must be fixed or waived with a documented owner line in HANDOFF.
 
 **Concept/NFR registry gate:** Before completing a milestone, inspect `NEXT.md` `### Concept / NFR registry (this iteration)`. Any row with `Applies=yes` and `Status=pending` must be resolved — either run `@concept-run` for that MOD id, or document a `gap — <reason>` waiver with owner. CO1 fails if unresolved applicable concept rows remain.
 
-**MOD-06 gate (mandatory when code changed):** If any task in the iteration modified `apis/src/` or `apis/tests/`, CO1 **fails** unless MOD-06 output is attached (PR body, task `Notes`, or iteration registry with `Status=done` and evidence path). **`human-only`** opt-out requires explicit human declaration in the same message — agents cannot grant it retroactively.
+**MOD-06 gate (mandatory when code changed):** If any task in the iteration modified application source or tests, CO1 **fails** unless MOD-06 output is attached (PR body, task `Notes`, or iteration registry with `Status=done` and evidence path). **`human-only`** opt-out requires explicit human declaration in the same message — agents cannot grant it retroactively.
 
 ### CO3 — Documentation updates
 
@@ -506,7 +518,7 @@ When a task cannot proceed mid-implementation:
 - Modifying files outside the declared task file list.
 - Inline `CREATE TABLE` / `ALTER TABLE` in application code.
 - Touching protected files without explicit user permission.
-- Running bare `pytest`, `python`, `npm`, `pyright`, or `ruff` on the host.
+- Running verification on the host when `{AGENT_RULES_FILE}` requires containers (or the reverse).
 - Skipping the task gate because "it's a small change."
 - Proceeding to complete without `@code-verify milestone`.
 - Skipping the **Concept / NFR registry** subsection in the active iteration when a concept pack is documented in agent rules.
