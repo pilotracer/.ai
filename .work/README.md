@@ -1,5 +1,7 @@
 # `.work/` — project working tree
 
+> **This is a demo skeleton inside the Agent OS framework repo.** When you bootstrap Agent OS into your own repo (`bash .ai/templates/bootstrap.sh`), the same layout is created at your repo root and the files are filled in by skills (**`@plan-foundation`**, **`@plan-master`**, **`@session-control`**, **`@code-implementation`**) as you work.
+
 **Purpose:** All **project-specific** artifacts: plans, SPECs, ADRs, prompts, and session handoff.
 
 **Agnostic** process (skills, standards, concepts, guides) lives under **`.ai/`** only.

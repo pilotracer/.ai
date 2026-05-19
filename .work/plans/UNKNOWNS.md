@@ -1,5 +1,7 @@
 # UNKNOWNS — planning registry
 
+> **This is a template.** In a real adopter repo this file is maintained by **`@plan-foundation`**, **`@plan-master`**, and updated by **`@code-implementation`** when blockers surface. In this framework repo it stays as a demo skeleton.
+
 **Updated:** YYYY-MM-DD · **Maintained by:** plan-foundation / plan-master
 
 | ID | Question / blocker | Blocks | Owner | Status |

@@ -1,10 +1,49 @@
-# `.ai/` — **Agent OS**
+# Agent OS — process framework for coding agents
 
-Portable process for teams that ship with coding agents: **skills** run the playbook, **standards** keep output honest, **`.work/`** remembers what you decided.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+![Last commit](https://img.shields.io/github/last-commit/PiloTracer/.ai)
+![Stars](https://img.shields.io/github/stars/PiloTracer/.ai?style=social)
 
-You get less re-prompting, fewer “where were we?” threads, and a loop you can run **start → ship → hand off** every session.
+> Your AI coding agent forgets context between sessions, contradicts past decisions, claims tests pass when they fail, and starts coding before the plan exists. **Agent OS fixes that** with a small set of repeatable **skills**, binding **standards**, and a tiny **project-memory** folder.
 
-**Project artifacts** (plans, SPECs, HANDOFF) live in **`.work/`** at the repo root (created by bootstrap). **Lost mid-flight?** → [`START_HERE.md`](START_HERE.md)
+**Works with:** Cursor, Claude Code, Codex, opencode, and any agent that reads project files.
+
+```bash
+bash .ai/templates/bootstrap.sh    # 30-second setup, any repo
+```
+
+Then in chat:
+
+```text
+@session-control start             # bookend the day
+@plan-foundation greenfield        # blueprint → master plan → milestones → code
+@session-control close             # update HANDOFF · draft commit message
+```
+
+**Lost?** → [`START_HERE.md`](START_HERE.md) · **All commands** → [Skills at a glance](#skills-at-a-glance) · **First time here?** → [How this compares](#how-this-compares)
+
+---
+
+## What you get
+
+- **Skills** — `@session-control`, `@code-implementation`, `@plan-foundation`, … run the playbook (11 in total).
+- **Standards** — binding contracts (CONVENTIONS, FEATURE_STANDARD, observability, security) keep agent output honest.
+- **`.work/`** — the project's memory: plans, SPECs, ADRs, `HANDOFF.md`, `NEXT.md`. Survives session boundaries.
+- **Gates** — `plan-master-ready`, `implementation-ready`, milestone verify; skip a step and the agent **stops** with a redirect.
+
+Result: less re-prompting, fewer "where were we?" threads, a loop you can run **start → ship → hand off** every session.
+
+---
+
+## How this compares
+
+| Tool | What it does | Where Agent OS adds value |
+|------|--------------|---------------------------|
+| `.cursorrules` / `AGENTS.md` | Static rules for one tool | Adds **gated workflow + memory + standards** on top |
+| Plain prompts | Per-task instructions | Adds **repeatable skills** with prerequisite gates |
+| Linear / Jira | Human-only planning | Plans live **next to code** as Markdown the agent reads |
+| GitHub Copilot / inline LLM | Single-turn completion | Cross-session continuity via `.work/HANDOFF.md` + `NEXT.md` |
+| Custom system prompts | Per-developer drift | One repo-wide, tool-agnostic contract checked into git |
 
 ---
 

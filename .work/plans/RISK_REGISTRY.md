@@ -1,5 +1,7 @@
 # RISK_REGISTRY — planning registry
 
+> **This is a template.** In a real adopter repo this file is maintained by **`@plan-foundation`** and **`@plan-master`**. In this framework repo it stays as a demo skeleton.
+
 **Updated:** YYYY-MM-DD · **Maintained by:** plan-foundation / plan-master
 
 Status: **Open** | **Mitigated** | **Accepted** | **Closed**
