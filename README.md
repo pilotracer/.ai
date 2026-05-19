@@ -8,88 +8,76 @@ You get less re-prompting, fewer “where were we?” threads, and a loop you ca
 
 ---
 
-## Mini-tutorial — one day, start to finish
+## Mini-tutorial — full lifecycle (agent chat)
 
-Copy this block into a new session. Replace `M4` with your milestone from `.work/plans/NEXT.md`.
+One straight line: **foundation → master plan → session → milestone → hand off**.  
+Replace `M1` with the milestone in `.work/plans/NEXT.md`.  
+**Already past planning?** Start at **§3**.
 
-### 1 · Boot the stack (host)
+### 1 · Foundation (once per project)
 
-```bash
-./bin/start.sh
-# Pick: start / up — brings up pg, redis, api, workers, etc.
-# Health check (optional):
-curl -s "http://localhost:${ACB_HOST_PORT_API:-8000}/health"
+```text
+@plan-foundation greenfield
+@plan-foundation status
+@plan-foundation certify plan-master-ready
 ```
 
-All Python/test commands below run **inside Docker** — not on the host.
+Produces `.work/plans/foundation/` (docs 01–04), registries, SPECs/ADRs — **no application code yet**.
 
-### 2 · Open session (agent chat)
+### 2 · Master plan (once per project)
+
+```text
+@plan-master greenfield
+@plan-master status
+```
+
+Stop until **Approved** and **implementation-ready: yes**. Only `plan-master` certifies that.
+
+### 3 · Open a coding session (every day)
 
 ```text
 @session-control start
 @code-implementation status
 ```
 
-If there is no active iteration yet:
+### 4 · Plan and run one milestone (repeat per M{N})
 
 ```text
-@code-implementation plan-iteration — M4
+@code-implementation plan-iteration — M1
+@code-implementation start
+@code-implementation continue
 ```
 
-### 3 · Build the milestone (agent chat — repeat until done)
-
-```text
-@code-implementation start       # first task in NEXT.md
-@code-implementation continue    # every task after that
-```
-
-Schema change? Stop and run:
+Schema change only:
 
 ```text
 @db-migration create — <short description>
 ```
 
-### 4 · Verify (terminal — after each task or before complete)
+First time this milestone needs a running API/DB (usually M1+), on the **host**:
 
 ```bash
-docker compose exec api bash -c "cd /code/apis && python -m pytest tests/ -m 'not sandbox'"
-docker compose exec api bash -c "cd /code/apis && ruff check src tests"
-docker compose exec api bash -c "cd /code/apis && pyright --strict src tests"
+./bin/start.sh
 ```
 
-### 5 · Sign off the milestone (agent chat)
+The agent runs **pytest / ruff / pyright inside Docker** at each task gate — you do not paste those unless debugging.
+
+### 5 · Close the milestone
 
 ```text
 @code-verify milestone
 @code-implementation complete
 ```
 
-### 6 · Close and hand off (agent chat)
+### 6 · End the session
 
 ```text
 @session-control close
-# optional — agent runs git for you:
 @session-control close commit
 @session-control close commit push
 ```
 
-**Done.** Next person (or next chat) runs `@session-control start` and reads `.work/plans/NEXT.md`.
-
----
-
-### Greenfield? (planning before code)
-
-Only when the repo has no approved master plan yet:
-
-```text
-@plan-foundation greenfield
-@plan-foundation certify plan-master-ready
-@plan-master greenfield
-@plan-master status                    # must show implementation-ready
-@code-implementation plan-iteration — M1
-```
-
-Then jump to **§3** above.
+Next chat: **`@session-control start`** → read `.work/plans/NEXT.md` for the next `M{N}`.
 
 ---
 
@@ -165,4 +153,4 @@ Agent rules file: **`.cursorrules` only** — do not add `AGENTS.md` without own
 1. Copy `.ai/`.
 2. Add a tuned `.cursorrules`.
 3. Create `.work/` with `HANDOFF.md` and `NEXT.md`.
-4. Teach the team: **`@session-control start`** on day one.
+4. New project: **`@plan-foundation greenfield`** first; daily coding: **`@session-control start`**.
