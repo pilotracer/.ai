@@ -3,7 +3,8 @@
 **Purpose:** Portable skills, standards, concepts, workflow guides, and integration mirrors — **reusable across projects**. Not project plans, SPECs, or session handoff.
 
 > **First time here, or lost?** Read [`START_HERE.md`](START_HERE.md) — the operator decision tree.  
-> **Process questions?** Read [`PROCESS_ROUTER.md`](PROCESS_ROUTER.md) or run `@process-router — <question>`.
+> **Process questions?** Read [`PROCESS_ROUTER.md`](PROCESS_ROUTER.md) or run `@process-router — <question>`.  
+> **DeepWiki:** [deepwiki.com/PiloTracer/.ai](https://deepwiki.com/PiloTracer/.ai)
 
 **Project working artifacts** (plans, SPECs, ADRs, prompts, HANDOFF) live under **[`.work/`](../.work/README.md)**.
 
