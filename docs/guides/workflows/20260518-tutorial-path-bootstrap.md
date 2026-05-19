@@ -24,7 +24,7 @@ After filling, every human and agent reads **one** table instead of hunting path
 | `{HANDOFF}` | Session / pick-up file | `.work/context/HANDOFF.md` |
 | `{BOUNDARY_MAP}` | Module / package boundary contract | *(author per* [Boundary map how-to](20260518-guide-boundary-map-howto.md)*)* — e.g. extend your directory map |
 | `{OBSERVABILITY_SPEC}` | Logging, metrics, trace fields | e.g. `.ai/standards/*observability*.md` if present |
-| `{AGENT_RULES_FILE}` | Global agent rules | `.cursorrules` (this repo: do not add `AGENTS.md` without owner approval) |
+| `{AGENT_RULES_FILE}` | Global agent rules | `.cursorrules` (do not add `AGENTS.md` without owner approval) |
 
 ---
 

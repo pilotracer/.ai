@@ -1,7 +1,7 @@
-# Directory Map — AC Billing System
+# Directory Map — template
 
-**Status:** binding before first application code · 2026-05-17
-**Source layout:** `.work/plans/foundation/20260517-04-foundation-architecture.md` §5, updated for artifacts added through 2026-05-17.
+**Status:** Customize for your repo, then treat as binding before first application code.
+**Bootstrap:** Copy to `.ai/standards/YYYYMMDD-DIRECTORY_MAP.md`, replace `REPLACE:` tokens, align with foundation doc 04 and `.cursorrules`.
 
 ---
 
@@ -9,101 +9,44 @@
 
 | Path | Purpose |
 |------|---------|
-| `.ai/` | **Agnostic:** skills, standards, concepts, workflow guides, integration mirror, `START_HERE.md`, `PROCESS_ROUTER.md` |
-| `.work/` | **Project:** plans, SPECs, ADRs, prompts, session `HANDOFF.md` — see `.work/README.md` |
-| `.ai/docs/integration/` | Vendor XSD/PDF/HTML; `MANIFEST.txt` |
-| `.work/plans/` | Foundation, full plan, registries, `NEXT.md`, personas, operations |
+| `.ai/` | **Agnostic:** skills, standards, concepts, workflow guides, `START_HERE.md`, `PROCESS_ROUTER.md` |
+| `.work/` | **Project:** plans, SPECs, ADRs, prompts, session `HANDOFF.md` |
+| `.ai/docs/integration/` | Optional vendor mirror + `MANIFEST.txt` (see `docs/integration/README.md`) |
+| `.work/plans/` | Foundation, full plan, registries, `NEXT.md` |
 | `.work/features/<slug>/` | Feature SPECs per FEATURE_STANDARD |
 | `.work/decisions/` | ADRs |
-| `.work/prompts/` | Product seed, decision questionnaires |
 | `.work/context/` | `HANDOFF.md` |
-| `.ai/skills/` | Portable agent skills |
-| `.ai/standards/` | CONVENTIONS, FEATURE_STANDARD, DIRECTORY_MAP, … |
-| `apis/` | Python FastAPI backend (**planned** — not on disk yet) |
-| `dashboard/` | Next.js App Router UI (**planned**) |
-| `workers/` | Celery worker entrypoints (**planned**) |
-| `DOCS_TECH_STACK.md` | Pinned stack versions |
-| `.cursorrules` | Agent + engineering rules |
-| `tmp/` | Gitignored scratch (`.gitignore`) |
-| `.obfuscation/` | Sanitizer for sensitive files |
-| `credentials/` | Local secrets only; **never commit** |
+| `REPLACE:APP_ROOT/` | Primary application (backend, monolith, or service tree) |
+| `REPLACE:FRONTEND_ROOT/` | Optional UI (if any) |
+| `REPLACE:WORKER_ROOT/` | Optional async workers (if any) |
+| `REPLACE:TECH_STACK_DOC` | Pinned stack versions |
+| `.cursorrules` | Agent + engineering rules (repo root) |
 
 ---
 
-## Backend (`apis/` — planned)
+## Application layout (example — adapt)
 
 ```
-apis/
-├── pyproject.toml
-├── migrations/
-│   ├── 001_init.sql
-│   ├── 002_identity.sql
-│   ├── 003_master_data.sql
-│   ├── 004_commercial.sql
-│   ├── 005_fiscal.sql
-│   ├── 006_triggers.sql
-│   ├── 007_inserts.sql
-│   └── ...                           ← numbered, idempotent, executed in order
+REPLACE:APP_ROOT/
+├── pyproject.toml | package.json | go.mod   ← pick per stack
+├── REPLACE:MIGRATIONS_DIR/
+│   └── 001_init.sql                         ← numbered, idempotent
 ├── src/
-│   ├── main.py
-│   ├── acb_platform/           ← platform layer (import acb_platform; not stdlib platform)
-│   ├── identity/
-│   ├── master_data/
-│   │   ├── domain/
-│   │   ├── application/
-│   │   ├── infrastructure/
-│   │   ├── http/
-│   │   ├── events/
-│   │   └── ports/
-│   ├── commercial/
-│   ├── fiscal/
-│   │   ├── domain/
-│   │   ├── application/
-│   │   ├── infrastructure/
-│   │   │   ├── hacienda/
-│   │   │   ├── signing/
-│   │   │   └── persistence/
-│   │   └── http/
-│   ├── inventory/              ← Phase A; stub optional v1
-│   ├── ar/
-│   └── reporting/
-├── scripts/
-│   ├── provision_tenant.py
-│   ├── sandbox/
-│   └── validate_fixtures.py
+│   ├── main.py | index.ts | …
+│   ├── REPLACE:PLATFORM_PACKAGE/            ← shared cross-cutting code
+│   └── <bounded-context>/                   ← one folder per domain module
+│       ├── domain/
+│       ├── application/
+│       ├── infrastructure/
+│       ├── http/                            ← if HTTP-facing
+│       └── ports/
 └── tests/
     ├── unit/
-    ├── contract/
     ├── integration/
-    ├── e2e/
-    ├── lint/                     ← import boundary checks
-    └── fixtures/v4_4/            ← synthetic-fixtures SPEC
+    └── contract/
 ```
 
-**Dependency rule:** contexts import only `acb_platform` (platform layer) and published `ports/` / `events/` from other contexts (CONVENTIONS §8).
-
----
-
-## Dashboard (`dashboard/` — planned)
-
-```
-dashboard/
-├── package.json                  ← protected
-├── app/                          ← App Router
-├── components/
-├── lib/                          ← API client, auth
-├── messages/                     ← ICU: en, es, zh-Hans, ru
-└── tests/
-```
-
----
-
-## Workers (`workers/` — planned)
-
-```
-workers/
-└── fiscal_pipeline/              ← Celery app; imports apis.src.fiscal
-```
+**Dependency rule:** bounded contexts import only `REPLACE:PLATFORM_PACKAGE` and published `ports/` / `events/` from other contexts (see CONVENTIONS).
 
 ---
 
@@ -111,22 +54,16 @@ workers/
 
 | Task | Read first |
 |------|------------|
-| Any code change | `.cursorrules`, `HANDOFF.md` |
+| Any code change | `.cursorrules`, `.work/context/HANDOFF.md` |
 | Layout | This file |
-| Stack versions | `DOCS_TECH_STACK.md` |
-| Fiscal work | `.work/features/fiscal-pipeline/20260517-SPEC.md` |
-| Master data | `.work/features/master-data/20260517-SPEC.md` |
-| Commercial / UX mode | `.work/features/commercial-documents/20260517-SPEC.md`, ADR 012 |
-| Peripherals | `.work/features/peripherals/20260517-SPEC.md` |
-| API design | `.ai/standards/20260517-api-style-guide.md` |
-| Personas | `.work/plans/20260517-personas-v1.md` |
-| Local dev (proposal) | `.work/plans/operations/20260517-docker-compose-proposal.md` |
-| Hacienda integration | `.work/plans/foundation/20260517-02-*.md`, integration mirror |
-| Security | `.ai/standards/20260517-threat-model.md`, `.ai/standards/20260517-data-classification.md` |
-| Observability | `.ai/standards/20260517-observability-spec.md` |
+| Stack versions | `REPLACE:TECH_STACK_DOC` |
+| Feature work | `.work/features/<slug>/*-SPEC.md` |
+| API design | `.ai/standards/*-api-style-guide.md` (when present) |
+| Security | data-classification + threat-model standards (when present) |
+| External APIs | `.work/plans/foundation/*-02-*.md`, `.ai/docs/integration/MANIFEST.txt` |
 
 ---
 
 ## Gate
 
-Doc 04 §14 item 3 (**directory map**) is satisfied by this file. Update this map when adding a new top-level directory (requires ADR per FEATURE_STANDARD §9).
+Foundation doc 04 should reference this map. Update it when adding a new top-level directory (ADR per FEATURE_STANDARD §9).

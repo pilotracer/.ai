@@ -41,7 +41,7 @@ Paths in skills may show `docker compose exec … pytest` — **swap** for your 
 
 | Gap | Mitigation |
 |-----|------------|
-| Type-checker drift (e.g. `mypy` vs `pyright`) between skill commands and project standard | Single source: align skill task-gate command with **CONVENTIONS §1** in one PR. *(Resolved 2026-05-18: this repo uses `pyright --strict` everywhere.)* |
+| Type-checker drift between skill commands and project standard | Single source: align task-gate commands with **CONVENTIONS** and `.cursorrules` `REPLACE:TYPECHECK_COMMAND` in one PR. |
 | Frontend tests not in same skill file | Add parallel task gate rows for `dashboard/` or split skill per surface. |
 | “FR has test” unverifiable without coverage tool | Add coverage threshold in CI later; verify row stays **gap** until then. |
 

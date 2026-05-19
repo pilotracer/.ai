@@ -1,6 +1,6 @@
 # Prompts (pointer)
 
-**Project prompts live in [`.work/prompts/`](../../.work/prompts/)**, not under `.ai/`.
+**Project prompts live in [`.work/prompts/`](../.work/prompts/)**, not under `.ai/`.
 
 Decision questionnaires and archived owner answers are **project-local** — not a portable standard layout.
 

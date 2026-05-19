@@ -65,7 +65,7 @@ Use this doc when **`{ITERATION_CARRIER}` is wrong or stale** but you already ha
 
 ### 3.6 Validation steps
 
-- At least **one** command your CI or humans can run (in this repo: Docker-wrapped `pytest` / `ruff` / `pyright` per `.cursorrules`).  
+- At least **one** command your CI or humans can run (from `.cursorrules` `REPLACE:TEST_COMMAND` and related gates).  
 - Replace host-only commands if your project forbids them.
 
 ### 3.7 Owner blockers / Cross-LLM / Done this iteration

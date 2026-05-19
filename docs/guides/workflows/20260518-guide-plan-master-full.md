@@ -12,7 +12,7 @@ A **single** implementation roadmap that links:
 
 **Business goal → FR/NFR → architecture → milestone → task id → validation → acceptance**
 
-It is the **only** home for **M1…Mn** milestone tables and **global** acceptance (typical sections **19–21** in this repo’s layout — **your** plan may use different numbers; record them in `{HANDOFF}`).
+It is the **only** home for **M1…Mn** milestone tables and **global** acceptance (section numbers vary — record yours in `{HANDOFF}`).
 
 ---
 

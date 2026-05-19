@@ -65,6 +65,6 @@ It is **not** a copy of your entire directory tree — only **edges** that must 
 
 ---
 
-## 5. Starter content for this repository (non-normative)
+## 5. Starter content (non-normative example)
 
-Until a dedicated `{BOUNDARY_MAP}` file exists, use **`/.ai/standards/20260517-DIRECTORY_MAP.md`** section “Backend (`apis/` — planned)” as the **interim** boundary list (`acb_platform/`, `master_data/`, `commercial/`, `fiscal/`, …). Promote a trimmed **edge-only** table here or into a new standards file when M1 lands and import lint exists.
+Until a dedicated `{BOUNDARY_MAP}` file exists, use **`.ai/standards/*-DIRECTORY_MAP.md`** as the **interim** boundary list (`REPLACE:PLATFORM_PACKAGE/`, `<context-a>/`, `<context-b>/`, …). Promote a trimmed **edge-only** table here or into a dedicated boundary file when M1 lands and import lint exists.

@@ -32,7 +32,7 @@ Use your **CONVENTIONS** doc as source of truth for paths.
 ```markdown
 ## Test coverage request — <Feature name>
 
-**Bounded context / module:** <e.g. master_data>
+**Bounded context / module:** <e.g. billing, identity>
 **Priority:** P0 | P1
 **Rules to cover:** R3, R7, R9 (cite SPEC)
 **Existing tests:** <paths or "none">

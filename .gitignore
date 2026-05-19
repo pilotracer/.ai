@@ -430,7 +430,7 @@ audit_results.txt
 **/env/
 
 # =============================================================================
-# AC Billing System (system-billing)
+# Local / runtime scratch (customize per adopting repo)
 # =============================================================================
 tmp/
 .obfuscation/
@@ -450,7 +450,7 @@ miscellaneous/
 !.ai/docs/integration/**/*.xlsx
 !.ai/docs/integration/**/*.xls
 
-# Python / test caches (when apis/ lands)
+# Python / test caches
 *.egg-info/
 .mypy_cache/
 .ruff_cache/
@@ -459,5 +459,19 @@ htmlcov/
 .coverage
 **/credentials/
 **/credenciales/
+**/.credenciales/
+**/.secrets/
+**/.credenciales/
+**/.credentials/
+**/.env/
+**/.env.local/
+**/.env.development/
+**/.env.production/
+**/.env.test/
+**/.env.development.local/
+**/.env.production.local/
+**/.env.test.local/
+**/.private/
 **/secret/
 **/tmp/
+**/temp/

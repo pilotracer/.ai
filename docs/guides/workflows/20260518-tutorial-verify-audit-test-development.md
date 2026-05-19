@@ -2,7 +2,7 @@
 
 **Doc type:** Quality gate tutorial (portable).  
 **Skills:** `code-implementation` (**task gate** + **complete**) · `code-verify` (**milestone** / **uncommitted** / **last**); optional `session-control` for handoff.  
-**Tests:** Must match your stack; examples below use **Docker-wrapped** commands (this repo’s `.cursorrules` pattern).
+**Tests:** Must match your stack; examples below use commands from `.cursorrules` (`REPLACE:TEST_COMMAND`, etc.).
 
 ---
 

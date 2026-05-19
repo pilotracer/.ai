@@ -3,7 +3,7 @@
 **Location:** `.ai/concepts/`  
 **Scope:** Markdown documentation only. **Does not** modify `.ai/skills/` (skills remain the canonical automation layer).
 
-**Purpose:** Normalize ideas from a single public talk into **repeatable checks** and **copy-paste prompts** so future work can wire them into rules, skills, CI gates, or review bots. The AC Billing repo is a **reference** system; these concepts are **general**. **Operator workflow:** see `.ai/docs/guides/workflows/README.md`.
+**Purpose:** Normalize ideas from a single public talk into **repeatable checks** and **copy-paste prompts** so future work can wire them into rules, skills, CI gates, or review bots. These concepts are **domain-agnostic** — apply them in any repo that adopts Agent OS. **Operator workflow:** see `.ai/docs/guides/workflows/README.md`.
 
 **Consumable-by-AI contract:** Each concept folder has `README.md` (human + agent context) and `prompt.md` (short **procedure** with an explicit **output shape**). Agents should treat numbers and named studies in this pack as **hypotheses** unless backed by **your** metrics, bills, or primary sources.
 

@@ -1,8 +1,10 @@
 # Features (pointer)
 
-**Feature SPECs live in [`.work/features/`](../../.work/features/)**, not under `.ai/`.
+**Feature SPECs live in [`.work/features/`](../.work/features/)**, not under `.ai/`.
 
-Binding **rules** for SPECs remain in [`.ai/standards/20260517-FEATURE_STANDARD.md`](../standards/20260517-FEATURE_STANDARD.md). **Artifacts** (SPEC files, amendments, changelogs) are project working documents.
+Template: [`.ai/templates/work/features/example-slug/`](../templates/work/features/example-slug/)
+
+Binding **rules** for SPECs remain in `.ai/standards/*FEATURE_STANDARD*` (customize from template). **Artifacts** (SPEC files, amendments, changelogs) live under `.work/features/`.
 
 | Action | Command |
 |--------|---------|

@@ -4,38 +4,174 @@ Portable process for teams that ship with coding agents: **skills** run the play
 
 You get less re-prompting, fewer “where were we?” threads, and a loop you can run **start → ship → hand off** every session.
 
-**Project artifacts** (plans, SPECs, HANDOFF) → **[`.work/`](../.work/README.md)** · **Lost mid-flight?** → [`START_HERE.md`](START_HERE.md) · **Deep dive** → [deepwiki.com/PiloTracer/.ai](https://deepwiki.com/PiloTracer/.ai)
+**Project artifacts** (plans, SPECs, HANDOFF) live in **`.work/`** at the repo root (created by bootstrap). **Lost mid-flight?** → [`START_HERE.md`](START_HERE.md)
 
 ---
 
-## First-time setup — install `.cursorrules` (human)
+## Bird's-eye — how to use Agent OS
 
-Cursor and compatible agents read agent rules from **`.cursorrules` in the repository root**, not from inside `.ai/`. Do this once per repo before your first `@session-control start`.
+Agent OS is a **gated pipeline**: each stage unlocks the next. Skills enforce the gates; if you skip a step, the agent should **stop** and tell you what to run instead ([`skills/SKILL_DEPENDENCIES.md`](skills/SKILL_DEPENDENCIES.md)).
 
-**From the repo root** (same directory as `.ai/` and `.work/`):
+### Readiness states (do not skip or confuse)
+
+| State | You get there with | What it unlocks |
+|-------|-------------------|-----------------|
+| *(scaffold)* | `@project-bootstrap init` | Foundation planning, session files |
+| **foundation-complete** | `@plan-foundation greenfield` (P0–P6 done) | `@plan-foundation certify` |
+| **plan-master-ready** | `@plan-foundation certify plan-master-ready` | `@plan-master greenfield` / `continue` / `revise` |
+| **implementation-ready** | `@plan-master status` (master plan **Approved**) | `@code-implementation start` / `continue` (broad coding) |
+
+**plan-master-ready ≠ ready to code everything.** It means the blueprint is solid enough for a master roadmap. Broad implementation needs **implementation-ready** (or an explicit milestone waiver in `.work/context/HANDOFF.md`).
+
+### Full flow (once per project → every day → per milestone)
+
+```text
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  ONCE PER PROJECT — planning gates (no application code yet)                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  @project-bootstrap init
+        │
+        │  Creates: .cursorrules · DOCS_TECH_STACK.md · .work/ skeleton
+        │  (scaffold only — fill REPLACE: tokens; no planning gates)
+        ▼
+  @plan-foundation greenfield
+        │
+        │  Produces: foundation docs 01–04 · ADRs · SPECs · registries
+        │  State: foundation-complete
+        ▼
+  @plan-foundation certify plan-master-ready
+        │
+        │  Deep consistency check (+ plan-master integrity on foundation)
+        │  State: plan-master-ready  (recorded in HANDOFF)
+        ▼
+  @plan-master greenfield  │  @plan-master continue
+        │
+        │  Produces: .work/plans/full/*-full-plan.md  (Draft → Approved)
+        ▼
+  @plan-master status
+        │
+        │  State: implementation-ready: yes  (only this skill scores it)
+        ▼
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  EVERY SESSION — bookends (planning or coding)                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  @session-control start          ← load HANDOFF · NEXT · UNKNOWNS · rules
+        │
+        │  … your work (planning skills above, or implementation below) …
+        ▼
+  @session-control close          ← refresh HANDOFF + NEXT; draft commit message
+  @session-control close commit   ← optional: stage + commit
+  @session-control close commit push
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  PER MILESTONE M{N} — repeat until the master plan is done                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  @code-implementation plan-iteration — M{N}
+        │  Writes ## Current iteration in .work/plans/NEXT.md from master plan
+        ▼
+  @code-implementation start
+        │  Read SPECs + standards; first task in-progress
+        ▼
+  @code-implementation continue     ◄──┐
+        │  Per task: implement → task gate (tests · lint · type)  │
+        │  Schema change? → @db-migration create — …              │
+        └────────────────────────────────────────────────────────┘
+        ▼
+  @code-verify milestone            ← plan + SPEC audit before you claim done
+        ▼
+  @code-implementation complete     ← archive iteration; update HANDOFF / NEXT
+        │
+        └──► next M{N+1} or @session-control close
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  ANYTIME — supporting skills (invoke when the work needs them)               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+  @process-router — <question>      lost? read-only signpost (no file writes)
+  @feature-spec create — <slug>     feature SPEC (see Skills at a glance)
+  @concept-run list | — MOD-0N      architecture prompts MOD-01…06 (MOD-06 default for agent code)
+  @dev-stack                        Docker dev helper script (bin/start.sh)
+  @code-verify uncommitted | last   commit hygiene (milestone mode is in the loop above)
+```
+
+### One-line cheat path (copy into chat)
+
+```text
+@project-bootstrap init
+@plan-foundation greenfield → @plan-foundation certify plan-master-ready
+@plan-master greenfield → @plan-master status
+@session-control start
+@code-implementation plan-iteration — M1 → start → continue
+@code-verify milestone → @code-implementation complete
+@session-control close
+```
+
+**Jump ahead?** If planning is already done, open at [`§ 3 · Open a coding session`](#3--open-a-coding-session-every-day) below. If you only need setup files, see [First-time setup](#first-time-setup-human-or-agent).
+
+### Skills at a glance
+
+All **11** skills live under [`skills/`](skills/README.md). Invoke as `@<skill-id>` plus a mode (e.g. `@plan-foundation status`).
+
+| Skill | One line | Typical invoke |
+|-------|----------|----------------|
+| **project-bootstrap** | Scaffold `.work/`, `.cursorrules`, stack doc from templates | `init` · `status` |
+| **plan-foundation** | Foundation docs 01–04, ADRs, SPECs, registries; certifies **plan-master-ready** | `greenfield` · `status` · `certify plan-master-ready` |
+| **plan-master** | Master plan with milestones; certifies **implementation-ready** | `greenfield` · `continue` · `status` · `revise` |
+| **session-control** | Session bookends; updates HANDOFF + NEXT | `start` · `close` · `status` |
+| **code-implementation** | Run one milestone from `NEXT.md`; per-task gates | `plan-iteration — M{N}` · `start` · `continue` · `complete` |
+| **code-verify** | Audits (not implementation): milestone, dirty tree, last commit/push | `milestone` · `uncommitted` · `last` |
+| **feature-spec** | Author, review, or amend feature SPECs | `create — <slug>` · `review — <path>` |
+| **concept-run** | Run MOD-01…06 architecture/NFR prompts | `list` · `— MOD-06` (required for agent-assisted code) |
+| **db-migration** | Idempotent numbered SQL scripts (no Alembic chain) | `create — <description>` |
+| **dev-stack** | Generate or update isolated Docker `bin/start.sh` | `@dev-stack` (see skill for modes) |
+| **process-router** | Read-only: “how do I…?” → right skill or guide | `— <question>` · `help` |
+
+Gates between skills: [`skills/SKILL_DEPENDENCIES.md`](skills/SKILL_DEPENDENCIES.md).
+
+---
+
+## First-time setup (human or agent)
+
+Cursor and compatible agents read **`.cursorrules` at the repository root** (sibling to `.ai/` in an application repo, or at this root when Agent OS is the git root).
+
+**Recommended — one command from repo root:**
 
 ```bash
-cp .ai/templates/cursorrules.template .cursorrules
+bash .ai/templates/bootstrap.sh
 ```
+
+Or in chat: **`@project-bootstrap init`**
+
+This creates (without overwriting existing files):
+
+- `.cursorrules` from [`templates/cursorrules.template`](templates/cursorrules.template)
+- `DOCS_TECH_STACK.md` from [`templates/DOCS_TECH_STACK.md.template`](templates/DOCS_TECH_STACK.md.template)
+- `.work/` skeleton (HANDOFF, NEXT, registries, empty plan folders)
 
 Then:
 
-1. Open **`.cursorrules`** and replace every `REPLACE:` token (project name, stack doc path, standards filenames, migrations dir, Docker services, test commands).
-2. Commit **`.cursorrules`** at the root next to `.ai/`.
-3. Keep a **single** rules file — do not add `AGENTS.md` unless your team explicitly standardizes on it.
+1. Replace every **`REPLACE:`** token in `.cursorrules` ([checklist](templates/README.md)).
+2. Customize [`.ai/standards/`](standards/) templates and point `.cursorrules` at your dated filenames.
+3. Run **`@plan-foundation greenfield`** (foundation docs 01–04).
+4. Keep a **single** rules file — do not add `AGENTS.md` unless your team standardizes on it.
 
 | Situation | What to do |
 |-----------|------------|
-| **New repo** using Agent OS | Run the `cp` command above; customize; commit. |
-| **This repo (AC Billing)** | A tailored `.cursorrules` may already exist at the root — **do not overwrite** unless you intend a governance reset. Use the template only as reference or for a fresh fork. |
+| **New adoption** | `bootstrap.sh` or `@project-bootstrap init` |
+| **Existing `.cursorrules`** | `@project-bootstrap status` — merge manually; do not blind overwrite |
 
-More detail: [`templates/README.md`](templates/README.md) · source: [`templates/cursorrules.template`](templates/cursorrules.template).
+More: [`templates/README.md`](templates/README.md) · skill: [`skills/project-bootstrap/`](skills/project-bootstrap/skill.md)
 
 ---
 
 ## Mini-tutorial — full lifecycle (agent chat)
 
-One straight line: **foundation → master plan → session → milestone → hand off**.  
+Step-by-step detail for each phase. **Panoramic map:** [Bird's-eye — how to use Agent OS](#birds-eye--how-to-use-agent-os) above.
+
 Replace `M1` with the milestone named in `.work/plans/NEXT.md`.  
 **Already past planning?** Jump to **§3**.
 
@@ -103,9 +239,9 @@ Pick one milestone from the master plan and execute it task by task.
 |--------|----------------|
 | **`@code-implementation plan-iteration — M1`** | Builds or validates the **`## Current iteration`** section in `NEXT.md` from master-plan **M1** (task IDs, files, acceptance notes). Required before the first line of code. |
 | **`@code-implementation start`** | Reads the relevant **SPECs** and **CONVENTIONS**, then implements the **first** task in the iteration. |
-| **`@code-implementation continue`** | Picks up the next incomplete task; runs the **task gate** (pytest, ruff, pyright in Docker) before marking `done`. Repeat until all tasks are finished. |
-| **`@db-migration create — …`** | *Only if the task changes schema.* Writes an idempotent numbered SQL script under `apis/migrations/` — never inline DDL in app code. |
-| **`./bin/start.sh`** | *First time this milestone needs runtime.* Starts the isolated dev stack (Postgres, Redis, API, workers). The agent runs tests **inside** containers; you rarely paste pytest/ruff/pyright yourself. |
+| **`@code-implementation continue`** | Picks up the next incomplete task; runs the **task gate** (your project's test/lint/type commands from `.cursorrules`) before marking `done`. Repeat until all tasks are finished. |
+| **`@db-migration create — …`** | *Only if the task changes schema.* Writes an idempotent numbered SQL script under your migrations dir (see `.cursorrules`) — never inline DDL in app code. |
+| **Dev stack script** | *First time this milestone needs runtime.* Use your project's dev-stack entry (e.g. `bin/start.sh` from `@dev-stack`) to start the isolated compose stack. The agent runs checks **inside** containers when Docker is the canonical path. |
 
 ```text
 @code-implementation plan-iteration — M1
@@ -118,6 +254,7 @@ Pick one milestone from the master plan and execute it task by task.
 ```
 
 ```bash
+# Example — use the path from .cursorrules (REPLACE:DEV_STACK_SCRIPT)
 ./bin/start.sh
 ```
 
@@ -185,18 +322,24 @@ Leave a clean handoff for your future self (or the next agent).
 ## How it fits together
 
 ```text
-  You + agent                         Project truth
-       │                                    │
-       ▼                                    ▼
-  .ai/  skills · standards          .work/  plans · SPECs
-        concepts · guides                   HANDOFF · NEXT
-       │                                    │
-       └────────── @session-control ────────┘
+  You + agent (@skills)                 Project truth (.work/)
+       │                                      │
+       │   plan-foundation → plan-master      │  foundation/ · full/
+       │   code-implementation → verify       │  features/ · HANDOFF · NEXT
+       ▼                                      ▼
+  .ai/  skills · standards            .work/  plans · SPECs · ADRs
+        concepts · guides                     session + iteration state
+       │                                      │
+       └──────────── @session-control ────────┘
 ```
 
-- **`.ai/`** — *how* we work (copy to other repos).
-- **`.work/`** — *what* this project decided (stay here).
-- **`.cursorrules`** — hard rules at the **repo root** (copy from [`templates/cursorrules.template`](templates/cursorrules.template); see [First-time setup](#first-time-setup--install-cursorrules-human)).
+| Layer | Role |
+|-------|------|
+| **`.ai/`** | *How* we work — skills, standards, concepts, guides (copy to other repos). |
+| **`.work/`** | *What* this project decided — plans, SPECs, HANDOFF, NEXT. |
+| **`.cursorrules`** | Binding agent rules at the **repo root** ([template](templates/cursorrules.template)). |
+
+Skill prerequisite gates: [`skills/SKILL_DEPENDENCIES.md`](skills/SKILL_DEPENDENCIES.md).
 
 ---
 
@@ -205,10 +348,10 @@ Leave a clean handoff for your future self (or the next agent).
 | Folder | Role |
 |--------|------|
 | [`skills/`](skills/README.md) | Executable playbooks — full registry |
-| [`standards/`](standards/) | Binding engineering contracts |
+| [`standards/`](standards/) | Engineering contract **templates** (customize per project) |
 | [`concepts/`](concepts/README.md) | MOD-01…06 architecture prompts |
 | [`docs/guides/workflows/`](docs/guides/workflows/README.md) | Tutorials + artifact matrix |
-| [`docs/integration/`](docs/integration/) | Vendor artifacts + `MANIFEST.txt` |
+| [`docs/integration/`](docs/integration/) | Vendor mirror layout + `MANIFEST` template (project adds artifacts) |
 | [`templates/`](templates/README.md) | **`cursorrules.template`** — copy to repo root as `.cursorrules` |
 | `plans/`, `features/`, … | **Pointers only** → `.work/` |
 
@@ -221,7 +364,7 @@ Leave a clean handoff for your future self (or the next agent).
 3. `.work/context/HANDOFF.md`
 4. `.work/plans/NEXT.md`
 5. `.work/plans/foundation/*-01-*-initial-scope.md` when present
-6. For code: `standards/20260517-CONVENTIONS.md`, `20260517-FEATURE_STANDARD.md`, `20260517-DIRECTORY_MAP.md`
+6. For code: customize then use your dated standards under `standards/` (templates ship as `20260517-*.md` — rename or copy after replacing `REPLACE:` tokens)
 
 Agent rules file: **`.cursorrules` only** — do not add `AGENTS.md` without owner approval.
 
@@ -230,10 +373,8 @@ Agent rules file: **`.cursorrules` only** — do not add `AGENTS.md` without own
 ## Copy to another project
 
 1. Copy the whole **`.ai/`** tree (includes `templates/`).
-2. At the **new repo root**, install agent rules (same as [First-time setup](#first-time-setup--install-cursorrules-human)):
-   ```bash
-   cp .ai/templates/cursorrules.template .cursorrules
-   ```
-   Edit `.cursorrules` — replace all `REPLACE:` tokens — then commit.
-3. Create **`.work/`** with `HANDOFF.md` and `NEXT.md`.
-4. Run **`@plan-foundation greenfield`**; daily coding: **`@session-control start`**.
+2. At the **new repo root**, run **`bash .ai/templates/bootstrap.sh`** (or `@project-bootstrap init`).
+3. Fill **`REPLACE:`** tokens in `.cursorrules`; customize **standards** under `.ai/standards/`.
+4. Follow the [bird's-eye flow](#birds-eye--how-to-use-agent-os): foundation → certify → master plan → status → daily session + milestones.
+
+Template sources: [`templates/work/`](templates/work/). This repo includes a demo [`.work/`](.work/) skeleton when Agent OS is the git root.

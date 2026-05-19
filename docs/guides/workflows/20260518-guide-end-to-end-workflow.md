@@ -21,7 +21,7 @@ For a **copy-paste table** plus invocation sentence, use [Path bootstrap](202605
 | `{FEATURE_SPEC_ROOT}` | Where **feature specs** (or equivalent) live: scope, acceptance, domain invariants. | Yes |
 | `{ITERATION_CARRIER}` | Where **implementation iterations** are tracked (`NEXT.md`, board, tracker export, etc.). | If you use iteration blocks |
 | `{MASTER_PLAN}` | Approved roadmap (milestones, FR/NFR, acceptance). | Recommended |
-| `{AGENT_RULES_FILE}` | Where **global agent/human rules** live (this repo: `.cursorrules` only). | Recommended |
+| `{AGENT_RULES_FILE}` | Where **global agent/human rules** live (typically `.cursorrules` at repo root). | Recommended |
 | `{BOUNDARY_MAP}` | Document that defines **hard module / package / service boundaries** for coupling reviews. | Strongly recommended |
 | `{SESSION_HANDOFF_FILE}` | Optional file for **session open/close** and pick-up notes (if you use session bookends). | Optional |
 | `{OBSERVABILITY_SPEC}` | Logging, metrics, traces, SLO conventions. | Recommended once code ships |
@@ -155,7 +155,7 @@ Treat observability as **first-class** in verify, not an afterthought: correlati
 
 ## 10. Related locations (non-normative)
 
-When this repo is used as a **reference** implementation, typical paths are:
+When bootstrapping a new adoption, typical paths are:
 
 - Workflow index: `.ai/docs/guides/workflows/README.md` (**artifact matrix**) and `.ai/docs/guides/workflows/20260518-guide-workflows-index.md` (**curriculum**)  
 - Concept pack: `.ai/concepts/README.md`  

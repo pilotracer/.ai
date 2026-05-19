@@ -42,14 +42,14 @@ The **artifact matrix** below maps **planning** vs **implementation** (plus cros
 | **Both** | Session hygiene, tactical queue, global rules, standards, concepts, SPECs as the contract under test. |
 | **Operations** | Approved runbooks and protected infra definitions (read during setup; edits need approval). |
 
-**Paths** below match **this repository** (AC Billing System). In another project, map each row to your placeholders ([Path bootstrap](20260518-tutorial-path-bootstrap.md)).
+**Paths** below use **example** filenames and layout. In each adopting repo, map rows to your placeholders ([Path bootstrap](20260518-tutorial-path-bootstrap.md)) and `.cursorrules` `REPLACE:` tokens.
 
 | Path | Phase | Status | Short description |
 |------|-------|--------|-------------------|
 | `.cursorrules` | Both | Binding | Global agent + engineering rules; workflow bootstrap and placeholder quick-map. |
 | `.ai/START_HERE.md` | Both | Context | **Operator decision tree** — answers "what do I invoke right now?"; recovery checklist; forgetfulness gate. First read when lost. |
 | `README.md` (repo root) | Both | Context | Human entry point; planning mode and stack pointers (`plan-foundation` identity read). |
-| `DOCS_TECH_STACK.md` | Both | Binding | Pinned versions, stack topology, open ADR TODOs. |
+| `REPLACE:TECH_STACK_DOC` (e.g. `DOCS_TECH_STACK.md`) | Both | Binding | Pinned versions, stack topology, open ADR TODOs. |
 | `.ai/README.md` | Both | Context | Canonical map of `.ai/` trees (plans, standards, skills, features). |
 | `.work/context/HANDOFF.md` | Both | Living | Session open/close, repository state, pick-up, produced-artifact table. |
 | `.work/plans/NEXT.md` | Both | Living | Tactical backlog, **Recommended next**, **`## Current iteration`** sub-plan, Done history. |
@@ -59,7 +59,7 @@ The **artifact matrix** below maps **planning** vs **implementation** (plus cros
 | `.work/plans/RISK_REGISTRY.md` | Planning | Registry | Architectural, ops, security, compliance risks. |
 | `.work/plans/UNKNOWNS.md` | Planning | Registry | Open questions, owners, blockers. |
 | `.work/plans/proposals/` | Planning | Context | Optional pre-SPEC feature proposals (`FEATURE_STANDARD`). |
-| `.work/plans/operations/*.md` | Operations | Context | Approved runbooks (docker, sandbox, CPA, regulatory watch, …). |
+| `.work/plans/operations/*.md` | Operations | Context | Approved runbooks (docker, sandbox, compliance, regulatory watch, …). |
 | `.work/plans/archives/` | Planning | Context | Long-lived planning archives when used. |
 | `.work/plans/YYYYMMDD-personas-v1.md` | Planning | Living | **Optional** UX personas when UI is in scope (`plan-foundation`); path/date are project-specific. |
 | `.work/features/<slug>/YYYYMMDD-SPEC.md` | Both | Binding | Feature behaviour (R1…), data model, observability, **section 15** concept registry, test plan. |
@@ -100,18 +100,18 @@ The **artifact matrix** below maps **planning** vs **implementation** (plus cros
 | `.ai/docs/guides/workflows/20260518-guide-workflows-index.md` | Both | Guide | Curriculum map, principles, link back to this matrix. |
 | `.ai/docs/guides/workflows/20260518-guide-*.md` | Both | Guide | Reference workflow docs (pattern): end-to-end template, boundary map, observability, testing-in-process, plan companions. |
 | `.ai/docs/guides/workflows/20260518-tutorial-*.md` | Both | Guide | Operator step-by-step tutorials (pattern): bootstrap, walk-throughs, NEXT/delivery, test requests. |
-| `.ai/docs/integration/MANIFEST.txt` | Implementation | Context | Vendor artifact inventory and source URLs. |
-| `.ai/docs/integration/**` | Implementation | Context | Cached XSD/PDF/HTML (large; read on demand). |
+| `.ai/docs/integration/MANIFEST.txt` | Implementation | Context | Vendor artifact inventory (project adds; see `docs/integration/README.md`). |
+| `.ai/docs/integration/**` | Implementation | Context | Cached vendor specs (project-owned; read on demand). |
 | `.work/plans/foundation/*-01-*-initial-scope.md` | Planning | Living | **P0 initial scope** mini-plan — `@plan-foundation` greenfield creates; canonical product-intent capture (not `{PROMPTS_ROOT}/initial.md`). |
 | `.work/prompts/*` (project-local) | Planning | Context | Questionnaires, archived decision prompts, optional **user scratch** (`initial.md`). Skills **do not** read `initial.md` unless the user explicitly names it. |
-| `apis/src/**` | Implementation | Application | FastAPI app, `acb_platform/`, bounded contexts (implementation). |
-| `apis/tests/**` | Implementation | Application | `unit/`, `contract/`, `integration/`, `e2e/`, fixtures. |
-| `apis/migrations/*.sql` | Implementation | Application | Idempotent schema scripts (ordering + ledger per `db-migration` skill). |
-| `dashboard/**` | Implementation | Application | Next.js UI (when present). |
+| `REPLACE:APP_ROOT/**` | Implementation | Application | Application source and bounded contexts. |
+| `REPLACE:APP_ROOT/tests/**` or project test dir | Implementation | Application | Unit, contract, integration, e2e as adopted. |
+| `REPLACE:MIGRATIONS_DIR/*.sql` | Implementation | Application | Idempotent schema scripts (`db-migration` skill). |
+| `REPLACE:FRONTEND_ROOT/**` | Implementation | Application | UI (when present). |
 | `bin/start.sh` (if present) | Implementation | Living | Dev stack entry script when **dev-stack** skill creates or maintains it; absent until generated. |
 | `docker-compose.yml` | Operations | Protected | Multi-service local dev stack (`.cursorrules`: no edits without approval). |
-| `Dockerfile.api`, `Dockerfile.dashboard` | Operations | Protected | Dev/prod container definitions (approval required). |
-| `package.json` (root), `dashboard/package.json`, `dashboard/next.config.js`, `dashboard/tsconfig.json`, `.env*` (not `.env.example`) | Both | Protected | Tooling and env files: **no edits without explicit approval** (see `.cursorrules`). |
+| `Dockerfile.*`, `docker-compose*.yml` | Operations | Protected | Container definitions (approval required). |
+| `package.json`, `REPLACE:FRONTEND_CONFIG_PATHS`, `.env*` (not `.env.example`) | Both | Protected | Tooling and env files: **no edits without explicit approval** (see `.cursorrules`). |
 | `.env.example` | Both | Living | Safe environment variable template (no secrets). |
 
 *Other paths may be added to `.cursorrules` as protected; treat that list as authoritative when it diverges from this matrix.*

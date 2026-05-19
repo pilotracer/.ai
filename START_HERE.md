@@ -23,6 +23,8 @@
 │  Where am I right now?                    │
 └──────────────────────────────────────────┘
        │
+       ├── "Bootstrap Agent OS / empty .work"     ─────────► `@project-bootstrap init` · `bash .ai/templates/bootstrap.sh`
+       │
        ├── "I just opened the project / I'm lost" ─────────► §2  Resume / orient
        │
        ├── "I'm lost / how do I…?"                  ─────────► §2  Resume / orient · `@process-router`
@@ -47,7 +49,7 @@ You forgot where you were? Run **one** of these — pick the lightest that answe
 | Need | Command |
 |---|---|
 | **Process question (signpost only)** | `@process-router — <question>` · [`PROCESS_ROUTER.md`](PROCESS_ROUTER.md) · `@process-router help` |
-| **Where am I / what's next?** | `@session-control status` + [`.work/context/HANDOFF.md`](../.work/context/HANDOFF.md) + [`.work/plans/NEXT.md`](../.work/plans/NEXT.md) |
+| **Where am I / what's next?** | `@session-control status` + `.work/context/HANDOFF.md` + `.work/plans/NEXT.md` |
 | One-paragraph status (no writes) | `@session-control status` |
 | Where the iteration is (read-only) | `@code-implementation status` |
 | Are we still planning or coding? | `@plan-foundation status` (planning) **or** `@plan-master status` (master plan / implementation-ready) |
@@ -95,8 +97,8 @@ Replace `M{N}` with the milestone you're working on (see `NEXT.md ## Recommended
 | Schema change → **stop and run** `@db-migration create` | `code-implementation/skill.md § Hard rules` |
 | AI-assisted diff → run concept prompt | `@concept-run — MOD-06` |
 | Diff crosses >1 hard boundary | `@concept-run — MOD-01` |
-| Type checker is **`pyright --strict`** (NOT `mypy`) | `CONVENTIONS §1` |
-| All commands in Docker — never bare `pytest` / `pyright` / `npm` on host | `.cursorrules § Docker Environment` |
+| Type-check / lint / test commands match `.cursorrules` | `REPLACE:TYPECHECK_COMMAND`, `REPLACE:LINT_COMMAND`, `REPLACE:TEST_COMMAND` |
+| Run verification where `.cursorrules` says (container or host) | `.cursorrules` § Docker / local CI |
 
 ---
 
@@ -106,7 +108,7 @@ Replace `M{N}` with the milestone you're working on (see `NEXT.md ## Recommended
 |---|---|
 | To start a brand-new project | `@plan-foundation greenfield` |
 | To check if foundation work is done | `@plan-foundation status` then `@plan-foundation certify` |
-| To author the master implementation plan | `@plan-master greenfield` (foundation must be `plan-master-ready` first; **this repo:** plan exists — use `@plan-master continue`) |
+| To author the master implementation plan | `@plan-master greenfield` (foundation must be `plan-master-ready` first; if a draft plan exists — `@plan-master continue`) |
 | To check if you can start coding | `@plan-master status` (only this skill scores `implementation-ready`) |
 | A new feature SPEC | `@feature-spec create — <slug>` (see `FEATURE_STANDARD` §3; **do not skip §15**) |
 | Concept / NFR prompts (MOD-01…06) | `@concept-run list` · `@concept-run — MOD-06` |
@@ -121,6 +123,8 @@ foundation-complete  →  plan-master-ready  →  implementation-ready
 ```
 
 Only `plan-master status` can mark `implementation-ready: yes`.
+
+**Skill prerequisite gates (which step blocks the next):** [`.ai/skills/SKILL_DEPENDENCIES.md`](skills/SKILL_DEPENDENCIES.md).
 
 ---
 
@@ -173,9 +177,9 @@ In order. Stop when your question is answered.
 Before claiming a task is done, answer **all** of these out loud:
 
 - [ ] Did I read the SPEC rule(s) **before** editing?
-- [ ] Did I run the task gate (tests, lint, **`pyright --strict`**, secrets scan, scope check) and read the actual exit codes?
+- [ ] Did I run the task gate (tests, lint, type-check per `.cursorrules`, secrets scan, scope check) and read the actual exit codes?
 - [ ] Did I touch only files in the task's declared file list?
-- [ ] If schema changed, did I create a numbered idempotent SQL script under `apis/migrations/`?
+- [ ] If schema changed, did I create a numbered idempotent SQL script under the migrations dir from `.cursorrules`?
 - [ ] **AI-assisted default:** Cursor/agent session → MOD-06 **required** unless human declared **`human-only`** in the same message — did I run `@concept-run — MOD-06` and attach output?
 - [ ] If concept registry rows were `Applies=yes`, did I run those prompts and update status (none left `pending`)?
 - [ ] Did I capture residual risks / deferred sub-work in task `Notes` or `UNKNOWNS.md` (not just the agent report)?
@@ -191,8 +195,8 @@ If any answer is "no" or "I'm not sure" → **fix it before closing**.
 These are non-negotiable per `.cursorrules`:
 
 - Claiming PASS when test output shows failure.
-- Modifying protected files (`package.json`, `docker-compose*.yml`, `Dockerfile.*`, `dashboard/next.config.js`, `dashboard/tsconfig.json`, `.env*`) without explicit user approval **in the same message**.
-- Running bare `pytest` / `pyright` / `npm` on the host (always Docker).
+- Modifying protected files (see `.cursorrules` §Protected Files) without explicit user approval **in the same message**.
+- Running verification on the host when `.cursorrules` requires containers (or the reverse).
 - Committing on a default `close` (only `close commit` or `close commit push` may commit).
 - AI attribution markers in any artifact ("Generated by", "Created by", signatures).
 - Logging full payloads with PII (names, emails, tax IDs, amounts).
@@ -212,12 +216,13 @@ Use **`@process-router — <question>`** for anything not listed — it routes t
 | What is `process-router`? | Read-only **signpost** — [`PROCESS_ROUTER.md`](PROCESS_ROUTER.md); maps questions → skill + guide (no writes) |
 | How do I use `process-router`? | `@process-router help` · `@process-router — how do I start M1?` · `@process-router — which MOD prompt for AI-assisted code?` |
 | Where am I / what's next? | `@session-control status` + `.work/context/HANDOFF.md` + `.work/plans/NEXT.md` |
+| What does each `@skill` do? | [`README.md`](README.md) § Skills at a glance |
 | Ready to code? | `@plan-master status` (implementation-ready) → `@code-implementation start` |
 | New feature SPEC? | `@feature-spec create — <slug>` |
 | Which concept prompt (MOD)? | `@concept-run list` · `@concept-run — MOD-06` (required for agent/Cursor code sessions unless **`human-only`**) |
 | Add a DB table/column? | `@db-migration create — <description>` |
 | Fix broken `NEXT.md`? | `20260518-tutorial-next-fix.md` · `@code-implementation plan-iteration — M{N}` |
-| Tests/lint/pyright failed? | §6 above · re-run task gate in Docker |
+| Tests/lint/type-check failed? | §6 above · re-run task gate per `.cursorrules` |
 | Close session safely? | `@session-control close` · `@session-control close commit` · `@session-control close commit push` |
 | Foundation vs master plan? | `plan-foundation` = P0–P6 + **plan-master-ready** · `plan-master` = full plan + **implementation-ready** |
 | Read everything? | Don't — §7 reading order; stop when answered |
