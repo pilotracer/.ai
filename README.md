@@ -8,6 +8,31 @@ You get less re-prompting, fewer “where were we?” threads, and a loop you ca
 
 ---
 
+## First-time setup — install `.cursorrules` (human)
+
+Cursor and compatible agents read agent rules from **`.cursorrules` in the repository root**, not from inside `.ai/`. Do this once per repo before your first `@session-control start`.
+
+**From the repo root** (same directory as `.ai/` and `.work/`):
+
+```bash
+cp .ai/templates/cursorrules.template .cursorrules
+```
+
+Then:
+
+1. Open **`.cursorrules`** and replace every `REPLACE:` token (project name, stack doc path, standards filenames, migrations dir, Docker services, test commands).
+2. Commit **`.cursorrules`** at the root next to `.ai/`.
+3. Keep a **single** rules file — do not add `AGENTS.md` unless your team explicitly standardizes on it.
+
+| Situation | What to do |
+|-----------|------------|
+| **New repo** using Agent OS | Run the `cp` command above; customize; commit. |
+| **This repo (AC Billing)** | A tailored `.cursorrules` may already exist at the root — **do not overwrite** unless you intend a governance reset. Use the template only as reference or for a fresh fork. |
+
+More detail: [`templates/README.md`](templates/README.md) · source: [`templates/cursorrules.template`](templates/cursorrules.template).
+
+---
+
 ## Mini-tutorial — full lifecycle (agent chat)
 
 One straight line: **foundation → master plan → session → milestone → hand off**.  
@@ -171,7 +196,7 @@ Leave a clean handoff for your future self (or the next agent).
 
 - **`.ai/`** — *how* we work (copy to other repos).
 - **`.work/`** — *what* this project decided (stay here).
-- **`.cursorrules`** — hard rules (Docker-only tests, no secret commits, verify before “done”).
+- **`.cursorrules`** — hard rules at the **repo root** (copy from [`templates/cursorrules.template`](templates/cursorrules.template); see [First-time setup](#first-time-setup--install-cursorrules-human)).
 
 ---
 
@@ -184,6 +209,7 @@ Leave a clean handoff for your future self (or the next agent).
 | [`concepts/`](concepts/README.md) | MOD-01…06 architecture prompts |
 | [`docs/guides/workflows/`](docs/guides/workflows/README.md) | Tutorials + artifact matrix |
 | [`docs/integration/`](docs/integration/) | Vendor artifacts + `MANIFEST.txt` |
+| [`templates/`](templates/README.md) | **`cursorrules.template`** — copy to repo root as `.cursorrules` |
 | `plans/`, `features/`, … | **Pointers only** → `.work/` |
 
 ---
@@ -191,7 +217,7 @@ Leave a clean handoff for your future self (or the next agent).
 ## Required reads (when work is active)
 
 1. [`START_HERE.md`](START_HERE.md)
-2. `.cursorrules`
+2. **`.cursorrules`** (repo root — install via [First-time setup](#first-time-setup--install-cursorrules-human) if missing)
 3. `.work/context/HANDOFF.md`
 4. `.work/plans/NEXT.md`
 5. `.work/plans/foundation/*-01-*-initial-scope.md` when present
@@ -203,7 +229,11 @@ Agent rules file: **`.cursorrules` only** — do not add `AGENTS.md` without own
 
 ## Copy to another project
 
-1. Copy `.ai/`.
-2. Add a tuned `.cursorrules`.
-3. Create `.work/` with `HANDOFF.md` and `NEXT.md`.
-4. New project: **`@plan-foundation greenfield`** first; daily coding: **`@session-control start`**.
+1. Copy the whole **`.ai/`** tree (includes `templates/`).
+2. At the **new repo root**, install agent rules (same as [First-time setup](#first-time-setup--install-cursorrules-human)):
+   ```bash
+   cp .ai/templates/cursorrules.template .cursorrules
+   ```
+   Edit `.cursorrules` — replace all `REPLACE:` tokens — then commit.
+3. Create **`.work/`** with `HANDOFF.md` and `NEXT.md`.
+4. Run **`@plan-foundation greenfield`**; daily coding: **`@session-control start`**.
