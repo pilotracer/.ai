@@ -63,11 +63,78 @@ Normalize the user message to **verb** + optional **target**.
 
 ---
 
+## Prerequisite gate (mutating modes)
+
+**Applies to:** `create`, `add`, `run`, `verify`. Skipped for `init` (it builds the prerequisites) and `status` (read-only).
+
+Before any of those modes touches a file or the database:
+
+1. Check that `REPLACE:MIGRATIONS_DIR/001_init.sql` exists.
+2. Check that `REPLACE:MIGRATION_RUNNER_PATH` exists.
+3. If either is missing → **stop** with the [blocked-report shape](#blocked-report-shape):
+   - **Required:** `db-migration init` already run (runner module + `001_init.sql` baseline)
+   - **Detected:** `REPLACE:MIGRATIONS_DIR/001_init.sql` missing **and/or** `REPLACE:MIGRATION_RUNNER_PATH` missing
+   - **Run first:** `@db-migration init`
+
+This prevents silent failures where `create` writes a script into a non-existent directory or `run` cannot find the runner.
+
+### Blocked-report shape
+
+Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blocked-report-shape):
+
+```markdown
+## @db-migration <command> — blocked (prerequisite)
+
+**Required:** <state or upstream step>
+**Detected:** <what's actually present>
+**Run first:** `<exact command to fix>`
+```
+
+---
+
 ## Init protocol
 
 Bootstraps the entire idempotent SQL migration system into a project. This mode **removes Alembic** (if present), creates the `migrations/` directory with initial scripts, writes the `migration_runner.py`, wires it into application startup, and updates all configuration files.
 
 **Triggers:** `@db-migration init`, `@db-migration implement`, `@db-migration setup`, `@db-migration bootstrap`
+
+### IB0 — Brownfield detection (mandatory before any write)
+
+Before touching the migration system, inventory existing artifacts:
+
+| Path | If exists |
+|------|-----------|
+| `REPLACE:MIGRATIONS_DIR/001_init.sql` | Mark as **existing — baseline** |
+| `REPLACE:MIGRATIONS_DIR/` (with `*.sql` files) | Mark as **existing — populated** |
+| `REPLACE:MIGRATION_RUNNER_PATH` | Mark as **existing — runner installed** |
+| `alembic.ini` or `REPLACE:APP_ROOT/alembic/` | Mark as **existing — Alembic present (will be removed)** |
+
+If **any** of the first three are present:
+
+1. **Stop** — do not write.
+2. Emit the brownfield summary:
+
+```markdown
+## @db-migration init — brownfield detected
+
+The migration system is already initialized. Choose how to proceed:
+
+| Existing | Path | Action choice |
+|----------|------|---------------|
+| {list every detected file} | … | keep / overwrite / abort |
+
+### Choose one (reply in the same message)
+- **`keep`** — run `@db-migration status` instead (read-only) and exit init
+- **`overwrite-runner`** — replace `migration_runner.py` only (preserves your `*.sql` files)
+- **`overwrite-all`** — replace runner + all `001`–`005` baseline files (destroys current content; **append-only scripts beyond `005_` are preserved**)
+- **`abort`** — exit silently
+```
+
+3. On **`overwrite-all`**: require an extra `confirm-overwrite-all` token in the same message; otherwise treat as `abort`.
+4. On **`keep`** / **`abort`**: exit; do not write.
+5. On **`overwrite-runner`** or **`overwrite-all`**: proceed to I0; honor the choice when writing files.
+
+**Anti-pattern:** silently overwriting a curated `001_init.sql` that already contains project-specific extensions and base tables. The brownfield gate exists to prevent exactly this.
 
 ### I0 — Detect the database dialect
 
@@ -124,31 +191,9 @@ Create `REPLACE:MIGRATION_RUNNER_PATH` using the reference implementation from `
 
 ### I5 — Wire into application startup
 
-Update the application entrypoint (e.g. `REPLACE:APP_ENTRYPOINT`).
+Update the application entrypoint (e.g. `REPLACE:APP_ENTRYPOINT`). Use the framework's startup hook to call `run_migrations(get_engine())` **before** the HTTP server accepts traffic.
 
-**FastAPI ≥ 0.93 (lifespan — preferred):**
-
-```python
-from contextlib import asynccontextmanager
-from fastapi import FastAPI
-from REPLACE:PLATFORM_PACKAGE.migration_runner import run_migrations
-from REPLACE:PLATFORM_PACKAGE.database import get_engine
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    await run_migrations(get_engine())
-    yield
-
-app = FastAPI(lifespan=lifespan)
-```
-
-**FastAPI < 0.93 (deprecated `on_event` — avoid on new projects):**
-
-```python
-@app.on_event("startup")
-async def startup():
-    await run_migrations(get_engine())
-```
+**Reference code blocks** (FastAPI lifespan, deprecated `on_event`, schema-per-tenant loop): see `reference.md` § Application startup wiring. Adapt to the target framework (FastAPI, Starlette, Flask, custom) per the project's stack doc.
 
 For schema-per-tenant: iterate tenants first, run migrations per schema.
 

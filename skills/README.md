@@ -37,7 +37,9 @@ Use for **new** skills and for any **rename** (update `.cursorrules`, this READM
 | concept-run | `concept-run/` | Run MOD-01…MOD-06 concept prompts; attach output to PR/NEXT/SPEC |
 | project-bootstrap | `project-bootstrap/` | Bootstrap `.work/`, `.cursorrules`, `DOCS_TECH_STACK.md` from templates |
 
-**Typical flow (greenfield):** `@project-bootstrap init` → `plan-foundation greenfield` → `certify plan-master-ready` → `plan-master greenfield` → `plan-master status` (implementation-ready) → `code-implementation plan-iteration` → `code-implementation start/continue/complete`.
+**Typical flow (greenfield):** `@project-bootstrap init` → `plan-foundation greenfield` → `certify plan-master-ready` → `plan-master greenfield` → `plan-master status` (implementation-ready) → `code-implementation plan` → `code-implementation start/continue/complete`.
+
+**Canonical verb vocabulary:** see [SKILL_DEPENDENCIES.md § Canonical command vocabulary](SKILL_DEPENDENCIES.md#canonical-command-vocabulary). Every skill uses `status` for read-only state, `init` for one-time setup, and so on — no skill invents bespoke verbs.
 
 **Skill prerequisites (gates):** [SKILL_DEPENDENCIES.md](SKILL_DEPENDENCIES.md) — which modes **stop** if an upstream step was skipped (e.g. `@plan-master greenfield` before `@plan-foundation certify plan-master-ready`).
 

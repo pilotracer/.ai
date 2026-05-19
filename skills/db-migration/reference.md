@@ -249,3 +249,48 @@ REPLACE:MIGRATIONS_DIR/
 ├── 002_*.sql
 └── ...
 ```
+
+---
+
+## Application startup wiring
+
+Moved from `skill.md` § I5 to keep the protocol lean. Adapt to the framework in your stack doc.
+
+### FastAPI ≥ 0.93 (lifespan — preferred)
+
+```python
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
+from REPLACE:PLATFORM_PACKAGE.migration_runner import run_migrations
+from REPLACE:PLATFORM_PACKAGE.database import get_engine
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await run_migrations(get_engine())
+    yield
+
+app = FastAPI(lifespan=lifespan)
+```
+
+### FastAPI < 0.93 (deprecated `on_event` — avoid on new projects)
+
+```python
+@app.on_event("startup")
+async def startup():
+    await run_migrations(get_engine())
+```
+
+### Schema-per-tenant (iterate tenants first)
+
+```python
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    engine = get_engine()
+    for tenant in list_tenant_schemas(engine):
+        await run_migrations(engine, schema=tenant)
+    yield
+```
+
+### Flask / Starlette / other frameworks
+
+Invoke `run_migrations(get_engine())` from the framework's startup hook (or before `app.run()`), **before** the server accepts requests. The runner is synchronous-friendly; wrap with `asyncio.run(...)` if your framework is sync.

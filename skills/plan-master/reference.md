@@ -14,8 +14,8 @@ Supplement to `skill.md`. Invocation examples and edge cases.
 | Integrity only | `plan-master` **integrity** |
 | Revise | `plan-master` **revise** - add integration sandbox milestone |
 | With mode | `plan-master greenfield` — **enterprise** |
-| Look up a task | `plan-master` **task** M1-T3 |
-| All tasks for a milestone | `plan-master` **task** M4 |
+| Look up a task | `plan-master` **show** M1-T3   *(alias: `task M1-T3`)* |
+| All tasks for a milestone | `plan-master` **show** M4   *(alias: `task M4`)* |
 
 ### Cursor
 

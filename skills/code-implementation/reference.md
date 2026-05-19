@@ -10,7 +10,7 @@ Supplement to `skill.md`. Invocation examples, NEXT.md templates, mode compariso
 
 ```
 @code-implementation status
-@code-implementation plan-iteration - M1
+@code-implementation plan - M1
 @code-implementation start
 @code-implementation continue
 @code-implementation complete
@@ -19,11 +19,12 @@ Supplement to `skill.md`. Invocation examples, NEXT.md templates, mode compariso
 @code-verify last
 ```
 
-Legacy (routes to `code-verify` skill):
+Legacy aliases (still accepted):
 
 ```
-@code-implementation verify
-@code-implementation verify uncommitted
+@code-implementation plan-iteration - M1   # alias of "plan"
+@code-implementation verify                # routes to @code-verify
+@code-implementation verify uncommitted    # routes to @code-verify
 @code-implementation task T3
 ```
 
@@ -34,7 +35,7 @@ Follow .ai/skills/code-implementation/skill.md — status. Read-only.
 ```
 
 ```
-Follow .ai/skills/code-implementation/skill.md — plan-iteration - M1.
+Follow .ai/skills/code-implementation/skill.md — plan - M1.
 Derive iteration block from plan-master and write it to NEXT.md.
 ```
 
@@ -47,8 +48,8 @@ Diff-only audit: secrets, scope, tests/lint/type on changed files.
 
 ## Mode comparison
 
-| | status | plan-iteration | start | continue | complete | task |
-|---|--------|----------------|-------|----------|----------|------|
+| | status | plan | start | continue | complete | task |
+|---|--------|------|-------|----------|----------|------|
 | Read NEXT.md | yes | yes | yes | yes | yes | yes |
 | Write NEXT.md | no | yes | no | task status | yes | task status |
 | Write HANDOFF | no | no | no | no | yes | no |
@@ -63,16 +64,16 @@ Diff-only audit: secrets, scope, tests/lint/type on changed files.
 
 ```
 @session-control start - implement M1 platform skeleton
-@code-implementation status               ← check if iteration block exists
-@code-implementation plan-iteration - M1  ← if block missing or invalid
-@code-implementation start                ← load context, begin T1
-@code-implementation continue             ← resume after interruption
-@code-implementation status               ← progress check (every 2–3 tasks)
-@code-verify milestone                    ← approaching completion
-@code-verify uncommitted                  ← before commit
-@code-verify last                         ← after commit/push
-@code-implementation complete             ← finalize + update HANDOFF/NEXT
-@session-control close commit        ← commit and close session
+@code-implementation status     ← check if iteration block exists
+@code-implementation plan - M1  ← if block missing or invalid
+@code-implementation start      ← load context, begin T1
+@code-implementation continue   ← resume after interruption
+@code-implementation status     ← progress check (every 2–3 tasks)
+@code-verify milestone          ← approaching completion
+@code-verify uncommitted        ← before commit
+@code-verify last               ← after commit/push
+@code-implementation complete   ← finalize + update HANDOFF/NEXT
+@session-control close commit   ← commit and close session
 ```
 
 ---
@@ -82,13 +83,13 @@ Diff-only audit: secrets, scope, tests/lint/type on changed files.
 | Goal | Prompt |
 |------|--------|
 | What tasks remain? | `@code-implementation status` |
-| Generate iteration scope for M2 | `@code-implementation plan-iteration - M2` |
+| Generate iteration scope for M2 | `@code-implementation plan - M2` |
 | Start fresh on current iteration | `@code-implementation start` |
 | Resume after interruption | `@code-implementation continue` |
 | Run a specific task (shorthand, active iteration) | `@code-implementation task T4` |
 | Run a specific task (globally unique ID) | `@code-implementation task M1-T4` |
-| Look up what a task requires (read-only) | `@plan-master task M1-T4` |
-| See all tasks for a milestone | `@plan-master task M1` |
+| Look up what a task requires (read-only) | `@plan-master show M1-T4` |
+| See all tasks for a milestone | `@plan-master show M1` |
 | Check work against Full Plan | `@code-verify milestone` |
 | Audit uncommitted diff only | `@code-verify uncommitted` |
 | Audit last commit or push | `@code-verify last` |
@@ -240,9 +241,9 @@ Return: pass | fail | gaps-found, with specific file/rule citations.
 
 | Situation | Behavior |
 |-----------|----------|
-| NEXT.md has no `## Current iteration` | Run `plan-iteration` before start |
-| Iteration block exists but milestone not in plan-master | Block is invalid; re-run `plan-iteration` with correct milestone |
-| Master plan not Approved but HANDOFF has M1 waiver | Proceed with `plan-iteration - M1`; note waiver in start report |
+| NEXT.md has no `## Current iteration` | Run `plan` before start |
+| Iteration block exists but milestone not in plan-master | Block is invalid; re-run `plan` with correct milestone |
+| Master plan not Approved but HANDOFF has M1 waiver | Proceed with `plan - M1`; note waiver in start report |
 | Schema change discovered mid-task | Stop task; run `@db-migration create`; resume after migration exists |
 | Task T3 depends on T2 which is blocked | Mark T3 `blocked (depends on T2)`; surface both in status |
 | All tasks done but test suite fails | Do not run complete; fix failing tests; re-run gate |
@@ -259,7 +260,7 @@ Return: pass | fail | gaps-found, with specific file/rule citations.
 
 | Prompt | Problem | Use instead |
 |--------|---------|-------------|
-| `@code-implementation start` with no NEXT.md iteration block | No scope | `plan-iteration - M{N}` first |
+| `@code-implementation start` with no NEXT.md iteration block | No scope | `plan - M{N}` first |
 | `@code-implementation start` when implementation-ready: no | Prerequisite | `@plan-master status`; HANDOFF waiver or approve plan |
 | `@plan-master greenfield` when plan-master-ready: no | Prerequisite | `@plan-foundation certify` first |
 | `@code-implementation complete` with failing tests | Violates gate | Fix tests; rerun gate |
@@ -275,7 +276,7 @@ Return: pass | fail | gaps-found, with specific file/rule citations.
 | Command | Maps to |
 |---------|---------|
 | `/impl status` | status |
-| `/impl plan M1` | plan-iteration - M1 |
+| `/impl plan M1` | plan - M1 |
 | `/impl start` | start |
 | `/impl continue` | continue |
 | `/impl done` | complete |

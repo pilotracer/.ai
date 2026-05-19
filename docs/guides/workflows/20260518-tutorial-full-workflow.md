@@ -62,7 +62,7 @@
 
 ## Phase 4 — Iteration block (`{ITERATION_CARRIER}`)
 
-1. Run your implementation skill’s **plan-iteration** mode (e.g. `code-implementation plan-iteration - M{N}`) **or** manually create the iteration section using the same shape your skill defines.  
+1. Run your implementation skill’s **plan** mode (e.g. `@code-implementation plan - M{N}`; legacy alias `plan-iteration`) **or** manually create the iteration section using the same shape your skill defines.  
 2. Ensure the block includes:  
    - Milestone ref → `{MASTER_PLAN}` section for that milestone.  
    - In / out of scope.  
@@ -132,7 +132,7 @@ You now have **end-to-end traceability** from business language to validation wi
 |-------|--------|
 | Foundation | [plan-foundation](20260518-guide-plan-foundation.md) |
 | Master plan | [plan-master](20260518-guide-plan-master-full.md) |
-| NEXT sub-plan | [plan-iteration / sub-plan](20260518-tutorial-next-sub-plan-iteration.md) |
+| NEXT sub-plan | [plan / sub-plan](20260518-tutorial-next-sub-plan-iteration.md) |
 | Delivery loop | [Multiple iterations](20260518-tutorial-implement-multiple-iterations.md) |
 | Verify & test in dev | [Verify / audit / test](20260518-tutorial-verify-audit-test-development.md) |
 | Tests in process | [Testing in workflow](20260518-guide-testing-and-test-suite-in-workflow.md) |

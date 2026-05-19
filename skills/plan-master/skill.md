@@ -54,28 +54,36 @@ If **plan-master-ready** is **no**, stop — run `@plan-foundation certify` firs
 
 ## Prerequisite gate (mutating modes)
 
-Run **before** **greenfield**, **continue**, or **revise** (not before **status**, **task**, or **integrity** when plan-foundation invoked integrity on foundation artifacts only).
+Run **before** **greenfield**, **continue**, or **revise** (not before **status**, **show** *(alias: `task`)*, or **integrity** when plan-foundation invoked integrity on foundation artifacts only).
 
 ### PG1 — Plan-master-ready
 
 1. Read `{HANDOFF}` § Repository state (or gate snapshot) for `Plan-master-ready: <date>` **or** run `@plan-foundation status` and read **Plan-master-ready:** line.
-2. If **no** and user did not supply complete structured YAML with `foundation_docs:` **and** explicit same-message confirmation that foundation was completed out-of-band → **stop**. Output:
+2. If **no** and user did not supply complete structured YAML with `foundation_docs:` **and** explicit same-message confirmation that foundation was completed out-of-band → **stop** with the [blocked-report shape](#blocked-report-shape):
 
 ```markdown
-## plan-master — blocked (prerequisite)
+## @plan-master <command> — blocked (prerequisite)
 
-**Plan-master-ready:** no
-
-### Run next
-1. `@plan-foundation status` — list foundation blockers
-2. `@plan-foundation continue` — finish P0–P6 gates
-3. `@plan-foundation certify plan-master-ready`
-4. Re-invoke `@plan-master greenfield` (or `continue`)
+**Required:** `plan-master-ready: yes` (from `@plan-foundation certify`)
+**Detected:** `plan-master-ready: no`
+**Run first:** `@plan-foundation status` → `@plan-foundation continue` → `@plan-foundation certify plan-master-ready` → re-invoke `@plan-master <command>`
 ```
 
 3. If **yes** → proceed to the mode protocol.
 
 **Anti-pattern:** Drafting or extending `*-full-plan.md` when PG1 fails. Do not use "waivers in Assumptions" to bypass plan-master-ready — only HANDOFF-documented **plan-master-ready** date or certify pass unlocks mutating plan-master modes.
+
+### Blocked-report shape
+
+Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blocked-report-shape):
+
+```markdown
+## @plan-master <command> — blocked (prerequisite)
+
+**Required:** <state or upstream step>
+**Detected:** <what's actually present>
+**Run first:** `<exact command to fix>`
+```
 
 ### PG2 — Mode-specific (after PG1 passes)
 
@@ -85,7 +93,7 @@ Run **before** **greenfield**, **continue**, or **revise** (not before **status*
 | **continue** | Latest `*-full-plan.md` exists (Draft or partial) |
 | **revise** | Latest `*-full-plan.md` exists |
 | **integrity** | Foundation artifacts and/or master plan exist for the requested scope |
-| **status** / **task** | — (read-only; PG1 not required) |
+| **status** / **show** | — (read-only; PG1 not required) |
 
 ---
 
@@ -101,10 +109,12 @@ Normalize the user message to **verb** + optional **modifiers** + optional **goa
 | `plan-master` **integrity** | integrity | Phase 5 only — contradiction and fitness review |
 | `plan-master` **revise** - \<reason\> | revise | Update existing plan; bump version note in plan header |
 | `plan-master greenfield` — startup \| enterprise \| ai-native \| ultra-scale | greenfield | Apply [Advanced mode](#advanced-modes) |
-|| `plan-master` **task** M1-T3 | task | Read-only: show one task full record (description, files, FR/NFR, status) |
-|| `plan-master` **task** M2 | task | Read-only: show all task records for milestone M2 |
+| `plan-master` **show** M1-T3 | show | Read-only: full record for one task (description, files, FR/NFR, status) |
+| `plan-master` **show** M2 | show | Read-only: full task table for milestone M2 |
 
-**Aliases:** `master plan`, `implementation roadmap`, `build roadmap`, `whole system plan` → map to **continue** if plan file exists, else **greenfield**.
+**Aliases:**
+- `master plan`, `implementation roadmap`, `build roadmap`, `whole system plan` → **continue** if plan file exists, else **greenfield**.
+- **`task`** is the legacy alias of **`show`** — both work (`@plan-master task M1-T3` ≡ `@plan-master show M1-T3`).
 
 **Goal text:** anything after `-` (not mode keywords).
 
@@ -119,9 +129,9 @@ Normalize the user message to **verb** + optional **modifiers** + optional **goa
 | **greenfield** | [Greenfield protocol](#greenfield-protocol) |
 | **integrity** | [Phase 5 — Verification](#phase-5--verification--integrity-validation) report only. Can be invoked standalone (`@plan-master integrity`) or from `plan-foundation` continue P3+/P6. |
 | **revise** | Read existing plan → apply delta → re-run Phase 5 subset |
-| **task** | [Task query protocol](#task-query-protocol) — read-only; show task record(s) by `M{N}-T{N}` or milestone |
+| **show** *(alias: `task`)* | [Show protocol](#show-protocol) — read-only; show task record(s) by `M{N}-T{N}` or milestone |
 
-Do not run greenfield questionnaires when the user asked for **status**, **integrity**, or **task** only.
+Do not run greenfield questionnaires when the user asked for **status**, **integrity**, or **show** only.
 
 ---
 
@@ -584,11 +594,13 @@ If master plan **missing** → **implementation-ready: no** — run **greenfield
 
 ---
 
-## Task query protocol
+## Show protocol
+
+*(Legacy alias: `task`. Both invocations resolve here.)*
 
 Read-only. No writes to plan or HANDOFF.
 
-**Trigger:** `@plan-master task M{N}-T{N}` or `@plan-master task M{N}`
+**Trigger:** `@plan-master show M{N}-T{N}` · `@plan-master show M{N}` · (legacy) `@plan-master task …`
 
 1. Locate `{PLANS_ROOT}/full/YYYYMMDD-full-plan.md` (latest by date prefix).
 2. Navigate to §19 Incremental Execution Roadmap → milestone M{N}.
@@ -597,7 +609,7 @@ Read-only. No writes to plan or HANDOFF.
 5. Output:
 
 ```markdown
-## Task — {M{N}-T{N} | M{N} all tasks}
+## plan-master show — {M{N}-T{N} | M{N} all tasks}
 
 **Plan:** {path} · **Milestone:** M{N} — {name}
 

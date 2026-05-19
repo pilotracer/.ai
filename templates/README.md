@@ -2,6 +2,13 @@
 
 Portable starter files for new repositories using **Agent OS**.
 
+## Path convention
+
+| Layout | Run bootstrap from | Docs refer to |
+|--------|-------------------|---------------|
+| App repo with nested `.ai/` | **Repo root** (parent of `.ai/`) | `.ai/templates/…`, `.ai/skills/…` |
+| Agent OS is the git root | **Repo root** (this tree) | `templates/…`, `skills/…` (no `.ai/` prefix) |
+
 ## Quick start
 
 From the **repository root** (directory containing `.ai/`):
@@ -104,6 +111,6 @@ When the git root **is** this Agent OS tree, `.work/` at the same root holds an 
 
 ## Related
 
-- [`.ai/README.md`](../README.md)
+- [Agent OS README](../README.md) (repo root when self-hosted; else `../README.md` from `.ai/`)
 - [`project-bootstrap` skill](../skills/project-bootstrap/skill.md)
 - [Path bootstrap tutorial](../docs/guides/workflows/20260518-tutorial-path-bootstrap.md)

@@ -31,6 +31,30 @@ Generate or update a **single-file** POSIX shell script (`bin/start.sh` preferre
 
 ---
 
+## Parse invocation
+
+Normalize the user message to **verb** + optional **target path**.
+
+| User says | Verb | Action |
+|-----------|------|--------|
+| `@dev-stack` **status** | status | [Status protocol](#status-protocol) — read-only: report whether `bin/start.sh` exists, is executable, and matches the current skill contract |
+| `@dev-stack` **init** | init | Generate fresh `bin/start.sh` (see [Generation protocol](#generation-protocol)) |
+| `@dev-stack` **update** \| **rewrite** | init | Same as `init` — overwrite existing file after isolation audit |
+| `@dev-stack` (no verb) | init | Default to generate / update |
+
+**Aliases:** `update`, `rewrite`, `scaffold`, `generate` → **init**.
+
+---
+
+## Step 0 — Pick a mode
+
+| Mode | Condition | Action |
+|------|-----------|--------|
+| **status** | user asks "is start.sh ready?", "do we have it?", "what version?" | [Status protocol](#status-protocol) — read-only |
+| **init** | user asks to create, update, or rewrite the script | [Generation protocol](#generation-protocol) |
+
+---
+
 ## Default output
 
 | Artifact | Rule |
@@ -38,6 +62,46 @@ Generate or update a **single-file** POSIX shell script (`bin/start.sh` preferre
 | **Path** | Prefer **`bin/start.sh`** at the repository root (create `bin/` if missing). Use another path only if the user names it. |
 | **Executable** | Instruct `chmod +x bin/start.sh` (or apply in the same change if the user asked to create the file). |
 | **Self-contained** | One file; no required sibling `lib/` scripts unless the user explicitly wants a split layout. |
+
+---
+
+## Status protocol
+
+Read-only. No file writes.
+
+1. Check `bin/start.sh` (or user-named path) exists.
+2. If exists: check executable bit (`test -x`), file size, and run `bash -n` for syntax.
+3. Detect compose project name (`grep -E 'COMPOSE_PROJECT_NAME|--project-name' bin/start.sh`).
+4. Detect dangerous-command pattern presence (`grep -E '_double_confirm|print_banner' bin/start.sh`).
+5. Output:
+
+```markdown
+## dev-stack status
+
+**Path:** bin/start.sh · **Exists:** yes/no · **Executable:** yes/no
+**Syntax:** pass | fail (`bash -n` exit code)
+**Compose scoping:** detected | missing
+**Dangerous-command guard:** detected | missing
+**Recommendation:** ok | run `@dev-stack init` to regenerate
+```
+
+If `bin/start.sh` is missing → recommend `@dev-stack init`.
+If syntax / scoping / guard missing → recommend `@dev-stack init` (will regenerate; confirm before overwrite — see Brownfield below).
+
+---
+
+## Brownfield gate (init mode)
+
+Before generating:
+
+1. If `bin/start.sh` already exists, **stop** and report:
+   - Current file size, last-modified, executable bit, detected compose scoping.
+   - Ask once: **overwrite | keep | abort**.
+2. On **keep**: exit with a status summary; do not write.
+3. On **abort**: exit silently.
+4. On **overwrite**: proceed to [Generation protocol](#generation-protocol).
+
+Do not silently overwrite a customized script.
 
 ---
 

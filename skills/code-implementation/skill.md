@@ -5,7 +5,7 @@ description: >-
   NEXT.md iteration block from the plan-master milestone, implement tasks per
   CONVENTIONS and FEATURE_STANDARD, gate each task on tests/lint, and finalize
   the iteration. Verification modes live in the **code-verify** skill. Use when the
-  user says code-implementation start, continue, complete, plan-iteration, or status.
+  user says code-implementation plan, start, continue, complete, or status.
   Requires implementation-ready (plan-master Approved) or explicit HANDOFF waiver.
 ---
 
@@ -23,7 +23,7 @@ Execute implementation iterations derived from an **Approved master plan** (`{PL
 
 **Hard rules:**
 
-- **No implementation without a valid iteration block.** If `NEXT.md` lacks one, run `plan-iteration` first.
+- **No implementation without a valid iteration block.** If `NEXT.md` lacks one, run `plan` first (alias: `plan-iteration`).
 - **No code without reading the relevant SPEC(s) first.** Evidence-first: read before writing.
 - **No task is `done` until its gate passes.** Tests + lint + type-check must exit 0 before advancing.
 - **Scope discipline.** Do not modify any file not declared in the task's file list. Undo and document any accidental out-of-scope change.
@@ -45,7 +45,7 @@ Normalize the user message to **verb** + optional **target**.
 | User says | Verb | Action |
 |-----------|------|--------|
 | `@code-implementation` **status** | status | Read-only: task matrix, progress snapshot |
-| `@code-implementation` **plan-iteration** - M1 | plan-iteration | Generate/validate `## Current iteration` block from plan-master milestone |
+| `@code-implementation` **plan** - M1 | plan | Generate/validate `## Current iteration` block from plan-master milestone |
 | `code-implementation` **start** | start | Load iteration block, read SPECs/CONVENTIONS, begin first task |
 | `code-implementation` **continue** | continue | Resume: find first incomplete task, implement, gate, advance |
 | `code-implementation` **complete** | complete | Finalize iteration: CO2 `@code-verify milestone` + CO1 gates + update HANDOFF/NEXT |
@@ -53,7 +53,7 @@ Normalize the user message to **verb** + optional **target**.
 | `code-implementation` **task** T3 | task | Execute a single task by shorthand ID (active iteration context) |
 | `code-implementation` **task** M1-T3 | task | Execute a single task by globally unique ID; gate immediately |
 
-**Aliases:** `impl`, `code`, `implement` → map to **continue** if iteration block exists, else **start**.
+**Aliases:** `impl`, `code`, `implement` → map to **continue** if iteration block exists, else **start**. **`plan-iteration`** is the legacy alias of **`plan`** — both work.
 
 **Ambiguous:** if `NEXT.md` has an iteration block but status is unknown → run abbreviated **status** and ask once.
 
@@ -64,13 +64,13 @@ Normalize the user message to **verb** + optional **target**.
 | Mode | Condition | Action |
 |------|-----------|--------|
 | **status** | progress/matrix/snapshot requested | [Status protocol](#status-protocol) — read-only |
-| **plan-iteration** | iteration block missing or invalid; user names a milestone | [Plan-iteration protocol](#plan-iteration-protocol) |
+| **plan** *(alias: `plan-iteration`)* | iteration block missing or invalid; user names a milestone | [Plan protocol](#plan-protocol) |
 | **start** | valid iteration block exists; no task started | [Start protocol](#start-protocol) |
 | **continue** | iteration in-progress; tasks pending or one in-progress | [Continue protocol](#continue-protocol) |
 | **complete** | all tasks done or user signals completion | [Complete protocol](#complete-protocol) |
 | **task** | user names `T{N}` or `M{N}-T{N}` | Execute that task; run gate; report |
 
-Do not run `plan-iteration` when the user asked for **status** only. For any **verify** request, use **`@code-verify`** (`code-verify` skill).
+Do not run `plan` when the user asked for **status** only. For any **verify** request, use **`@code-verify`** (`code-verify` skill).
 
 **Suggested cadence:** `@code-verify uncommitted` before commit · `@code-verify last` after commit/push · `@code-verify milestone` before **complete**.
 
@@ -139,11 +139,13 @@ An iteration block is **valid** when all of the following are true:
 5. Validation steps include at least one runnable test command from `{AGENT_RULES_FILE}`.
 6. **`### Concept / NFR registry (this iteration)`** subsection is present with one row per architecture concept id **or** explicit `N/A` for each id with reason (if the repository has no concept pack, one row: `N/A — no pack`).
 
-If any criterion fails → iteration block is **invalid** → run **plan-iteration** before **start**.
+If any criterion fails → iteration block is **invalid** → run **plan** before **start**.
 
 ---
 
-## Plan-iteration protocol
+## Plan protocol
+
+*(Legacy alias: `plan-iteration`. Both invocations resolve here.)*
 
 Generates or validates the `## Current iteration` block in `NEXT.md` from the next incomplete milestone in the approved plan-master.
 
@@ -151,16 +153,34 @@ Generates or validates the `## Current iteration` block in `NEXT.md` from the ne
 
 1. Read `{HANDOFF}` — note owner blockers, waivers, M1-only authorizations.
 2. Read `{PLANS_ROOT}/full/YYYYMMDD-full-plan.md` (latest by date prefix). Confirm **Status: Approved** (or owner waiver recorded in HANDOFF for early M{N} start).
-3. If no plan file → **stop**. Recommend `@plan-master greenfield` after `@plan-foundation certify plan-master-ready`.
-4. If plan is **Draft** and HANDOFF has **no** waiver naming milestone **M{N}** → **stop**. Recommend `@plan-master status` → approve plan or add HANDOFF waiver.
+3. If no plan file → **stop** with the [blocked-report shape](#blocked-report-shape):
+   - **Required:** Approved `*-full-plan.md`
+   - **Detected:** no `{PLANS_ROOT}/full/*-full-plan.md`
+   - **Run first:** `@plan-foundation certify plan-master-ready` → `@plan-master greenfield`
+4. If plan is **Draft** and HANDOFF has **no** waiver naming milestone **M{N}** → **stop** with the same shape:
+   - **Required:** plan `Status: Approved` **or** HANDOFF waiver for `M{N}`
+   - **Detected:** plan is `Status: Draft`; no HANDOFF waiver for `M{N}`
+   - **Run first:** `@plan-master status` → approve plan, or document HANDOFF waiver
 5. Read `{ITERATION_CARRIER}` — find `## Done this iteration` and `## Recommended next` to determine which milestone is next.
 
-**Note:** **implementation-ready** is checked at [ST0](#st0--implementation-gate) (**start** / **continue**), not at plan-iteration - you may build the iteration block once the plan is **Approved** (or milestone-waived per steps 2–4).
+**Note:** **implementation-ready** is checked at [ST0](#st0--implementation-gate) (**start** / **continue**), not at this step — you may build the iteration block once the plan is **Approved** (or milestone-waived per steps 2–4).
+
+### Blocked-report shape
+
+Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blocked-report-shape), every prerequisite stop in this skill emits:
+
+```markdown
+## @code-implementation <command> — blocked (prerequisite)
+
+**Required:** <state or upstream step>
+**Detected:** <what's actually present>
+**Run first:** `<exact command to fix>`
+```
 
 ### PI2 — Select target milestone
 
 1. Identify the first incomplete milestone (M1…) in plan-master §19.
-2. If user specified `plan-iteration - M{N}`, use that milestone directly; verify it exists in the plan.
+2. If user specified `plan - M{N}` (or legacy `plan-iteration - M{N}`), use that milestone directly; verify it exists in the plan.
 3. Check dependencies: if the milestone declares prior milestones as dependencies, confirm they are done (or explicitly waived in HANDOFF).
 
 ### PI3 — Derive tasks
@@ -181,10 +201,10 @@ Write the `## Current iteration` section into `NEXT.md` — insert after `## Rec
 
 Include a **`### Concept / NFR registry (this iteration)`** subsection (table or explicit `N/A — no pack`). Rows must align with the **feature SPEC §15** (or equivalent) for the bounded contexts touched, or state why the iteration is **platform-only** with per-MOD `N/A` reasons.
 
-### PI5 — Plan-iteration report
+### PI5 — Plan report
 
 ```markdown
-## Plan-iteration — M{N}: {name}
+## code-implementation plan — M{N}: {name}
 
 **Milestone:** M{N} · {task count} tasks · **Source:** {plan-master path}
 **Prerequisites:** pass | fail | waived
@@ -221,7 +241,10 @@ Before ST1 (and before first line of application code):
 1. Read `{HANDOFF}` for milestone waivers (e.g. M1 platform skeleton).
 2. If HANDOFF waives the active iteration milestone → **pass** (note waiver in start report).
 3. Else run `@plan-master status` (or read last recorded **Implementation-ready:** in HANDOFF if dated today).
-4. If **implementation-ready: no** → **stop**. Output redirect to `@plan-master status`; list blockers (Draft plan, missing plan, plan-master-ready expired).
+4. If **implementation-ready: no** → **stop** with the [blocked-report shape](#blocked-report-shape):
+   - **Required:** `implementation-ready: yes` **or** HANDOFF waiver for the active milestone
+   - **Detected:** `implementation-ready: no` (Draft plan / missing plan / plan-master-ready expired)
+   - **Run first:** `@plan-master status` → approve plan, or document HANDOFF waiver
 5. If **yes** → proceed to ST1.
 
 **Anti-pattern:** **start** or **continue** when only **plan-master-ready** is set — that unlocks planning and M1 *prep*, not broad implementation unless HANDOFF says so.
@@ -439,7 +462,7 @@ Do not edit archived decision prompts.
 
 1. Set iteration block `**Status:** complete`.
 2. Move all task rows to `### Done this iteration` with completion dates.
-3. Set `## Recommended next` to the next milestone: `@code-implementation plan-iteration - M{N+1}` or the first task of M{N+1} if already scoped.
+3. Set `## Recommended next` to the next milestone: `@code-implementation plan - M{N+1}` or the first task of M{N+1} if already scoped.
 4. Clear the `## Current iteration` body or replace with a one-line reference: `M{N} complete — see Done section.`
 
 ### CO5 — HANDOFF update

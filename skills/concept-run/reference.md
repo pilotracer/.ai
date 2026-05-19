@@ -66,7 +66,7 @@ The authoritative trigger table is in `.ai/concepts/README.md` § Trigger table.
 | Trigger | Output goes to |
 |---------|---------------|
 | SPEC §15 creation | SPEC §15 Concept / NFR registry |
-| `plan-iteration` block | `NEXT.md` iteration `### Concept / NFR registry` → task Notes column |
+| `plan` (iteration) block | `NEXT.md` iteration `### Concept / NFR registry` → task Notes column |
 | `@code-implementation` session (code touched) | PR description, task `Notes`, or iteration registry |
 | `@code-verify milestone` | Verify report § Concept / NFR registry row |
 

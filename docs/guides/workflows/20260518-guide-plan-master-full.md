@@ -53,7 +53,7 @@ Exact parse table: **`plan-master/skill.md`**.
 ## 5. After the plan is Approved
 
 1. Update `{HANDOFF}` **Repository state** with plan path + version.  
-2. Run **`@code-implementation plan-iteration - M1`** (or next incomplete milestone) to build `{ITERATION_CARRIER}` — see [NEXT sub-plan](20260518-tutorial-next-sub-plan-iteration.md).
+2. Run **`@code-implementation plan - M1`** (or next incomplete milestone) to build `{ITERATION_CARRIER}` — see [NEXT sub-plan](20260518-tutorial-next-sub-plan-iteration.md).
 
 ---
 

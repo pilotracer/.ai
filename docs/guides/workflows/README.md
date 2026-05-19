@@ -83,7 +83,7 @@ The **artifact matrix** below maps **planning** vs **implementation** (plus cros
 | `.ai/skills/session-control/reference.md` | Both | Context | Optional extended procedures for `session-control`. |
 | `.ai/skills/db-migration/skill.md` | Implementation | Skill | Idempotent numbered SQL migrations; no version table, no chain conflicts. |
 | `.ai/skills/db-migration/reference.md` | Implementation | Context | Optional extended procedures for `db-migration`. |
-| `.ai/skills/code-implementation/skill.md` | Implementation | Skill | `plan-iteration`, `start`/`continue`/`complete`; task gates; tests. |
+| `.ai/skills/code-implementation/skill.md` | Implementation | Skill | `plan` *(alias: `plan-iteration`)*, `start`/`continue`/`complete`; task gates; tests. |
 | `.ai/skills/code-implementation/reference.md` | Implementation | Context | Optional extended procedures for `code-implementation`. |
 | `.ai/skills/code-verify/skill.md` | Implementation | Skill | `milestone` / `uncommitted` / `last` verification gates. |
 | `.ai/skills/code-verify/reference.md` | Implementation | Context | Optional extended procedures for `code-verify`. |

@@ -47,7 +47,7 @@ Use your **CONVENTIONS** doc as source of truth for paths.
 ## 4. Tie to `{ITERATION_CARRIER}`
 
 - If implementation is **in flight** — append sub-tasks `M{n}-T{x}a` “Add tests for R…” per `code-implementation` migration-sub-task pattern (adapt for tests-only).  
-- Else — schedule in next **plan-iteration** milestone.
+- Else — schedule in next **`@code-implementation plan`** milestone.
 
 ---
 

@@ -128,7 +128,7 @@ Do **not** ask if goal is already clear from invocation or HANDOFF. Store in sta
 If the session goal mentions coding, M1, implementation, or a feature task:
 
 1. Run `@plan-master status` (read-only) or read HANDOFF for **Implementation-ready** and milestone waivers.
-2. If **implementation-ready: no** and no HANDOFF waiver for the named milestone → note in start report under **### Readiness (do not implement yet)** with redirect: `@plan-master status` → approve plan, or add HANDOFF waiver, or `@code-implementation plan-iteration - M{N}` only after prerequisites pass.
+2. If **implementation-ready: no** and no HANDOFF waiver for the named milestone → note in start report under **### Readiness (do not implement yet)** with redirect: `@plan-master status` → approve plan, or add HANDOFF waiver, or `@code-implementation plan - M{N}` only after prerequisites pass.
 3. Do **not** invoke `@code-implementation start` from session-control — route the user to that skill after gates pass.
 
 ### S5 — Mark session open (HANDOFF)

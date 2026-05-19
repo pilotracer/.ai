@@ -8,7 +8,7 @@
 ## 1. Loop diagram
 
 ```text
-plan-iteration - M{N}
+plan - M{N}
        │
        ▼
     start ──► continue ──► … ──► @code-verify milestone ──► complete
@@ -66,7 +66,7 @@ Optional: `@code-verify uncommitted` before commit · `@code-verify last` after 
 
 ## 6. Next milestone (second “iteration” of the process)
 
-`@code-implementation plan-iteration - M{N+1}` — new sub-plan. Repeat loop.
+`@code-implementation plan - M{N+1}` — new sub-plan. Repeat loop.
 
 ---
 

@@ -17,7 +17,7 @@ foundation-complete  →  plan-master-ready  →  implementation-ready
 | *(scaffold only)* | `@project-bootstrap init` | `@plan-foundation greenfield`, `@session-control` (minimal) |
 | **foundation-complete** | `@plan-foundation status` (P0–P6 gates) | `@plan-foundation certify`, foundation **continue** |
 | **plan-master-ready** | `@plan-foundation certify` | `@plan-master greenfield` / **continue** / **revise** |
-| **implementation-ready** | `@plan-master status` | `@code-implementation start` / **continue** (broad); **plan-iteration** with Approved plan |
+| **implementation-ready** | `@plan-master status` | `@code-implementation start` / **continue** (broad); `@code-implementation plan` *(alias: `plan-iteration`)* with Approved plan |
 
 **M1 early start:** `plan-foundation` may authorize M1 skeleton when **plan-master-ready: yes** and HANDOFF/NEXT document a waiver — that is **not** implementation-ready. `code-implementation` honors HANDOFF milestone waivers per its skill.
 
@@ -29,32 +29,37 @@ foundation-complete  →  plan-master-ready  →  implementation-ready
 
 | Skill / mode | Depends on | Gate |
 |--------------|------------|------|
-| **project-bootstrap** `init` | Repo contains `.ai/` (or is Agent OS root) | — |
+| **project-bootstrap** `init` | Repo contains `.ai/` (or is Agent OS root); **B0** brownfield gate detects existing `.work/` / `.cursorrules` / stack doc | — (brownfield prompts overwrite-all / overwrite-missing / keep / abort) |
 | **project-bootstrap** `status` | — | Read-only |
 | **session-control** `start` | `{HANDOFF}` (offer bootstrap if missing) | Recommended: `@project-bootstrap init` |
 | **session-control** `close` | Prior `start` or dirty tree | — |
 | **session-control** `status` | — | Read-only |
-| **plan-foundation** `greenfield` | `.cursorrules`, `{HANDOFF}` | Recommended: `@project-bootstrap init` |
+| **plan-foundation** `greenfield` | `.cursorrules`, `{HANDOFF}` (GF0 gate) | Recommended: `@project-bootstrap init` |
 | **plan-foundation** `continue` | Prior foundation work started | — |
-| **plan-foundation** `certify` | **foundation-complete: yes** | **Required** |
+| **plan-foundation** `certify` | **foundation-complete: yes** (CF0 gate) | **Required** |
 | **plan-foundation** `status` | — | Read-only |
-| **plan-master** `greenfield` | **plan-master-ready: yes** | **Required** (see exceptions below) |
+| **plan-master** `greenfield` | **plan-master-ready: yes** (PG1 gate) | **Required** (see exceptions below) |
 | **plan-master** `continue` | **plan-master-ready: yes**; draft or partial `*-full-plan.md` | **Required** |
 | **plan-master** `revise` | Existing `*-full-plan.md`; **plan-master-ready** still valid | **Required** |
 | **plan-master** `integrity` | Target artifacts exist (foundation set **or** master plan for P5) | Invoked by plan-foundation certify **or** standalone |
-| **plan-master** `status` / `task` | — | Read-only |
-| **code-implementation** `plan-iteration` | Approved `*-full-plan.md` **or** HANDOFF M{N} waiver | **Required** |
-| **code-implementation** `start` / `continue` | Valid `NEXT.md` iteration block; **implementation-ready** or HANDOFF waiver | **Required** |
+| **plan-master** `status` / `show` *(alias: `task`)* | — | Read-only |
+| **code-implementation** `plan` *(alias: `plan-iteration`)* | Approved `*-full-plan.md` **or** HANDOFF M{N} waiver (PI1 gate) | **Required** |
+| **code-implementation** `start` / `continue` | Valid `NEXT.md` iteration block; **implementation-ready** or HANDOFF waiver (ST0 gate) | **Required** |
 | **code-implementation** `complete` | Active iteration; `@code-verify milestone` pass | **Required** |
 | **code-implementation** `status` | — | Read-only |
-| **code-verify** `milestone` | Valid `NEXT.md` § Current iteration | **Required** |
+| **code-verify** `milestone` | Active milestone exists in `{MASTER_PLAN}` §19 **or** `NEXT.md` § Current iteration (M0 gate) | **Required** |
 | **code-verify** `uncommitted` / `last` | — | — |
-| **feature-spec** `create` / `review` / `amend` | FEATURE_STANDARD | — (no plan-master gate) |
+| **feature-spec** `create` | FEATURE_STANDARD; **CR0** hard-stops if `<slug>/` folder exists; warns if `plan-master-ready: no` | **Required** (brownfield) + **Recommended** (readiness) |
+| **feature-spec** `review` / `amend` / `status` / `approve` | FEATURE_STANDARD; `approve` runs `review` first and only flips Status on pass | — |
 | **feature-spec** before **Approved** | §15 concept registry | **Required** per FEATURE_STANDARD |
 | **concept-run** `run` | Applicable trigger (SPEC §15, iteration registry, diff scope) | Per `.ai/concepts/README.md` |
-| **db-migration** `create` | Task or user request; CONVENTIONS | Typically during **code-implementation** |
-| **dev-stack** | User request / docker-compose present | — |
-| **process-router** | — | Read-only |
+| **concept-run** `list` / `status` | — | Read-only |
+| **db-migration** `init` | Repo at Agent OS root; **IB0** brownfield gate detects existing runner + `001_init.sql` | — (brownfield prompts keep / overwrite-runner / overwrite-all / abort) |
+| **db-migration** `create` / `add` / `run` / `verify` | `db-migration init` already run (runner module + `001_init.sql` baseline present) | **Required** |
+| **db-migration** `status` | — | Read-only |
+| **dev-stack** `init` | User request / `docker-compose*.yml` present; brownfield gate refuses to silently overwrite existing `bin/start.sh` | — |
+| **dev-stack** `status` | — | Read-only |
+| **process-router** `route` / `help` | — | Read-only |
 
 ---
 
@@ -78,10 +83,59 @@ foundation-complete  →  plan-master-ready  →  implementation-ready
 | `@plan-master greenfield` | Not plan-master-ready | `@plan-foundation status` → `@plan-foundation certify` |
 | `@plan-foundation certify` | Not foundation-complete | `@plan-foundation continue` |
 | `@plan-foundation greenfield` | No HANDOFF / `.cursorrules` | `@project-bootstrap init` |
-| `@code-implementation start` | No iteration block | `@code-implementation plan-iteration - M{N}` |
-| `@code-implementation plan-iteration` | No Approved plan | `@plan-master status` → approve or waiver in HANDOFF |
+| `@code-implementation start` | No iteration block | `@code-implementation plan - M{N}`   *(alias: `plan-iteration`)* |
+| `@code-implementation plan` (or `plan-iteration`) | No Approved plan | `@plan-master status` → approve or waiver in HANDOFF |
 | `@code-implementation start` | Not implementation-ready | `@plan-master status` or document HANDOFF waiver |
+| `@code-verify milestone - M{N}` | Milestone M{N} not in plan / NEXT | `@plan-master show M{N}` or `@code-implementation plan - M{N}` |
+| `@db-migration create/run` | `db-migration init` never ran | `@db-migration init` |
+| `@feature-spec create - <slug>` | Folder already exists | `@feature-spec amend - <slug>` |
+| `@project-bootstrap init` | Repo already bootstrapped | `@project-bootstrap status` (or run `init` with overwrite confirmation) |
 | "Ready to code?" in plan-foundation | Wrong skill | `@plan-master status` |
+
+---
+
+## Canonical command vocabulary
+
+All skills use the same verbs where applicable. This keeps muscle memory portable.
+
+| Canonical verb | Meaning | Skills that implement it |
+|----------------|---------|---------------------------|
+| `status` | Read-only: report current state | plan-foundation, plan-master, session-control, code-implementation, code-verify (via `last`/`uncommitted`/`milestone`), feature-spec, db-migration, concept-run, dev-stack, project-bootstrap |
+| `start` | Begin a unit of work | session-control, code-implementation |
+| `continue` | Resume in-progress work | plan-foundation, plan-master, code-implementation |
+| `close` | Wrap up + handoff | session-control |
+| `complete` | Mark a unit as done | code-implementation |
+| `plan` | Prepare next unit | code-implementation *(alias: `plan-iteration`)* |
+| `init` | One-time setup | project-bootstrap, db-migration, dev-stack |
+| `create` | Make a new artifact | feature-spec, db-migration |
+| `amend` | Modify an existing artifact | feature-spec |
+| `review` | Read-only audit of an artifact | feature-spec |
+| `revise` | Structured edit | plan-master |
+| `certify` | Formal sign-off transitioning a readiness state | plan-foundation |
+| `greenfield` | First-time creation | plan-foundation, plan-master |
+| `verify` / `milestone` / `uncommitted` / `last` | Runtime/output checks | code-verify (scope flag), db-migration |
+| `run` | Execute (scripts / prompts) | db-migration, concept-run |
+| `show` | Read-only inspect of a specific record | plan-master *(alias: `task`)* |
+| `list` | Enumerate available items | concept-run |
+| `route` / `help` | Read-only Q&A | process-router |
+
+**Alias policy:** When a verb is renamed, the old name is kept as an alias for **at least one minor version**. Aliases are listed inline in each skill's parse-invocation table and in the matrix above.
+
+---
+
+## Blocked report shape (every gate)
+
+When a gate stops execution, the skill emits a uniform block so users always see the same shape:
+
+```markdown
+## @<skill> <command> — blocked (prerequisite)
+
+**Required:** <state or upstream step>
+**Detected:** <what's actually present>
+**Run first:** `<exact command to fix>`
+```
+
+Skills must not invent ad-hoc error messages for prerequisite failures.
 
 ---
 
@@ -89,7 +143,8 @@ foundation-complete  →  plan-master-ready  →  implementation-ready
 
 When adding or changing a skill:
 
-1. Update this matrix.
-2. Add or update § **Prerequisite gate** in that skill's `skill.md`.
+1. Update this matrix and (if a new verb is introduced) the canonical vocabulary above.
+2. Add or update § **Prerequisite gate** in that skill's `skill.md` using the **blocked report shape**.
 3. Add a row to `process-router/reference.md` if operators commonly hit the gate.
 4. Do **not** duplicate normative gate text in START_HERE beyond the readiness diagram — link here or to the skill.
+5. Prefer **reusing an existing canonical verb** over inventing a new one. If a new verb is unavoidable, document why.

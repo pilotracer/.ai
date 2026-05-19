@@ -354,8 +354,14 @@ Detect from the user message. If ambiguous, ask once:
 
 Before P0 INTERACTIONs:
 
-1. If `{HANDOFF}` missing → **stop**. Recommend `@project-bootstrap init` (or `@session-control` minimal HANDOFF only if user refuses bootstrap in the same message).
-2. If `.cursorrules` missing at repo root → **stop**. Recommend `@project-bootstrap init`.
+1. If `{HANDOFF}` missing → **stop** with the [blocked-report shape](#blocked-report-shape):
+   - **Required:** `{HANDOFF}` exists
+   - **Detected:** `.work/context/HANDOFF.md` missing
+   - **Run first:** `@project-bootstrap init` (or `@session-control` minimal HANDOFF only if user refuses bootstrap in the same message)
+2. If `.cursorrules` missing at repo root → **stop** with the same shape:
+   - **Required:** `.cursorrules` at repo root
+   - **Detected:** missing
+   - **Run first:** `@project-bootstrap init`
 3. If `REPLACE:` tokens remain in `.cursorrules` → warn; foundation may proceed but record unfilled tokens in the greenfield report.
 
 ### CF0 — Foundation-complete
@@ -363,7 +369,22 @@ Before P0 INTERACTIONs:
 Before **certify**:
 
 1. Evaluate [Foundation-complete (artifact check)](#s3b--foundation-complete-artifact-check).
-2. If **foundation-complete: no** → **stop**. Recommend `@plan-foundation continue` with the failing phase/gate list. Do **not** certify plan-master-ready.
+2. If **foundation-complete: no** → **stop** with the [blocked-report shape](#blocked-report-shape):
+   - **Required:** `foundation-complete: yes` (P0–P6 gates closed)
+   - **Detected:** `foundation-complete: no` — failing phase/gate list from status
+   - **Run first:** `@plan-foundation continue` (finish the failing phase, then re-invoke `certify`)
+
+### Blocked-report shape
+
+Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blocked-report-shape), every prerequisite stop in this skill emits:
+
+```markdown
+## @plan-foundation <command> — blocked (prerequisite)
+
+**Required:** <state or upstream step>
+**Detected:** <what's actually present>
+**Run first:** `<exact command to fix>`
+```
 
 ---
 
@@ -939,4 +960,4 @@ When foundation is complete on an adopting repo, **status** typically shows:
 | **Plan-master-ready** | **yes** after `certify plan-master-ready` + integrity |
 | **Master plan** | **Approved** under `{PLANS_ROOT}/full/` |
 | **Implementation-ready** | Ask `@plan-master status` |
-| **Next step** | `@session-control start` → `@code-implementation plan-iteration - M1` |
+| **Next step** | `@session-control start` → `@code-implementation plan - M1` |

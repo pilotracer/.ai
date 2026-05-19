@@ -54,6 +54,19 @@ Orchestrate **feature SPEC** artifacts under `{FEATURE_SPEC_ROOT}/<feature-slug>
 
 ## Create protocol
 
+### CR0 — Brownfield + readiness gates
+
+1. **Brownfield check (hard stop):** if `{FEATURE_SPEC_ROOT}/<slug>/` already exists → **stop** with the [blocked-report shape](#blocked-report-shape):
+   - **Required:** slug folder does not already exist
+   - **Detected:** `{FEATURE_SPEC_ROOT}/<slug>/` already contains files (list)
+   - **Run first:** `@feature-spec amend - <slug>` (to add a SPEC amendment), or pick a different slug, or delete the existing folder if it is a stale stub
+2. **Readiness check (warning only — proceed if user confirms):** read latest `{HANDOFF}` for `Plan-master-ready:` row. If absent or **no**, emit:
+   - **Warning:** SPEC will not slot into an Approved master plan yet (`plan-master-ready: no` or unknown). The SPEC is still useful for `plan-foundation` P3, but make sure your team expects out-of-plan SPECs.
+   - **Run first (optional):** `@plan-foundation certify plan-master-ready` → `@plan-master status`
+   - Then **continue** with create if user confirms in the same message.
+
+### CR1 — Author the SPEC
+
 1. Read FEATURE_STANDARD §2–§3, §8 (naming), §15.
 2. Confirm slug does not collide with existing bounded-context folder name alone (use verb phrase if needed).
 3. Check for related ADRs / foundation docs; list in SPEC header.
@@ -63,6 +76,20 @@ Orchestrate **feature SPEC** artifacts under `{FEATURE_SPEC_ROOT}/<feature-slug>
 7. Output create report with path and open questions (§13).
 
 **Stop** if user has not stated problem scope — ask once for one-paragraph purpose.
+
+---
+
+### Blocked-report shape
+
+Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blocked-report-shape), every prerequisite stop in this skill emits:
+
+```markdown
+## @feature-spec <command> — blocked (prerequisite)
+
+**Required:** <state or upstream step>
+**Detected:** <what's actually present>
+**Run first:** `<exact command to fix>`
+```
 
 ---
 

@@ -99,6 +99,33 @@ Infra paths changed for iteration work still require explicit owner approval —
 
 Deep cross-check of the **active iteration** vs master plan and SPECs. Use before `@code-implementation complete`, when ≥80% of iteration tasks are done, or on user request.
 
+### M0 — Milestone existence gate
+
+Before M1 (evidence gathering):
+
+1. Resolve target milestone:
+   a. If user provided `milestone - M{N}`, use that explicit `M{N}`.
+   b. Else read `{ITERATION_CARRIER}` `## Current iteration` header `M{N}`.
+2. Check the milestone exists:
+   a. In `{PLANS_ROOT}/full/YYYYMMDD-full-plan.md` §19 (Approved or Draft), **or**
+   b. In `{ITERATION_CARRIER}` `## Current iteration` block (valid per `code-implementation` skill).
+3. If neither location records this `M{N}` → **stop** with the [blocked-report shape](#blocked-report-shape):
+   - **Required:** `M{N}` defined in master plan §19 or active in `{ITERATION_CARRIER}` `## Current iteration`
+   - **Detected:** `M{N}` not present in either source (ghost milestone)
+   - **Run first:** `@plan-master show M{N}` (does it exist? alias: `task`) — if not, `@plan-master revise - add M{N}` or correct the milestone number; if it exists in the plan but no iteration block, `@code-implementation plan - M{N}`
+
+### Blocked-report shape
+
+Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blocked-report-shape):
+
+```markdown
+## @code-verify <command> — blocked (prerequisite)
+
+**Required:** <state or upstream step>
+**Detected:** <what's actually present>
+**Run first:** `<exact command to fix>`
+```
+
 ### M1 — Gather evidence
 
 1. `{PLANS_ROOT}/full/YYYYMMDD-full-plan.md` §19 (milestone), §20–§21 as needed.

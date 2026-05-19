@@ -1,7 +1,7 @@
 # Tutorial — fix `{ITERATION_CARRIER}` (NEXT-style file)
 
 **Doc type:** Corrective tutorial (portable).  
-**Skill:** `code-implementation` **plan-iteration** (regenerate) or **manual** edit — see valid-block criteria in `{SKILLS_ROOT}/code-implementation/skill.md`.  
+**Skill:** `code-implementation` **plan** (regenerate) or **manual** edit — see valid-block criteria in `{SKILLS_ROOT}/code-implementation/skill.md`. *(Legacy alias of `plan`: `plan-iteration`.)*  
 **Related:** [Fix plans + full plan drift](20260518-tutorial-fix-existing-plans.md) (broader), [Generate new NEXT](20260518-tutorial-next-generate-new.md) (structure).
 
 Use this doc when **`{ITERATION_CARRIER}` is wrong or stale** but you already have an Approved `{MASTER_PLAN}`.
@@ -24,7 +24,7 @@ Use this doc when **`{ITERATION_CARRIER}` is wrong or stale** but you already ha
 1. **Copy** the entire current `{ITERATION_CARRIER}` file to a scratch note (outside git or in `tmp/` per repo hygiene).  
 2. Fix **`{MASTER_PLAN}` first** if task ids or FR links are wrong — [broader tutorial](20260518-tutorial-fix-existing-plans.md).  
 3. Either:  
-   - **A)** Run `@code-implementation plan-iteration - M{N}` with the **correct** milestone (agent regenerates `## Current iteration` per skill), or  
+   - **A)** Run `@code-implementation plan - M{N}` with the **correct** milestone (agent regenerates `## Current iteration` per skill), or  
    - **B)** Manually edit only inside `## Current iteration …` through `### Done this iteration` (do not delete `## Done` history rows).
 
 ---
@@ -76,7 +76,7 @@ Use this doc when **`{ITERATION_CARRIER}` is wrong or stale** but you already ha
 
 ### 3.8 `## Recommended next` (above iteration)
 
-- After milestone complete: first row should be **`plan-iteration - M{N+1}`** or explicit human task.  
+- After milestone complete: first row should be **`@code-implementation plan - M{N+1}`** or explicit human task.  
 - Remove stale “start M1” when M1 is complete.
 
 ---
@@ -92,5 +92,5 @@ Use this doc when **`{ITERATION_CARRIER}` is wrong or stale** but you already ha
 ## 5. When to nuke vs repair
 
 - **Repair:** one wrong subsection, ids off-by-one, missing registry.  
-- **Regenerate:** iteration block is messier than 30 minutes to fix → `plan-iteration` for clean structure.  
+- **Regenerate:** iteration block is messier than 30 minutes to fix → `@code-implementation plan` for clean structure.  
 - **Nuke (rare):** file has conflicting duplicate `## Current iteration` headers → keep file, delete duplicate section bodies after backup, then regenerate one block.

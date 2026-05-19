@@ -2,7 +2,7 @@
 
 **Doc type:** Tactical planning tutorial (portable).  
 **Synonym:** “Sub-plan” = **`## Current iteration`** in `{ITERATION_CARRIER}`.  
-**Skill:** `@code-implementation plan-iteration - M{N}`.
+**Skill:** `@code-implementation plan - M{N}`   *(legacy alias: `plan-iteration - M{N}` — both still work; file kept for stability)*.
 
 ---
 
@@ -22,13 +22,13 @@ The sub-plan **never** invents new task ids; it **mirrors** the master plan for 
 
 | Question | If yes |
 |----------|--------|
-| Is `{MASTER_PLAN}` Approved for this milestone? | Run **plan-iteration**. |
+| Is `{MASTER_PLAN}` Approved for this milestone? | Run **`@code-implementation plan - M{N}`**. |
 | Is the milestone missing from the plan? | **plan-master revise** first. |
 | Are you only fixing typos in an existing block? | [Fix NEXT tutorial](20260518-tutorial-next-fix.md). |
 
 ---
 
-## 3. What `plan-iteration` does (operator view)
+## 3. What `plan` (legacy `plan-iteration`) does (operator view)
 
 1. Reads latest Approved `{MASTER_PLAN}` and milestone **M{N}**.  
 2. Copies task rows → preserves **`M{N}-T{n}`** ids.  

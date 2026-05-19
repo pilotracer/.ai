@@ -34,7 +34,7 @@
 
 ## Current iteration
 
-*(No active iteration — run `@code-implementation plan-iteration - M1` after master plan is **Approved** and `implementation-ready: yes`.)*
+*(No active iteration — run `@code-implementation plan - M1` after master plan is **Approved** and `implementation-ready: yes`.)*
 
 ```markdown
 ## Current iteration — M{N}: <milestone name>

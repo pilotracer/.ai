@@ -165,7 +165,7 @@ After master plan exists:
 3. @plan-master greenfield
 4. (owner reviews) → master plan Approved
 5. @plan-master status
-6. @session-control start → @code-implementation plan-iteration - M1
+6. @session-control start → @code-implementation plan - M1
 ```
 
 ---

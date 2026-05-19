@@ -33,6 +33,23 @@ Then in chat:
 
 Result: less re-prompting, fewer "where were we?" threads, a loop you can run **start → ship → hand off** every session.
 
+**Fast start on an existing repo?** → [`docs/adoption/minimal-adoption.md`](docs/adoption/minimal-adoption.md) (lite path vs full pipeline).
+
+---
+
+## Path convention (read this once)
+
+Docs often show paths like `.ai/START_HERE.md`. That applies when Agent OS lives **inside** an application repo. When the **git root is this framework repository**, the same files sit at the repo root **without** the `.ai/` prefix.
+
+| Layout | Where Agent OS lives | Example |
+|--------|----------------------|---------|
+| **Nested** (typical) | `your-app/.ai/` | `.ai/START_HERE.md`, `.ai/skills/` |
+| **Self-hosted** (this repo) | git root *is* the tree | `START_HERE.md`, `skills/` |
+
+Bootstrap always runs from the **application repo root** (parent of `.ai/`): `bash .ai/templates/bootstrap.sh`.
+
+**This framework repo:** `.cursorrules` and `DOCS_TECH_STACK.md` at the root intentionally keep unfilled `REPLACE:` tokens — they are templates, not a misconfigured product.
+
 ---
 
 ## How this compares
@@ -109,7 +126,7 @@ Agent OS is a **gated pipeline**: each stage unlocks the next. Skills enforce th
 │  PER MILESTONE M{N} — repeat until the master plan is done                  │
 └─────────────────────────────────────────────────────────────────────────────┘
 
-  @code-implementation plan-iteration - M{N}
+  @code-implementation plan - M{N}
         │  Writes ## Current iteration in .work/plans/NEXT.md from master plan
         ▼
   @code-implementation start
@@ -144,7 +161,7 @@ Agent OS is a **gated pipeline**: each stage unlocks the next. Skills enforce th
 @plan-foundation greenfield → @plan-foundation certify plan-master-ready
 @plan-master greenfield → @plan-master status
 @session-control start
-@code-implementation plan-iteration - M1 → start → continue
+@code-implementation plan - M1 → start → continue
 @code-verify milestone → @code-implementation complete
 @session-control close
 ```
@@ -161,12 +178,12 @@ All **11** skills live under [`skills/`](skills/README.md). Invoke as `@<skill-i
 | **plan-foundation** | Foundation docs 01–04, ADRs, SPECs, registries; certifies **plan-master-ready** | `greenfield` · `status` · `certify plan-master-ready` |
 | **plan-master** | Master plan with milestones; certifies **implementation-ready** | `greenfield` · `continue` · `status` · `revise` |
 | **session-control** | Session bookends; updates HANDOFF + NEXT | `start` · `close` · `status` |
-| **code-implementation** | Run one milestone from `NEXT.md`; per-task gates | `plan-iteration - M{N}` · `start` · `continue` · `complete` |
+| **code-implementation** | Run one milestone from `NEXT.md`; per-task gates | `plan - M{N}` · `start` · `continue` · `complete` |
 | **code-verify** | Audits (not implementation): milestone, dirty tree, last commit/push | `milestone` · `uncommitted` · `last` |
-| **feature-spec** | Author, review, or amend feature SPECs | `create - <slug>` · `review - <path>` |
-| **concept-run** | Run MOD-01…06 architecture/NFR prompts | `list` · `- MOD-06` (required for agent-assisted code) |
-| **db-migration** | Idempotent numbered SQL scripts (no Alembic chain) | `create - <description>` |
-| **dev-stack** | Generate or update isolated Docker `bin/start.sh` | `@dev-stack` (see skill for modes) |
+| **feature-spec** | Author, review, or amend feature SPECs | `create - <slug>` · `review - <path>` · `amend - <slug>` |
+| **concept-run** | Run MOD-01…06 architecture/NFR prompts | `list` · `status` · `run - MOD-06` (required for agent-assisted code) |
+| **db-migration** | Idempotent numbered SQL scripts (no Alembic chain) | `init` · `create - <description>` · `run` · `status` · `verify` |
+| **dev-stack** | Generate or update isolated Docker `bin/start.sh` | `init` · `status` |
 | **process-router** | Read-only: “how do I…?” → right skill or guide | `— <question>` · `help` |
 
 Gates between skills: [`skills/SKILL_DEPENDENCIES.md`](skills/SKILL_DEPENDENCIES.md).
@@ -276,14 +293,14 @@ Pick one milestone from the master plan and execute it task by task.
 
 | Invoke | What happens |
 |--------|----------------|
-| **`@code-implementation plan-iteration - M1`** | Builds or validates the **`## Current iteration`** section in `NEXT.md` from master-plan **M1** (task IDs, files, acceptance notes). Required before the first line of code. |
+| **`@code-implementation plan - M1`** | Builds or validates the **`## Current iteration`** section in `NEXT.md` from master-plan **M1** (task IDs, files, acceptance notes). Required before the first line of code.   *(Legacy alias: `plan-iteration - M1`.)* |
 | **`@code-implementation start`** | Reads the relevant **SPECs** and **CONVENTIONS**, then implements the **first** task in the iteration. |
 | **`@code-implementation continue`** | Picks up the next incomplete task; runs the **task gate** (your project's test/lint/type commands from `.cursorrules`) before marking `done`. Repeat until all tasks are finished. |
 | **`@db-migration create - …`** | *Only if the task changes schema.* Writes an idempotent numbered SQL script under your migrations dir (see `.cursorrules`) — never inline DDL in app code. |
 | **Dev stack script** | *First time this milestone needs runtime.* Use your project's dev-stack entry (e.g. `bin/start.sh` from `@dev-stack`) to start the isolated compose stack. The agent runs checks **inside** containers when Docker is the canonical path. |
 
 ```text
-@code-implementation plan-iteration - M1
+@code-implementation plan - M1
 @code-implementation start
 @code-implementation continue
 ```

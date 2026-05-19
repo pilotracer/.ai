@@ -6,13 +6,16 @@
 
 **Rule:** If something below contradicts a `skill.md` or a binding standard, the **skill / standard wins**. Open a PR to fix this file.
 
+**Paths:** In an app repo, prefix with `.ai/` (e.g. `.ai/START_HERE.md`). When Agent OS **is** the git root (this repository), use `START_HERE.md`, `skills/`, `standards/` with no prefix. See [README § Path convention](README.md#path-convention-read-this-once).
+
 ---
 
 ## 0. Two things to know about this project
 
 1. **Truth before speed.** The agent rules in `.cursorrules` (Core Principles 1–7) are non-negotiable. Never claim "tests pass" without running them and reading the output. If you're not sure, label your statement **Unverified**.
 2. **Skills do the orchestration. Standards bind the code. Concepts gate the architecture.** You almost never need to read all three at once — pick what your task needs.
-3. **`.ai/` = agnostic process** (skills, standards, guides). **`.work/` = this project's plans, SPECs, ADRs, HANDOFF.** Process how-to: [`.ai/PROCESS_ROUTER.md`](PROCESS_ROUTER.md) or `@process-router help`.
+3. **Process vs project truth:** skills, standards, guides (under `.ai/` when nested, or at repo root here) vs `.work/` plans, SPECs, HANDOFF. Process how-to: [`PROCESS_ROUTER.md`](PROCESS_ROUTER.md) or `@process-router help`.
+4. **Lite adoption:** need bootstrap + sessions only? → [`docs/adoption/minimal-adoption.md`](docs/adoption/minimal-adoption.md).
 
 ---
 
@@ -72,7 +75,7 @@ Then run `@session-control start` to formally open a session.
 **If `code-implementation status` says the iteration block is invalid or missing:**
 
 ```text
-@code-implementation plan-iteration - M{N}
+@code-implementation plan - M{N}
 ```
 
 Replace `M{N}` with the milestone you're working on (see `NEXT.md ## Recommended next` or `.work/plans/full/*-full-plan.md §19`).
@@ -221,7 +224,7 @@ Use **`@process-router - <question>`** for anything not listed — it routes to 
 | New feature SPEC? | `@feature-spec create - <slug>` |
 | Which concept prompt (MOD)? | `@concept-run list` · `@concept-run - MOD-06` (required for agent/Cursor code sessions unless **`human-only`**) |
 | Add a DB table/column? | `@db-migration create - <description>` |
-| Fix broken `NEXT.md`? | `20260518-tutorial-next-fix.md` · `@code-implementation plan-iteration - M{N}` |
+| Fix broken `NEXT.md`? | `20260518-tutorial-next-fix.md` · `@code-implementation plan - M{N}`   *(legacy alias: `plan-iteration`)* |
 | Tests/lint/type-check failed? | §6 above · re-run task gate per `.cursorrules` |
 | Close session safely? | `@session-control close` · `@session-control close commit` · `@session-control close commit push` |
 | Foundation vs master plan? | `plan-foundation` = P0–P6 + **plan-master-ready** · `plan-master` = full plan + **implementation-ready** |
