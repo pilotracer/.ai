@@ -15,9 +15,9 @@ It answers: *"Which skill, guide, or standard should I open for this question?"*
 ```text
 You ask a question
        ↓
-@process-router — <question>
+@process-router - <question>
        ↓
-"Run @db-migration create — …" + links to skill.md / guide
+"Run @db-migration create - …" + links to skill.md / guide
        ↓
 You invoke THAT skill to do the work
 ```
@@ -44,15 +44,15 @@ Use `@process-router` for *how-to* questions; use the line above for *where am I
 ## How to invoke
 
 ```text
-@process-router — how do I add a database migration?
-@process-router ask — which concept prompt for an AI-assisted PR?
-@process-router route — I'm ready to code M1, what do I run first?
-@process-router — what's the difference between plan-foundation and plan-master?
-@process-router — how do I set up Agent OS in a new repo?
+@process-router - how do I add a database migration?
+@process-router ask - which concept prompt for an AI-assisted PR?
+@process-router route - I'm ready to code M1, what do I run first?
+@process-router - what's the difference between plan-foundation and plan-master?
+@process-router - how do I set up Agent OS in a new repo?
 @process-router help
 ```
 
-The verb is optional — `@process-router — <question>` is enough. Aliases: `ask`, `where`, `how`.
+The verb is optional — `@process-router - <question>` is enough. Aliases: `ask`, `where`, `how`.
 
 ---
 
@@ -61,10 +61,10 @@ The verb is optional — `@process-router — <question>` is enough. Aliases: `a
 | Situation | Use |
 |-----------|-----|
 | First-time / empty `.work` | `@project-bootstrap init` · `bash .ai/templates/bootstrap.sh` |
-| Lost in the workflow | `@process-router — I'm lost` |
-| How-to for a specific step | `@process-router — how do I fix NEXT.md?` |
-| Which concept (MOD) applies | `@process-router — AI-assisted PR, which prompt?` |
-| Explain skill boundaries | `@process-router — foundation vs master plan?` |
+| Lost in the workflow | `@process-router - I'm lost` |
+| How-to for a specific step | `@process-router - how do I fix NEXT.md?` |
+| Which concept (MOD) applies | `@process-router - AI-assisted PR, which prompt?` |
+| Explain skill boundaries | `@process-router - foundation vs master plan?` |
 | Know exactly what's next | `@session-control status` + `.work/context/HANDOFF.md` + `.work/plans/NEXT.md` |
 
 ---

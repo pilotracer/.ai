@@ -11,24 +11,24 @@ Supplement to `skill.md`. Invocation examples, concept mapping, trigger quick-re
 ```
 @concept-run list
 @concept-run status
-@concept-run run — MOD-01
-@concept-run — MOD-06
-@concept-run run-all — pending
+@concept-run run - MOD-01
+@concept-run - MOD-06
+@concept-run run-all - pending
 ```
 
 ### Claude Code / opencode / Codex
 
 ```
-Follow .ai/skills/concept-run/skill.md — list. Read-only.
+Follow .ai/skills/concept-run/skill.md - list. Read-only.
 ```
 
 ```
-Follow .ai/skills/concept-run/skill.md — run — MOD-06.
+Follow .ai/skills/concept-run/skill.md - run - MOD-06.
 Execute the AI-amplification prompt and attach output to the PR or iteration Notes.
 ```
 
 ```
-Follow .ai/skills/concept-run/skill.md — run-all — pending.
+Follow .ai/skills/concept-run/skill.md - run-all - pending.
 Run each pending applicable concept in the current iteration registry.
 ```
 
@@ -79,7 +79,7 @@ The authoritative trigger table is in `.ai/concepts/README.md` § Trigger table.
 | Concept pack missing (no `.ai/concepts/`) | `list` reports `N/A — no pack`; `run` refuses with instructions |
 | `prompt.md` not found for MOD id | Report gap; suggest owner create the missing prompt |
 | Required input missing (e.g. no diff for MOD-01) | Ask user once for the missing input; do not invent |
-| `run-all — pending` finds no pending rows | Report `nothing to run` and suggest `@concept-run list` |
+| `run-all - pending` finds no pending rows | Report `nothing to run` and suggest `@concept-run list` |
 | Quantitative claim without evidence tag | Reject the claim; restate with `estimated` or `assumption` |
 | MOD-03 invoked for task that adds no billable units | Mark `N/A` in output with reason; do not fabricate cost lines |
 | `Status=gap` rows found | Treat as resolved — do not re-run unless user asks |
@@ -92,7 +92,7 @@ The authoritative trigger table is in `.ai/concepts/README.md` § Trigger table.
 When the task gate's manual "Also verify" section flags a concept requirement:
 
 1. Stop the task gate.
-2. Run `@concept-run run — MOD-{N}` for the relevant concept.
+2. Run `@concept-run run - MOD-{N}` for the relevant concept.
 3. Attach output to the task Notes column in `NEXT.md`.
 4. Update the iteration registry `Status` row to `done YYYY-MM-DD`.
 5. Resume the task gate.
@@ -106,7 +106,7 @@ Per `code-implementation` CO1, unresolved `Applies=yes` concept rows block miles
 When `@feature-spec create` or `review` needs §15 populated:
 
 1. Run `@concept-run list` to see which concepts apply to this feature.
-2. Run `@concept-run run — MOD-0N` for each applicable concept.
+2. Run `@concept-run run - MOD-0N` for each applicable concept.
 3. Populate §15 with the output skeleton.
 
 ---
@@ -125,6 +125,6 @@ When `@feature-spec create` or `review` needs §15 populated:
 | Prompt | Problem | Use instead |
 |--------|---------|-------------|
 | `@concept-run run` (no MOD id) | No target | `@concept-run list` first, then pick |
-| `@concept-run run — MOD-07` | No such concept | `@concept-run list` for valid ids |
+| `@concept-run run - MOD-07` | No such concept | `@concept-run list` for valid ids |
 | `@concept-run` with no concept pack | Nothing to run | Report and skip; do not fabricate |
 | Skipping MOD-06 on agent/Cursor diffs | Violates Required trigger | Run before `@code-implementation complete`; default AI-assisted |

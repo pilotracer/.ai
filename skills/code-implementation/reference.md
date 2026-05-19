@@ -10,7 +10,7 @@ Supplement to `skill.md`. Invocation examples, NEXT.md templates, mode compariso
 
 ```
 @code-implementation status
-@code-implementation plan-iteration — M1
+@code-implementation plan-iteration - M1
 @code-implementation start
 @code-implementation continue
 @code-implementation complete
@@ -34,7 +34,7 @@ Follow .ai/skills/code-implementation/skill.md — status. Read-only.
 ```
 
 ```
-Follow .ai/skills/code-implementation/skill.md — plan-iteration — M1.
+Follow .ai/skills/code-implementation/skill.md — plan-iteration - M1.
 Derive iteration block from plan-master and write it to NEXT.md.
 ```
 
@@ -62,9 +62,9 @@ Diff-only audit: secrets, scope, tests/lint/type on changed files.
 ## Typical session flow
 
 ```
-@session-control start — implement M1 platform skeleton
+@session-control start - implement M1 platform skeleton
 @code-implementation status               ← check if iteration block exists
-@code-implementation plan-iteration — M1  ← if block missing or invalid
+@code-implementation plan-iteration - M1  ← if block missing or invalid
 @code-implementation start                ← load context, begin T1
 @code-implementation continue             ← resume after interruption
 @code-implementation status               ← progress check (every 2–3 tasks)
@@ -82,7 +82,7 @@ Diff-only audit: secrets, scope, tests/lint/type on changed files.
 | Goal | Prompt |
 |------|--------|
 | What tasks remain? | `@code-implementation status` |
-| Generate iteration scope for M2 | `@code-implementation plan-iteration — M2` |
+| Generate iteration scope for M2 | `@code-implementation plan-iteration - M2` |
 | Start fresh on current iteration | `@code-implementation start` |
 | Resume after interruption | `@code-implementation continue` |
 | Run a specific task (shorthand, active iteration) | `@code-implementation task T4` |
@@ -242,7 +242,7 @@ Return: pass | fail | gaps-found, with specific file/rule citations.
 |-----------|----------|
 | NEXT.md has no `## Current iteration` | Run `plan-iteration` before start |
 | Iteration block exists but milestone not in plan-master | Block is invalid; re-run `plan-iteration` with correct milestone |
-| Master plan not Approved but HANDOFF has M1 waiver | Proceed with `plan-iteration — M1`; note waiver in start report |
+| Master plan not Approved but HANDOFF has M1 waiver | Proceed with `plan-iteration - M1`; note waiver in start report |
 | Schema change discovered mid-task | Stop task; run `@db-migration create`; resume after migration exists |
 | Task T3 depends on T2 which is blocked | Mark T3 `blocked (depends on T2)`; surface both in status |
 | All tasks done but test suite fails | Do not run complete; fix failing tests; re-run gate |
@@ -250,7 +250,7 @@ Return: pass | fail | gaps-found, with specific file/rule citations.
 | User asks for implementation-ready check | Redirect: `@plan-master status` — not code-implementation |
 | Second model unavailable for cross-LLM (M1–M3) | Log `skipped — single-model session`; does not block complete |
 | Second model unavailable for cross-LLM (**high-risk milestone** per threat model) | **fail** unless owner records a **human architect review** waiver in `{HANDOFF}` (name + date) per `code-verify` |
-| Cursor/agent session: MOD-06 skipped | **fail** at CO1; run `@concept-run — MOD-06` or attach output before complete. **`human-only`** opt-out requires explicit human declaration in the same message |
+| Cursor/agent session: MOD-06 skipped | **fail** at CO1; run `@concept-run - MOD-06` or attach output before complete. **`human-only`** opt-out requires explicit human declaration in the same message |
 | Protected file change needed | Stop; explain why; ask explicit permission; only proceed after yes |
 
 ---
@@ -259,7 +259,7 @@ Return: pass | fail | gaps-found, with specific file/rule citations.
 
 | Prompt | Problem | Use instead |
 |--------|---------|-------------|
-| `@code-implementation start` with no NEXT.md iteration block | No scope | `plan-iteration — M{N}` first |
+| `@code-implementation start` with no NEXT.md iteration block | No scope | `plan-iteration - M{N}` first |
 | `@code-implementation start` when implementation-ready: no | Prerequisite | `@plan-master status`; HANDOFF waiver or approve plan |
 | `@plan-master greenfield` when plan-master-ready: no | Prerequisite | `@plan-foundation certify` first |
 | `@code-implementation complete` with failing tests | Violates gate | Fix tests; rerun gate |
@@ -275,7 +275,7 @@ Return: pass | fail | gaps-found, with specific file/rule citations.
 | Command | Maps to |
 |---------|---------|
 | `/impl status` | status |
-| `/impl plan M1` | plan-iteration — M1 |
+| `/impl plan M1` | plan-iteration - M1 |
 | `/impl start` | start |
 | `/impl continue` | continue |
 | `/impl done` | complete |

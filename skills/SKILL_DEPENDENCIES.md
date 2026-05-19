@@ -78,7 +78,7 @@ foundation-complete  →  plan-master-ready  →  implementation-ready
 | `@plan-master greenfield` | Not plan-master-ready | `@plan-foundation status` → `@plan-foundation certify` |
 | `@plan-foundation certify` | Not foundation-complete | `@plan-foundation continue` |
 | `@plan-foundation greenfield` | No HANDOFF / `.cursorrules` | `@project-bootstrap init` |
-| `@code-implementation start` | No iteration block | `@code-implementation plan-iteration — M{N}` |
+| `@code-implementation start` | No iteration block | `@code-implementation plan-iteration - M{N}` |
 | `@code-implementation plan-iteration` | No Approved plan | `@plan-master status` → approve or waiver in HANDOFF |
 | `@code-implementation start` | Not implementation-ready | `@plan-master status` or document HANDOFF waiver |
 | "Ready to code?" in plan-foundation | Wrong skill | `@plan-master status` |

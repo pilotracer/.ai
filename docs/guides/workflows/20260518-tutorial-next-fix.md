@@ -24,7 +24,7 @@ Use this doc when **`{ITERATION_CARRIER}` is wrong or stale** but you already ha
 1. **Copy** the entire current `{ITERATION_CARRIER}` file to a scratch note (outside git or in `tmp/` per repo hygiene).  
 2. Fix **`{MASTER_PLAN}` first** if task ids or FR links are wrong — [broader tutorial](20260518-tutorial-fix-existing-plans.md).  
 3. Either:  
-   - **A)** Run `@code-implementation plan-iteration — M{N}` with the **correct** milestone (agent regenerates `## Current iteration` per skill), or  
+   - **A)** Run `@code-implementation plan-iteration - M{N}` with the **correct** milestone (agent regenerates `## Current iteration` per skill), or  
    - **B)** Manually edit only inside `## Current iteration …` through `### Done this iteration` (do not delete `## Done` history rows).
 
 ---
@@ -76,7 +76,7 @@ Use this doc when **`{ITERATION_CARRIER}` is wrong or stale** but you already ha
 
 ### 3.8 `## Recommended next` (above iteration)
 
-- After milestone complete: first row should be **`plan-iteration — M{N+1}`** or explicit human task.  
+- After milestone complete: first row should be **`plan-iteration - M{N+1}`** or explicit human task.  
 - Remove stale “start M1” when M1 is complete.
 
 ---

@@ -35,7 +35,7 @@ Normalize the user message to **verb** + optional **modifiers**. The word `sessi
 | User says | Verb | Git on close |
 |-----------|------|----------------|
 | `@session-control` **start** | start | — |
-| `session-control` **start** — \<goal\> | start | — |
+| `session-control` **start** - \<goal\> | start | — |
 | `@session-control` **close** | close | draft message only |
 | `session-control` **close** | close | draft message only |
 | `session-control` **close** **commit** | close | commit (HEREDOC message) |
@@ -45,7 +45,7 @@ Normalize the user message to **verb** + optional **modifiers**. The word `sessi
 
 **Aliases (same verb):** `begin`, `open` → start; `end`, `handoff` → close.
 
-**Goal text:** anything after `—` or on a new line after `start` (not the words `commit`/`push`).
+**Goal text:** anything after `-` or on a new line after `start` (not the words `commit`/`push`).
 
 ---
 
@@ -57,7 +57,7 @@ Normalize the user message to **verb** + optional **modifiers**. The word `sessi
 | **close** | `close` [commit] [push] | [Close protocol](#close-protocol) |
 | **status** | `status` | [Status protocol](#status-protocol) — compact snapshot; no HANDOFF writes |
 
-If the user gives a **task goal** with start (e.g. `start — work on payments SPEC`), capture it in the start report and use HANDOFF's conditional reading table.
+If the user gives a **task goal** with start (e.g. `start - work on payments SPEC`), capture it in the start report and use HANDOFF's conditional reading table.
 
 ---
 
@@ -128,7 +128,7 @@ Do **not** ask if goal is already clear from invocation or HANDOFF. Store in sta
 If the session goal mentions coding, M1, implementation, or a feature task:
 
 1. Run `@plan-master status` (read-only) or read HANDOFF for **Implementation-ready** and milestone waivers.
-2. If **implementation-ready: no** and no HANDOFF waiver for the named milestone → note in start report under **### Readiness (do not implement yet)** with redirect: `@plan-master status` → approve plan, or add HANDOFF waiver, or `@code-implementation plan-iteration — M{N}` only after prerequisites pass.
+2. If **implementation-ready: no** and no HANDOFF waiver for the named milestone → note in start report under **### Readiness (do not implement yet)** with redirect: `@plan-master status` → approve plan, or add HANDOFF waiver, or `@code-implementation plan-iteration - M{N}` only after prerequisites pass.
 3. Do **not** invoke `@code-implementation start` from session-control — route the user to that skill after gates pass.
 
 ### S5 — Mark session open (HANDOFF)
@@ -201,7 +201,7 @@ Optional: one line on dirty files (no full diff). For full context load, use **s
 
 **Execution order:** C1 → C2 → C3 → C4 (draft message) → C5 (HANDOFF) → C6 (NEXT) → C4b (git, if `commit`/`push`) → C7 (optional) → C8 (report).
 
-If C1 secrets **fail**, **stop** — do not run C5, C6, or C4b; report failure in C8.
+If C1 secrets **fail**, **stop** - do not run C5, C6, or C4b; report failure in C8.
 
 ### C1 — Working tree audit (mandatory)
 

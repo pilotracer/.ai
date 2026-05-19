@@ -30,11 +30,11 @@ Orchestrate **feature SPEC** artifacts under `{FEATURE_SPEC_ROOT}/<feature-slug>
 
 | User says | Mode | Action |
 |-----------|------|--------|
-| `@feature-spec` **create** — \<slug\> | create | New SPEC from template |
-| `@feature-spec` **review** — \<path\> | review | Checklist against FEATURE_STANDARD |
-| `@feature-spec` **amend** — \<path\> | amend | New amendment file |
-| `@feature-spec` **status** — \<path or slug\> | status | Read-only: exists? status header? §15? |
-| `@feature-spec` **approve** — \<path\> | approve | Set header Approved after review passes |
+| `@feature-spec` **create** - \<slug\> | create | New SPEC from template |
+| `@feature-spec` **review** - \<path\> | review | Checklist against FEATURE_STANDARD |
+| `@feature-spec` **amend** - \<path\> | amend | New amendment file |
+| `@feature-spec` **status** - \<path or slug\> | status | Read-only: exists? status header? §15? |
+| `@feature-spec` **approve** - \<path\> | approve | Set header Approved after review passes |
 
 **Slug:** kebab-case, informative (`user-auth`, not `feature1`).
 
@@ -76,7 +76,7 @@ Orchestrate **feature SPEC** artifacts under `{FEATURE_SPEC_ROOT}/<feature-slug>
 6. Output review report:
 
 ```markdown
-## feature-spec review — <slug>
+## feature-spec review - <slug>
 
 **Path:** … · **Status:** Draft | Approved | …
 

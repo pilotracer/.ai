@@ -141,7 +141,7 @@ or
 After master plan exists:
 
 ```
-@plan-master status — implementation-ready?
+@plan-master status - implementation-ready?
 ```
 
 **Agent must:** Evaluate master plan Approved + validation gates (plan-master skill). plan-foundation does **not** score this.
@@ -165,7 +165,7 @@ After master plan exists:
 3. @plan-master greenfield
 4. (owner reviews) → master plan Approved
 5. @plan-master status
-6. @session-control start → @code-implementation plan-iteration — M1
+6. @session-control start → @code-implementation plan-iteration - M1
 ```
 
 ---

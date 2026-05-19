@@ -12,7 +12,7 @@ Supplement to `skill.md`. Invocation examples and edge cases.
 | Continue | `plan-master` **continue** |
 | New plan | `@plan-master` **greenfield** |
 | Integrity only | `plan-master` **integrity** |
-| Revise | `plan-master` **revise** — add integration sandbox milestone |
+| Revise | `plan-master` **revise** - add integration sandbox milestone |
 | With mode | `plan-master greenfield` — **enterprise** |
 | Look up a task | `plan-master` **task** M1-T3 |
 | All tasks for a milestone | `plan-master` **task** M4 |
@@ -22,7 +22,7 @@ Supplement to `skill.md`. Invocation examples and edge cases.
 ```
 @plan-master status
 @plan-master continue
-@plan-master greenfield — ai-native
+@plan-master greenfield - ai-native
 Read .ai/skills/plan-master/skill.md and run integrity mode.
 ```
 

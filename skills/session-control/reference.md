@@ -11,7 +11,7 @@ Supplement to `skill.md`. Invocation examples, HANDOFF templates, and edge cases
 | Action | Prompt |
 |--------|--------|
 | Open | `@session-control` **start** |
-| Open + goal | `session-control` **start** — bootstrap platform skeleton |
+| Open + goal | `session-control` **start** - bootstrap platform skeleton |
 | Close | `@session-control` **close** |
 | Close + commit | `session-control` **close** **commit** |
 | Close + commit + push | `session-control` **close** **commit** **push** |
@@ -66,7 +66,7 @@ Default `close` never runs `git commit` or `git push`. User runs git manually fr
 **Start:**
 
 ```
-@session-control start — implement platform health route
+@session-control start - implement platform health route
 ```
 
 **Close (default — no git write):**

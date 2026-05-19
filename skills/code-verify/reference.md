@@ -77,7 +77,7 @@ Waivers do not carry forward to the next high-risk milestone.
 
 | Situation | MOD-06 row result |
 |-----------|--------------------|
-| Cursor/agent session with code changes in application source/tests, no output attached | **fail** — `skip` is forbidden |
+| Cursor/agent session with code changes in application source/tests, no output attached | **fail** - `skip` is forbidden |
 | Cursor/agent session, MOD-06 output attached (PR, task `Notes`, iteration registry) | **pass** |
 | Human declared **`human-only`** in the same message authoring the edits | **n/a** with quoted human declaration as evidence |
 

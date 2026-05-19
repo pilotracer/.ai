@@ -8,7 +8,7 @@ Binding **rules** for SPECs remain in `.ai/standards/*FEATURE_STANDARD*` (custom
 
 | Action | Command |
 |--------|---------|
-| Create SPEC | `@feature-spec create — <slug>` |
-| Review SPEC | `@feature-spec review — .work/features/<slug>/YYYYMMDD-SPEC.md` |
+| Create SPEC | `@feature-spec create - <slug>` |
+| Review SPEC | `@feature-spec review - .work/features/<slug>/YYYYMMDD-SPEC.md` |
 
 Portable skills reference `{FEATURE_SPEC_ROOT}` — see `.cursorrules` placeholder map.

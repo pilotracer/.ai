@@ -9,21 +9,21 @@ Supplement to `skill.md`. Invocation examples, mode comparison, and edge cases.
 ### Cursor
 
 ```
-@feature-spec create — user-auth
-@feature-spec review — .work/features/user-auth/YYYYMMDD-SPEC.md
-@feature-spec amend — .work/features/<slug>/YYYYMMDD-SPEC.md
-@feature-spec status — master-data
-@feature-spec approve — .work/features/<slug>/YYYYMMDD-SPEC.md
+@feature-spec create - user-auth
+@feature-spec review - .work/features/user-auth/YYYYMMDD-SPEC.md
+@feature-spec amend - .work/features/<slug>/YYYYMMDD-SPEC.md
+@feature-spec status - master-data
+@feature-spec approve - .work/features/<slug>/YYYYMMDD-SPEC.md
 ```
 
 ### Claude Code / opencode / Codex
 
 ```
-Follow .ai/skills/feature-spec/skill.md — create — user-auth.
+Follow .ai/skills/feature-spec/skill.md - create - user-auth.
 ```
 
 ```
-Follow .ai/skills/feature-spec/skill.md — review — .work/features/<slug>/YYYYMMDD-SPEC.md.
+Follow .ai/skills/feature-spec/skill.md - review - .work/features/<slug>/YYYYMMDD-SPEC.md.
 ```
 
 ```
@@ -72,7 +72,7 @@ Amendment filenames:
 |-----------|----------|
 | SPEC exists but is Draft | Review returns `needs-revision` until all §3 sections filled |
 | §15 missing at approve | Approve blocked until §15 filled or N/A justified per concept id |
-| Approved SPEC has defect | Use **amend** — never edit the Approved SPEC in place |
+| Approved SPEC has defect | Use **amend** - never edit the Approved SPEC in place |
 | Single reviewer on high-risk SPEC (threat model) | Flag in review; gate blocks approve unless ADR/owner waives |
 | Slug collision with another SPEC | Block create; suggest distinguishing slug (e.g. `oauth-login` vs `user-auth`) |
 | FEATURE_STANDARD path moved | Read `.ai/standards/` for latest `*FEATURE_STANDARD*` by date prefix |
@@ -104,7 +104,7 @@ Amendment filenames:
 
 | Prompt | Problem | Use instead |
 |--------|---------|-------------|
-| `@feature-spec create —` (no slug) | No target | Provide a kebab-case slug |
-| `@feature-spec create — master-data` (duplicate) | SPEC already exists | `@feature-spec amend` or `review` |
-| Editing SPEC after Approved without amend | Violates immutable rule | `@feature-spec amend — <path>` |
+| `@feature-spec create -` (no slug) | No target | Provide a kebab-case slug |
+| `@feature-spec create - master-data` (duplicate) | SPEC already exists | `@feature-spec amend` or `review` |
+| Editing SPEC after Approved without amend | Violates immutable rule | `@feature-spec amend - <path>` |
 | Marking SPEC Implemented in this skill | Wrong stage | `code-implementation complete` updates status |

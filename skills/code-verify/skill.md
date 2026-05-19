@@ -155,7 +155,7 @@ Waivers for high-risk milestones do not carry forward to the next high-risk mile
 {result}
 
 ### Verdict
-**pass** | **pass with gaps** | **fail** — {one sentence}
+**pass** | **pass with gaps** | **fail** - {one sentence}
 
 ### Next step
 - pass / pass with gaps (waived): `@code-implementation complete` allowed if tasks done + CO1 gates pass
@@ -224,7 +224,7 @@ HEAD_SHA=$(git rev-parse HEAD)
 |-----------|------------|------------|-------|
 | No `@{u}` | commit | `HEAD~1..HEAD` | First commit: `git diff --root HEAD` |
 | `HEAD` **ahead** of `@{u}` | **commit** | `@{u}..HEAD` | All unpushed commits |
-| `HEAD` **behind** `@{u}` | — | — | **fail** — pull/rebase first |
+| `HEAD` **behind** `@{u}` | — | — | **fail** - pull/rebase first |
 | `HEAD` **==** `@{u}` (synced) | **push** | `HEAD~1..HEAD` | Single tip commit delivered by push |
 | Merge commit as `HEAD` | commit or push | `HEAD^1..HEAD` | Use first parent for range |
 

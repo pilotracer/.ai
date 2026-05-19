@@ -2,7 +2,7 @@
 
 **Doc type:** Tactical planning tutorial (portable).  
 **Synonym:** “Sub-plan” = **`## Current iteration`** in `{ITERATION_CARRIER}`.  
-**Skill:** `@code-implementation plan-iteration — M{N}`.
+**Skill:** `@code-implementation plan-iteration - M{N}`.
 
 ---
 

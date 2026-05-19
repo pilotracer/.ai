@@ -22,7 +22,7 @@ Models rarely see your **invoice**. They will propose **new services, meshes, an
 
 1. For any **new billable unit** (service, cluster, mesh, log index), produce **monthly estimate bands** (low/high).  
 2. Tie spend to **drivers**: QPS, payload size, retention, cardinality, regions.  
-3. Add an **ADR** when spend crosses a team-defined **threshold** — include **\$** and **rollback** plan.  
+3. Add an **ADR** when spend crosses a team-defined **threshold** - include **\$** and **rollback** plan.  
 4. Compare **N+1** architecture vs **consolidation** scenario at same traffic **at least** qualitatively.
 
 ## Anti-patterns

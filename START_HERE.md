@@ -48,7 +48,7 @@ You forgot where you were? Run **one** of these — pick the lightest that answe
 
 | Need | Command |
 |---|---|
-| **Process question (signpost only)** | `@process-router — <question>` · [`PROCESS_ROUTER.md`](PROCESS_ROUTER.md) · `@process-router help` |
+| **Process question (signpost only)** | `@process-router - <question>` · [`PROCESS_ROUTER.md`](PROCESS_ROUTER.md) · `@process-router help` |
 | **Where am I / what's next?** | `@session-control status` + `.work/context/HANDOFF.md` + `.work/plans/NEXT.md` |
 | One-paragraph status (no writes) | `@session-control status` |
 | Where the iteration is (read-only) | `@code-implementation status` |
@@ -72,7 +72,7 @@ Then run `@session-control start` to formally open a session.
 **If `code-implementation status` says the iteration block is invalid or missing:**
 
 ```text
-@code-implementation plan-iteration — M{N}
+@code-implementation plan-iteration - M{N}
 ```
 
 Replace `M{N}` with the milestone you're working on (see `NEXT.md ## Recommended next` or `.work/plans/full/*-full-plan.md §19`).
@@ -95,8 +95,8 @@ Replace `M{N}` with the milestone you're working on (see `NEXT.md ## Recommended
 | Read the relevant feature SPEC **before** editing | `code-implementation/skill.md § Start protocol ST1` |
 | Run the **task gate** (tests + lint + type + secrets + scope) | `code-implementation/skill.md § Task gate` |
 | Schema change → **stop and run** `@db-migration create` | `code-implementation/skill.md § Hard rules` |
-| AI-assisted diff → run concept prompt | `@concept-run — MOD-06` |
-| Diff crosses >1 hard boundary | `@concept-run — MOD-01` |
+| AI-assisted diff → run concept prompt | `@concept-run - MOD-06` |
+| Diff crosses >1 hard boundary | `@concept-run - MOD-01` |
 | Type-check / lint / test commands match `.cursorrules` | `REPLACE:TYPECHECK_COMMAND`, `REPLACE:LINT_COMMAND`, `REPLACE:TEST_COMMAND` |
 | Run verification where `.cursorrules` says (container or host) | `.cursorrules` § Docker / local CI |
 
@@ -110,10 +110,10 @@ Replace `M{N}` with the milestone you're working on (see `NEXT.md ## Recommended
 | To check if foundation work is done | `@plan-foundation status` then `@plan-foundation certify` |
 | To author the master implementation plan | `@plan-master greenfield` (foundation must be `plan-master-ready` first; if a draft plan exists — `@plan-master continue`) |
 | To check if you can start coding | `@plan-master status` (only this skill scores `implementation-ready`) |
-| A new feature SPEC | `@feature-spec create — <slug>` (see `FEATURE_STANDARD` §3; **do not skip §15**) |
-| Concept / NFR prompts (MOD-01…06) | `@concept-run list` · `@concept-run — MOD-06` |
+| A new feature SPEC | `@feature-spec create - <slug>` (see `FEATURE_STANDARD` §3; **do not skip §15**) |
+| Concept / NFR prompts (MOD-01…06) | `@concept-run list` · `@concept-run - MOD-06` |
 | A new ADR | `.work/decisions/YYYYMMDD-NNN-<slug>.md` — see existing ADRs for shape |
-| A schema migration | `@db-migration create — <description>` (idempotent; no Alembic) |
+| A schema migration | `@db-migration create - <description>` (idempotent; no Alembic) |
 
 **Three readiness states (do not confuse them):**
 
@@ -180,7 +180,7 @@ Before claiming a task is done, answer **all** of these out loud:
 - [ ] Did I run the task gate (tests, lint, type-check per `.cursorrules`, secrets scan, scope check) and read the actual exit codes?
 - [ ] Did I touch only files in the task's declared file list?
 - [ ] If schema changed, did I create a numbered idempotent SQL script under the migrations dir from `.cursorrules`?
-- [ ] **AI-assisted default:** Cursor/agent session → MOD-06 **required** unless human declared **`human-only`** in the same message — did I run `@concept-run — MOD-06` and attach output?
+- [ ] **AI-assisted default:** Cursor/agent session → MOD-06 **required** unless human declared **`human-only`** in the same message — did I run `@concept-run - MOD-06` and attach output?
 - [ ] If concept registry rows were `Applies=yes`, did I run those prompts and update status (none left `pending`)?
 - [ ] Did I capture residual risks / deferred sub-work in task `Notes` or `UNKNOWNS.md` (not just the agent report)?
 - [ ] Did I update `NEXT.md ## Done this iteration` and `HANDOFF` produced-artifacts?
@@ -206,22 +206,22 @@ These are non-negotiable per `.cursorrules`:
 
 ## 10. Common questions (FAQ)
 
-Use **`@process-router — <question>`** for anything not listed — it routes to the right skill or doc without duplicating them.
+Use **`@process-router - <question>`** for anything not listed — it routes to the right skill or doc without duplicating them.
 
 **Example:**
-**`@process-router — what is the next step`**
+**`@process-router - what is the next step`**
 
 | Question | Answer |
 |----------|--------|
-| What is `process-router`? | Read-only **signpost** — [`PROCESS_ROUTER.md`](PROCESS_ROUTER.md); maps questions → skill + guide (no writes) |
-| How do I use `process-router`? | `@process-router help` · `@process-router — how do I start M1?` · `@process-router — which MOD prompt for AI-assisted code?` |
+| What is `process-router`? | Read-only **signpost** - [`PROCESS_ROUTER.md`](PROCESS_ROUTER.md); maps questions → skill + guide (no writes) |
+| How do I use `process-router`? | `@process-router help` · `@process-router - how do I start M1?` · `@process-router - which MOD prompt for AI-assisted code?` |
 | Where am I / what's next? | `@session-control status` + `.work/context/HANDOFF.md` + `.work/plans/NEXT.md` |
 | What does each `@skill` do? | [`README.md`](README.md) § Skills at a glance |
 | Ready to code? | `@plan-master status` (implementation-ready) → `@code-implementation start` |
-| New feature SPEC? | `@feature-spec create — <slug>` |
-| Which concept prompt (MOD)? | `@concept-run list` · `@concept-run — MOD-06` (required for agent/Cursor code sessions unless **`human-only`**) |
-| Add a DB table/column? | `@db-migration create — <description>` |
-| Fix broken `NEXT.md`? | `20260518-tutorial-next-fix.md` · `@code-implementation plan-iteration — M{N}` |
+| New feature SPEC? | `@feature-spec create - <slug>` |
+| Which concept prompt (MOD)? | `@concept-run list` · `@concept-run - MOD-06` (required for agent/Cursor code sessions unless **`human-only`**) |
+| Add a DB table/column? | `@db-migration create - <description>` |
+| Fix broken `NEXT.md`? | `20260518-tutorial-next-fix.md` · `@code-implementation plan-iteration - M{N}` |
 | Tests/lint/type-check failed? | §6 above · re-run task gate per `.cursorrules` |
 | Close session safely? | `@session-control close` · `@session-control close commit` · `@session-control close commit push` |
 | Foundation vs master plan? | `plan-foundation` = P0–P6 + **plan-master-ready** · `plan-master` = full plan + **implementation-ready** |

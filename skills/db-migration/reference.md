@@ -10,28 +10,28 @@ Supplement to `skill.md`. Invocation examples, SQL templates, and edge cases.
 |--------|--------|
 | Init / bootstrap | `@db-migration init` |
 | Init (alias) | `@db-migration implement` |
-| Create a table | `@db-migration create — add orders table` |
-| Add a column | `@db-migration add — add column email to master_parties` |
+| Create a table | `@db-migration create - add orders table` |
+| Add a column | `@db-migration add - add column email to master_parties` |
 | Run migrations | `@db-migration run` |
 | Check status | `@db-migration status` |
 | Verify idempotency | `@db-migration verify` |
-| Add a trigger | `@db-migration add — CREATE OR REPLACE FUNCTION validate_clave() …` |
+| Add a trigger | `@db-migration add - CREATE OR REPLACE FUNCTION validate_clave() …` |
 
 ### Cursor
 
 ```
 @db-migration init
 @db-migration implement
-@db-migration create — users table with tenant_id, email, password_hash
-@db-migration add — ADD COLUMN IF NOT EXISTS phone TEXT to users
+@db-migration create - users table with tenant_id, email, password_hash
+@db-migration add - ADD COLUMN IF NOT EXISTS phone TEXT to users
 @db-migration status
 ```
 
 ### Claude Code / opencode / Codex
 
 ```
-Follow .ai/skills/db-migration/skill.md — create. Add items table.
-Follow .ai/skills/db-migration/skill.md — verify.
+Follow .ai/skills/db-migration/skill.md - create. Add items table.
+Follow .ai/skills/db-migration/skill.md - verify.
 ```
 
 ---
@@ -229,9 +229,9 @@ async def run_migrations(engine: AsyncEngine) -> None:
 
 | Prompt | Problem | Use instead |
 |--------|---------|-------------|
-| `@db-migration create — drop users table` | Destructive; not idempotent-safe | Write a script that soft-deprecates (rename, add `active=false`) or use `DROP TABLE IF EXISTS` with extreme caution |
-| `@db-migration run — only script 003` | Skips ordering contract | Run all scripts — they're idempotent, so re-running is safe |
-| `@db-migration create` without describing what | Ambiguous | Describe the change: `create — add items table with cabys_code` |
+| `@db-migration create - drop users table` | Destructive; not idempotent-safe | Write a script that soft-deprecates (rename, add `active=false`) or use `DROP TABLE IF EXISTS` with extreme caution |
+| `@db-migration run - only script 003` | Skips ordering contract | Run all scripts — they're idempotent, so re-running is safe |
+| `@db-migration create` without describing what | Ambiguous | Describe the change: `create - add items table with cabys_code` |
 | `alembic upgrade head` | Wrong tool | Use `@db-migration run` — Alembic has been removed from this project |
 
 ---

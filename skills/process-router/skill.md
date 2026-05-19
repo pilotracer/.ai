@@ -29,8 +29,8 @@ description: >-
 
 | User says | Mode | Action |
 |-----------|------|--------|
-| `@process-router` **route** — \<question\> | route | [Route protocol](#route-protocol) |
-| `@process-router` **ask** — \<question\> | route | alias |
+| `@process-router` **route** - \<question\> | route | [Route protocol](#route-protocol) |
+| `@process-router` **ask** - \<question\> | route | alias |
 | `@process-router` **help** | help | List modes + 5 example questions |
 | `@process-router` — \<question\> (no verb) | route | Treat whole message as question |
 
@@ -49,20 +49,20 @@ description: >-
 
 ## Route protocol
 
-1. Read the user question (text after `—` or remainder of message).
+1. Read the user question (text after `-` or remainder of message).
 2. Classify into one primary bucket (see [reference.md](reference.md) § Routing table):
-   - **bootstrap** — first-time setup, empty `.work`, install `.cursorrules`
-   - **orient** — where am I / what's next
-   - **session** — start / close / status
-   - **plan** — foundation / master plan / ADR
-   - **implement** — iteration / task / verify
-   - **spec** — feature SPEC author/review
-   - **concept** — MOD-01…06 prompts
-   - **schema** — migrations
-   - **stack** — Docker / dev environment
-   - **test** — requesting or running tests
-   - **standard** — conventions, observability, security
-   - **learn** — reading order / architecture
+   - **bootstrap** - first-time setup, empty `.work`, install `.cursorrules`
+   - **orient** - where am I / what's next
+   - **session** - start / close / status
+   - **plan** - foundation / master plan / ADR
+   - **implement** - iteration / task / verify
+   - **spec** - feature SPEC author/review
+   - **concept** - MOD-01…06 prompts
+   - **schema** - migrations
+   - **stack** - Docker / dev environment
+   - **test** - requesting or running tests
+   - **standard** - conventions, observability, security
+   - **learn** - reading order / architecture
 3. Load **only** the row's linked paths (do not read the whole repo).
 4. Output the route report. If multiple buckets match, list primary first, secondary one line each.
 5. If question is ambiguous, ask **once** with ≤3 multiple-choice options from the table.

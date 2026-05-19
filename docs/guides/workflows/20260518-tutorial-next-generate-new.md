@@ -2,7 +2,7 @@
 
 **Doc type:** Authoring tutorial (portable).  
 **Prerequisites:** Approved `{MASTER_PLAN}` (or documented waiver in `{HANDOFF}`).  
-**Skill:** `@code-implementation plan-iteration — M{N}` (preferred) — reads milestone from plan and writes the block into `{ITERATION_CARRIER}`.
+**Skill:** `@code-implementation plan-iteration - M{N}` (preferred) — reads milestone from plan and writes the block into `{ITERATION_CARRIER}`.
 
 ---
 
@@ -25,7 +25,7 @@ The **master plan** owns M1…Mn **definitions**; the carrier owns **now**.
    - `## Blocked on owner` (optional).  
    - `## Recommended next` (one row: run plan-foundation / plan-master / plan-iteration as appropriate).  
 2. Do **not** write `## Current iteration` by hand until the master plan exists and is Approved.  
-3. Run **`@code-implementation plan-iteration — M1`** (or first milestone).  
+3. Run **`@code-implementation plan-iteration - M1`** (or first milestone).  
 4. Skill inserts the iteration block **after** `## Recommended next` (per `code-implementation` skill — confirm order in your skill if forked).
 
 ---
@@ -57,7 +57,7 @@ An iteration block is **valid** when **all** are true (mirror of `code-implement
 When all tasks show `done`:
 
 1. Run **`@code-implementation complete`** (updates Done, clears iteration guidance, sets Recommended next).  
-2. Run **`@code-implementation plan-iteration — M{N+1}`** to append a **fresh** `## Current iteration` for the next milestone.  
+2. Run **`@code-implementation plan-iteration - M{N+1}`** to append a **fresh** `## Current iteration` for the next milestone.  
 3. Optionally **archive** the previous iteration block into `## Done` or a `.work/plans/archives/` snippet if your governance requires long retention on one page.
 
 ---
@@ -65,7 +65,7 @@ When all tasks show `done`:
 ## 6. Agent prompt (optional)
 
 ```text
-Read {MASTER_PLAN} milestone M{N}. Run code-implementation plan-iteration — M{N}.
+Read {MASTER_PLAN} milestone M{N}. Run code-implementation plan-iteration - M{N}.
 Do not invent task ids. Preserve FR/NFR references from the plan.
 ```
 

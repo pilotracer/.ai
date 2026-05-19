@@ -2,7 +2,7 @@
 
 **Project prompts live in [`.work/prompts/`](../.work/prompts/)**, not under `.ai/`.
 
-Decision questionnaires and archived owner answers are **project-local** — not a portable standard layout.
+Decision questionnaires and archived owner answers are **project-local** - not a portable standard layout.
 
 | Typical file | Purpose | Read by skills? |
 |--------------|---------|-----------------|

@@ -82,7 +82,7 @@ Proposal → Spec → Implementation → Release notes → Archive
 
 | Action | Skill |
 |--------|-------|
-| Create SPEC | `@feature-spec create — <slug>` |
-| Review SPEC | `@feature-spec review — <path>` |
+| Create SPEC | `@feature-spec create - <slug>` |
+| Review SPEC | `@feature-spec review - <path>` |
 | Implement | `@code-implementation start` / `continue` |
 | Verify milestone | `@code-verify milestone` |

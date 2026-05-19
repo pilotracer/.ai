@@ -70,7 +70,7 @@ Agent OS is a **gated pipeline**: each stage unlocks the next. Skills enforce th
 │  PER MILESTONE M{N} — repeat until the master plan is done                  │
 └─────────────────────────────────────────────────────────────────────────────┘
 
-  @code-implementation plan-iteration — M{N}
+  @code-implementation plan-iteration - M{N}
         │  Writes ## Current iteration in .work/plans/NEXT.md from master plan
         ▼
   @code-implementation start
@@ -78,7 +78,7 @@ Agent OS is a **gated pipeline**: each stage unlocks the next. Skills enforce th
         ▼
   @code-implementation continue     ◄──┐
         │  Per task: implement → task gate (tests · lint · type)  │
-        │  Schema change? → @db-migration create — …              │
+        │  Schema change? → @db-migration create - …              │
         └────────────────────────────────────────────────────────┘
         ▼
   @code-verify milestone            ← plan + SPEC audit before you claim done
@@ -91,9 +91,9 @@ Agent OS is a **gated pipeline**: each stage unlocks the next. Skills enforce th
 │  ANYTIME — supporting skills (invoke when the work needs them)               │
 └─────────────────────────────────────────────────────────────────────────────┘
 
-  @process-router — <question>      lost? read-only signpost (no file writes)
-  @feature-spec create — <slug>     feature SPEC (see Skills at a glance)
-  @concept-run list | — MOD-0N      architecture prompts MOD-01…06 (MOD-06 default for agent code)
+  @process-router - <question>      lost? read-only signpost (no file writes)
+  @feature-spec create - <slug>     feature SPEC (see Skills at a glance)
+  @concept-run list | - MOD-0N      architecture prompts MOD-01…06 (MOD-06 default for agent code)
   @dev-stack                        Docker dev helper script (bin/start.sh)
   @code-verify uncommitted | last   commit hygiene (milestone mode is in the loop above)
 ```
@@ -105,7 +105,7 @@ Agent OS is a **gated pipeline**: each stage unlocks the next. Skills enforce th
 @plan-foundation greenfield → @plan-foundation certify plan-master-ready
 @plan-master greenfield → @plan-master status
 @session-control start
-@code-implementation plan-iteration — M1 → start → continue
+@code-implementation plan-iteration - M1 → start → continue
 @code-verify milestone → @code-implementation complete
 @session-control close
 ```
@@ -122,11 +122,11 @@ All **11** skills live under [`skills/`](skills/README.md). Invoke as `@<skill-i
 | **plan-foundation** | Foundation docs 01–04, ADRs, SPECs, registries; certifies **plan-master-ready** | `greenfield` · `status` · `certify plan-master-ready` |
 | **plan-master** | Master plan with milestones; certifies **implementation-ready** | `greenfield` · `continue` · `status` · `revise` |
 | **session-control** | Session bookends; updates HANDOFF + NEXT | `start` · `close` · `status` |
-| **code-implementation** | Run one milestone from `NEXT.md`; per-task gates | `plan-iteration — M{N}` · `start` · `continue` · `complete` |
+| **code-implementation** | Run one milestone from `NEXT.md`; per-task gates | `plan-iteration - M{N}` · `start` · `continue` · `complete` |
 | **code-verify** | Audits (not implementation): milestone, dirty tree, last commit/push | `milestone` · `uncommitted` · `last` |
-| **feature-spec** | Author, review, or amend feature SPECs | `create — <slug>` · `review — <path>` |
-| **concept-run** | Run MOD-01…06 architecture/NFR prompts | `list` · `— MOD-06` (required for agent-assisted code) |
-| **db-migration** | Idempotent numbered SQL scripts (no Alembic chain) | `create — <description>` |
+| **feature-spec** | Author, review, or amend feature SPECs | `create - <slug>` · `review - <path>` |
+| **concept-run** | Run MOD-01…06 architecture/NFR prompts | `list` · `- MOD-06` (required for agent-assisted code) |
+| **db-migration** | Idempotent numbered SQL scripts (no Alembic chain) | `create - <description>` |
 | **dev-stack** | Generate or update isolated Docker `bin/start.sh` | `@dev-stack` (see skill for modes) |
 | **process-router** | Read-only: “how do I…?” → right skill or guide | `— <question>` · `help` |
 
@@ -237,20 +237,20 @@ Pick one milestone from the master plan and execute it task by task.
 
 | Invoke | What happens |
 |--------|----------------|
-| **`@code-implementation plan-iteration — M1`** | Builds or validates the **`## Current iteration`** section in `NEXT.md` from master-plan **M1** (task IDs, files, acceptance notes). Required before the first line of code. |
+| **`@code-implementation plan-iteration - M1`** | Builds or validates the **`## Current iteration`** section in `NEXT.md` from master-plan **M1** (task IDs, files, acceptance notes). Required before the first line of code. |
 | **`@code-implementation start`** | Reads the relevant **SPECs** and **CONVENTIONS**, then implements the **first** task in the iteration. |
 | **`@code-implementation continue`** | Picks up the next incomplete task; runs the **task gate** (your project's test/lint/type commands from `.cursorrules`) before marking `done`. Repeat until all tasks are finished. |
-| **`@db-migration create — …`** | *Only if the task changes schema.* Writes an idempotent numbered SQL script under your migrations dir (see `.cursorrules`) — never inline DDL in app code. |
+| **`@db-migration create - …`** | *Only if the task changes schema.* Writes an idempotent numbered SQL script under your migrations dir (see `.cursorrules`) — never inline DDL in app code. |
 | **Dev stack script** | *First time this milestone needs runtime.* Use your project's dev-stack entry (e.g. `bin/start.sh` from `@dev-stack`) to start the isolated compose stack. The agent runs checks **inside** containers when Docker is the canonical path. |
 
 ```text
-@code-implementation plan-iteration — M1
+@code-implementation plan-iteration - M1
 @code-implementation start
 @code-implementation continue
 ```
 
 ```text
-@db-migration create — <short description>
+@db-migration create - <short description>
 ```
 
 ```bash
@@ -301,7 +301,7 @@ Leave a clean handoff for your future self (or the next agent).
 | Moment | Command |
 |--------|---------|
 | Where am I? | `@session-control status` |
-| How do I…? | `@process-router — <question>` |
+| How do I…? | `@process-router - <question>` |
 | Stuck on process | [`START_HERE.md`](START_HERE.md) |
 | Dirty tree before commit | `@code-verify uncommitted` |
 | After you committed | `@code-verify last` |

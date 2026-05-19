@@ -91,7 +91,7 @@ Run **before** **greenfield**, **continue**, or **revise** (not before **status*
 
 ## Parse invocation
 
-Normalize the user message to **verb** + optional **modifiers** + optional **goal text** (after `—`).
+Normalize the user message to **verb** + optional **modifiers** + optional **goal text** (after `-`).
 
 | User says | Verb | Notes |
 |-----------|------|-------|
@@ -99,14 +99,14 @@ Normalize the user message to **verb** + optional **modifiers** + optional **goa
 | `plan-master` **continue** | continue | Resume next incomplete planning phase |
 | `plan-master` **greenfield** | greenfield | New plan from YAML/minimal input |
 | `plan-master` **integrity** | integrity | Phase 5 only — contradiction and fitness review |
-| `plan-master` **revise** — \<reason\> | revise | Update existing plan; bump version note in plan header |
+| `plan-master` **revise** - \<reason\> | revise | Update existing plan; bump version note in plan header |
 | `plan-master greenfield` — startup \| enterprise \| ai-native \| ultra-scale | greenfield | Apply [Advanced mode](#advanced-modes) |
 || `plan-master` **task** M1-T3 | task | Read-only: show one task full record (description, files, FR/NFR, status) |
 || `plan-master` **task** M2 | task | Read-only: show all task records for milestone M2 |
 
 **Aliases:** `master plan`, `implementation roadmap`, `build roadmap`, `whole system plan` → map to **continue** if plan file exists, else **greenfield**.
 
-**Goal text:** anything after `—` (not mode keywords).
+**Goal text:** anything after `-` (not mode keywords).
 
 ---
 
@@ -547,7 +547,7 @@ If master plan **missing** → **implementation-ready: no** — run **greenfield
 ## Revise protocol
 
 0. Run [Prerequisite gate](#prerequisite-gate-mutating-modes) **PG1** (and **PG2** revise row).
-1. Read latest `{PLANS_ROOT}/full/YYYYMMDD-full-plan.md` and the user's stated reason (after `—`).
+1. Read latest `{PLANS_ROOT}/full/YYYYMMDD-full-plan.md` and the user's stated reason (after `-`).
 2. Apply delta; bump version note in plan header; re-run Phase 5 integrity subset.
 3. Do not set **Approved** until P5 **pass** (or documented waivers).
 4. Output completion checklist.

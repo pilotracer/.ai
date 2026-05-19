@@ -31,9 +31,9 @@ Execute **concept pack** procedures under `.ai/concepts/<name>/prompt.md`. Regis
 |-----------|------|--------|
 | `@concept-run` **list** | list | Trigger table summary (read-only) |
 | `@concept-run` **status** | status | Pending concept rows in NEXT § Current iteration |
-| `@concept-run` **run** — MOD-0N | run | Execute one prompt |
-| `@concept-run` — MOD-0N | run | alias |
-| `@concept-run` **run-all** — pending | run-all | All iteration rows with Applies=yes, Status=pending |
+| `@concept-run` **run** - MOD-0N | run | Execute one prompt |
+| `@concept-run` - MOD-0N | run | alias |
+| `@concept-run` **run-all** - pending | run-all | All iteration rows with Applies=yes, Status=pending |
 
 **Ids:** MOD-01 … MOD-06 — map to folders in `.ai/concepts/README.md` § Concept index.
 

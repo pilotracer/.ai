@@ -40,7 +40,7 @@ Normalize the user message to **verb** + optional **target**.
 | `@db-migration` **implement** | init (alias) | Same as init |
 | `@db-migration` **setup** | init (alias) | Same as init |
 | `@db-migration` **bootstrap** | init (alias) | Same as init |
-| `@db-migration` **create** — add users table | create | Produce a new numbered `.sql` script |
+| `@db-migration` **create** - add users table | create | Produce a new numbered `.sql` script |
 | `@db-migration` **add** column `email` to `users` | add | Append to `schema_changes.sql` or create a new script |
 | `db-migration` **run** | run | Simulate/dry-run or execute all scripts |
 | `db-migration` **status** | status | Read-only: list scripts, verify idempotency |

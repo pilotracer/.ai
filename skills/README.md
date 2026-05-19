@@ -41,7 +41,7 @@ Use for **new** skills and for any **rename** (update `.cursorrules`, this READM
 
 **Skill prerequisites (gates):** [SKILL_DEPENDENCIES.md](SKILL_DEPENDENCIES.md) — which modes **stop** if an upstream step was skipped (e.g. `@plan-master greenfield` before `@plan-foundation certify plan-master-ready`).
 
-**Orientation:** `@process-router — <question>` when lost; `@session-control status` for repo snapshot.
+**Orientation:** `@process-router - <question>` when lost; `@session-control status` for repo snapshot.
 
 **Do not** ask plan-foundation for implementation-ready — use `plan-master status`.
 

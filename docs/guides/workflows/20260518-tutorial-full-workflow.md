@@ -62,7 +62,7 @@
 
 ## Phase 4 — Iteration block (`{ITERATION_CARRIER}`)
 
-1. Run your implementation skill’s **plan-iteration** mode (e.g. `code-implementation plan-iteration — M{N}`) **or** manually create the iteration section using the same shape your skill defines.  
+1. Run your implementation skill’s **plan-iteration** mode (e.g. `code-implementation plan-iteration - M{N}`) **or** manually create the iteration section using the same shape your skill defines.  
 2. Ensure the block includes:  
    - Milestone ref → `{MASTER_PLAN}` section for that milestone.  
    - In / out of scope.  

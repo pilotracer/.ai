@@ -117,7 +117,7 @@ plan-master-ready certification (semantic validation — THIS skill certifies)
     ↓
 master plan Approved
     ↓
-implementation-ready (@plan-master status — safe for broad execution)
+implementation-ready (@plan-master status - safe for broad execution)
     ↓
 code per approved roadmap + SPECs
 ```
@@ -892,7 +892,7 @@ README.md
 
 **Q:** Foundation P0–P6 is complete and **plan-master-ready** is certified. Proceed to **plan-master** for the master implementation plan (`{PLANS_ROOT}/full/YYYYMMDD-full-plan.md`)?
 **Type:** confirm
-**Skip if:** plan-master-ready is **no** — list blockers; use **continue** instead
+**Skip if:** plan-master-ready is **no** - list blockers; use **continue** instead
 
 **On confirm:**
 
@@ -939,4 +939,4 @@ When foundation is complete on an adopting repo, **status** typically shows:
 | **Plan-master-ready** | **yes** after `certify plan-master-ready` + integrity |
 | **Master plan** | **Approved** under `{PLANS_ROOT}/full/` |
 | **Implementation-ready** | Ask `@plan-master status` |
-| **Next step** | `@session-control start` → `@code-implementation plan-iteration — M1` |
+| **Next step** | `@session-control start` → `@code-implementation plan-iteration - M1` |

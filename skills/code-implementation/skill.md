@@ -33,7 +33,7 @@ Execute implementation iterations derived from an **Approved master plan** (`{PL
 - **No secrets in code, tests, or comments.** Use `.env` variables or KMS references.
 - **Completion Gate is non-negotiable.** Per `.cursorrules`: code changed → checks run → output reviewed → residual risks listed. Cannot be skipped.
 - **AI-assisted default:** Cursor/agent sessions are **AI-assisted: yes** for MOD-06 unless the human explicitly declares **`human-only`** in the same message. Agents must not skip MOD-06 by self-classifying.
-- **MOD-06 before complete:** `@concept-run — MOD-06` (or documented output path) is **required** before `@code-implementation complete` when any task in the iteration touched application source or tests (per DIRECTORY_MAP).
+- **MOD-06 before complete:** `@concept-run - MOD-06` (or documented output path) is **required** before `@code-implementation complete` when any task in the iteration touched application source or tests (per DIRECTORY_MAP).
 - **Every mode ends with a Completion checklist** — each item `pass` | `fail` | `skip` with evidence.
 
 ---
@@ -45,7 +45,7 @@ Normalize the user message to **verb** + optional **target**.
 | User says | Verb | Action |
 |-----------|------|--------|
 | `@code-implementation` **status** | status | Read-only: task matrix, progress snapshot |
-| `@code-implementation` **plan-iteration** — M1 | plan-iteration | Generate/validate `## Current iteration` block from plan-master milestone |
+| `@code-implementation` **plan-iteration** - M1 | plan-iteration | Generate/validate `## Current iteration` block from plan-master milestone |
 | `code-implementation` **start** | start | Load iteration block, read SPECs/CONVENTIONS, begin first task |
 | `code-implementation` **continue** | continue | Resume: find first incomplete task, implement, gate, advance |
 | `code-implementation` **complete** | complete | Finalize iteration: CO2 `@code-verify milestone` + CO1 gates + update HANDOFF/NEXT |
@@ -155,12 +155,12 @@ Generates or validates the `## Current iteration` block in `NEXT.md` from the ne
 4. If plan is **Draft** and HANDOFF has **no** waiver naming milestone **M{N}** → **stop**. Recommend `@plan-master status` → approve plan or add HANDOFF waiver.
 5. Read `{ITERATION_CARRIER}` — find `## Done this iteration` and `## Recommended next` to determine which milestone is next.
 
-**Note:** **implementation-ready** is checked at [ST0](#st0--implementation-gate) (**start** / **continue**), not at plan-iteration — you may build the iteration block once the plan is **Approved** (or milestone-waived per steps 2–4).
+**Note:** **implementation-ready** is checked at [ST0](#st0--implementation-gate) (**start** / **continue**), not at plan-iteration - you may build the iteration block once the plan is **Approved** (or milestone-waived per steps 2–4).
 
 ### PI2 — Select target milestone
 
 1. Identify the first incomplete milestone (M1…) in plan-master §19.
-2. If user specified `plan-iteration — M{N}`, use that milestone directly; verify it exists in the plan.
+2. If user specified `plan-iteration - M{N}`, use that milestone directly; verify it exists in the plan.
 3. Check dependencies: if the milestone declares prior milestones as dependencies, confirm they are done (or explicitly waived in HANDOFF).
 
 ### PI3 — Derive tasks
@@ -331,7 +331,7 @@ Run after every task implementation before marking `done`. All checks must pass.
 | No secrets in diff | `git diff --unified=0` reviewed | Same rules as `code-verify` S1 — no keys, tokens, passwords, PEM material |
 | Protected files | `git diff --name-only` reviewed | No `.cursorrules` §Protected Files paths unless user explicitly approved |
 | Scope discipline | `git diff --name-only` | All paths in declared task file list |
-| MOD-06 (AI-assisted) | `@concept-run — MOD-06` when iteration touched code | Output attached to PR, task `Notes`, or iteration registry; **required** before **complete** (see CO1) |
+| MOD-06 (AI-assisted) | `@concept-run - MOD-06` when iteration touched code | Output attached to PR, task `Notes`, or iteration registry; **required** before **complete** (see CO1) |
 
 **Also verify (manual — no single exit code):**
 
@@ -429,7 +429,7 @@ All **manual** validation steps in the iteration block (e.g. `curl /health`) mus
 If the iteration surfaced documentation gaps:
 
 - **SPEC amendment** → create `{FEATURE_SPEC_ROOT}/<context>/YYYYMMDD-SPEC-amendment-NN.md`. Do not edit a merged SPEC.
-- **Full Plan gap** → note in HANDOFF; recommend `@plan-master revise — <reason>`.
+- **Full Plan gap** → note in HANDOFF; recommend `@plan-master revise - <reason>`.
 - **Foundation gap** → note in HANDOFF; recommend `@plan-foundation continue` (rare — only for structural omissions).
 - **New assumptions / risks / unknowns surfaced** → append to `{PLANS_ROOT}/ASSUMPTIONS.md`, `RISK_REGISTRY.md`, `UNKNOWNS.md` respectively.
 
@@ -439,7 +439,7 @@ Do not edit archived decision prompts.
 
 1. Set iteration block `**Status:** complete`.
 2. Move all task rows to `### Done this iteration` with completion dates.
-3. Set `## Recommended next` to the next milestone: `@code-implementation plan-iteration — M{N+1}` or the first task of M{N+1} if already scoped.
+3. Set `## Recommended next` to the next milestone: `@code-implementation plan-iteration - M{N+1}` or the first task of M{N+1} if already scoped.
 4. Clear the `## Current iteration` body or replace with a one-line reference: `M{N} complete — see Done section.`
 
 ### CO5 — HANDOFF update
