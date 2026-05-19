@@ -8,8 +8,6 @@
 
 **Project working artifacts** (plans, SPECs, ADRs, prompts, HANDOFF) live under **[`.work/`](../.work/README.md)**.
 
-Do **not** treat `.claude/` as authoritative.
-
 ---
 
 ## Layout (`.ai/` only)
