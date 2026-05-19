@@ -11,10 +11,20 @@ You get less re-prompting, fewer “where were we?” threads, and a loop you ca
 ## Mini-tutorial — full lifecycle (agent chat)
 
 One straight line: **foundation → master plan → session → milestone → hand off**.  
-Replace `M1` with the milestone in `.work/plans/NEXT.md`.  
-**Already past planning?** Start at **§3**.
+Replace `M1` with the milestone named in `.work/plans/NEXT.md`.  
+**Already past planning?** Jump to **§3**.
+
+---
 
 ### 1 · Foundation (once per project)
+
+Turn an idea into a **documented, reviewable blueprint** — still no application code.
+
+| Invoke | What happens |
+|--------|----------------|
+| **`@plan-foundation greenfield`** | Walks you through P0–P6: captures product intent and scope (**doc 01**), integration sources and evidence (**doc 02**), optional product lanes (**doc 03**), architecture and repo layout proposal (**doc 04**). Also seeds **ADRs**, **feature SPECs**, **ASSUMPTIONS / RISKS / UNKNOWNS**, and session files (`HANDOFF`, `NEXT`). |
+| **`@plan-foundation status`** | Read-only snapshot: which gates passed, what is missing, whether you are safe to approach the master plan. |
+| **`@plan-foundation certify plan-master-ready`** | Deep check that foundation artifacts are consistent and complete enough for **`@plan-master`** — certifies **plan-master-ready**, not implementation-ready. |
 
 ```text
 @plan-foundation greenfield
@@ -22,25 +32,55 @@ Replace `M1` with the milestone in `.work/plans/NEXT.md`.
 @plan-foundation certify plan-master-ready
 ```
 
-Produces `.work/plans/foundation/` (docs 01–04), registries, SPECs/ADRs — **no application code yet**.
+**You should have:** `.work/plans/foundation/` (01–04), registries, SPECs, and a clear “what we are building” story.
+
+---
 
 ### 2 · Master plan (once per project)
+
+Turn the blueprint into an **approved execution roadmap** with milestones and tasks.
+
+| Invoke | What happens |
+|--------|----------------|
+| **`@plan-master greenfield`** | Authors `{PLANS_ROOT}/full/*-full-plan.md`: FR/NFR traceability, milestones **M1…M9**, per-task file lists, acceptance criteria, and links back to foundation + SPECs. |
+| **`@plan-master status`** | Read-only: plan exists, **Approved** or still Draft, integrity snapshot, and **`implementation-ready: yes/no`** — only this skill may mark implementation-ready. |
 
 ```text
 @plan-master greenfield
 @plan-master status
 ```
 
-Stop until **Approved** and **implementation-ready: yes**. Only `plan-master` certifies that.
+**Do not start broad coding until** the master plan is **Approved** and status shows **implementation-ready: yes**.
+
+---
 
 ### 3 · Open a coding session (every day)
+
+Bookend the day so the next chat does not start from zero.
+
+| Invoke | What happens |
+|--------|----------------|
+| **`@session-control start`** | Loads `.cursorrules`, `HANDOFF`, `NEXT`, `UNKNOWNS`, and P0 scope; marks the session **Open** with your goal; surfaces owner blockers. |
+| **`@code-implementation status`** | Shows the active **`## Current iteration`** block: which tasks are pending, in progress, done, or blocked. |
 
 ```text
 @session-control start
 @code-implementation status
 ```
 
+---
+
 ### 4 · Plan and run one milestone (repeat per M{N})
+
+Pick one milestone from the master plan and execute it task by task.
+
+| Invoke | What happens |
+|--------|----------------|
+| **`@code-implementation plan-iteration — M1`** | Builds or validates the **`## Current iteration`** section in `NEXT.md` from master-plan **M1** (task IDs, files, acceptance notes). Required before the first line of code. |
+| **`@code-implementation start`** | Reads the relevant **SPECs** and **CONVENTIONS**, then implements the **first** task in the iteration. |
+| **`@code-implementation continue`** | Picks up the next incomplete task; runs the **task gate** (pytest, ruff, pyright in Docker) before marking `done`. Repeat until all tasks are finished. |
+| **`@db-migration create — …`** | *Only if the task changes schema.* Writes an idempotent numbered SQL script under `apis/migrations/` — never inline DDL in app code. |
+| **`./bin/start.sh`** | *First time this milestone needs runtime.* Starts the isolated dev stack (Postgres, Redis, API, workers). The agent runs tests **inside** containers; you rarely paste pytest/ruff/pyright yourself. |
 
 ```text
 @code-implementation plan-iteration — M1
@@ -48,28 +88,41 @@ Stop until **Approved** and **implementation-ready: yes**. Only `plan-master` ce
 @code-implementation continue
 ```
 
-Schema change only:
-
 ```text
 @db-migration create — <short description>
 ```
-
-First time this milestone needs a running API/DB (usually M1+), on the **host**:
 
 ```bash
 ./bin/start.sh
 ```
 
-The agent runs **pytest / ruff / pyright inside Docker** at each task gate — you do not paste those unless debugging.
+---
 
 ### 5 · Close the milestone
+
+Prove the milestone is really done, then freeze progress in project memory.
+
+| Invoke | What happens |
+|--------|----------------|
+| **`@code-verify milestone`** | Audits the iteration against the master plan and SPECs: tests/lint/type evidence, scope, traceability gaps — **pass** before you claim the milestone. |
+| **`@code-implementation complete`** | Finalizes the iteration: moves work to **Done** in `NEXT.md`, refreshes `HANDOFF`, archives the iteration block, promotes residual risks to `UNKNOWNS` when needed. |
 
 ```text
 @code-verify milestone
 @code-implementation complete
 ```
 
+---
+
 ### 6 · End the session
+
+Leave a clean handoff for your future self (or the next agent).
+
+| Invoke | What happens |
+|--------|----------------|
+| **`@session-control close`** | Updates `HANDOFF` + `NEXT`, lists follow-ups, and **always** shows a draft commit message — **no git** unless you add `commit`. |
+| **`@session-control close commit`** | Same as close, then stages and commits with that message (refuses if secrets are in the diff). |
+| **`@session-control close commit push`** | Commit + push current branch. |
 
 ```text
 @session-control close
@@ -77,7 +130,7 @@ The agent runs **pytest / ruff / pyright inside Docker** at each task gate — y
 @session-control close commit push
 ```
 
-Next chat: **`@session-control start`** → read `.work/plans/NEXT.md` for the next `M{N}`.
+**Next session:** `@session-control start` → read **Recommended next** in `.work/plans/NEXT.md` → pick the next `M{N}`.
 
 ---
 
