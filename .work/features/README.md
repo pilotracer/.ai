@@ -1,5 +1,7 @@
 # Feature SPECs (`.work/features/`)
 
+> **Navigation only.** This README is the same in every adopter repo. The actual SPEC folders and files inside `.work/features/` are created by **`@feature-spec create - <slug>`** and amended by **`@feature-spec amend`**.
+
 One folder per feature **slug** (kebab-case).
 
 | File | Purpose |

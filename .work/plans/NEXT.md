@@ -1,6 +1,6 @@
 # NEXT — planning backlog
 
-> **This is a template.** In a real adopter repo this file is maintained by **`@code-implementation`** (current iteration) and **`@session-control close`** (recommended next). In this framework repo it stays as a demo skeleton.
+> **This is a template file.** In your adopter repo it is maintained by **`@code-implementation`** (the `## Current iteration` block) and **`@session-control close`** (the `## Recommended next` row). In this framework repo it stays as a demo skeleton.
 
 **Updated:** YYYY-MM-DD
 

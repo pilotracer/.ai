@@ -1,6 +1,6 @@
 # RISK_REGISTRY — planning registry
 
-> **This is a template.** In a real adopter repo this file is maintained by **`@plan-foundation`** and **`@plan-master`**. In this framework repo it stays as a demo skeleton.
+> **This is a template file.** In your adopter repo it is created by **`@plan-foundation`** (P0) and extended by **`@plan-master`** (architectural / ops / security risks). In this framework repo it stays as a demo skeleton.
 
 **Updated:** YYYY-MM-DD · **Maintained by:** plan-foundation / plan-master
 

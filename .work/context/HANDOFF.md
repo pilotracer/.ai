@@ -1,6 +1,6 @@
 # HANDOFF — session boundary
 
-> **This is a template.** In a real adopter repo this file is rewritten by **`@session-control start`** / **`@session-control close`** every session. In this framework repo it stays as a demo skeleton so pointer links resolve.
+> **This is a template file.** In your adopter repo it is rewritten by **`@session-control start`** / **`@session-control close`** every session. In this framework repo it stays as a demo skeleton so pointer links resolve.
 
 ## Session status
 

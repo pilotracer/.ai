@@ -1,5 +1,7 @@
 # Architectural Decision Records (ADRs)
 
+> **Navigation only.** This README is the same in every adopter repo. The actual ADR files (`YYYYMMDD-NNN-slug.md`) inside this folder are created by **`@plan-foundation`** (P2) and updated by **`@plan-master`** when planning surfaces new decisions.
+
 Project-specific ADRs. Process: `.ai/skills/plan-foundation/skill.md` P2 · pointer: `.ai/decisions/README.md`.
 
 ## Conventions
