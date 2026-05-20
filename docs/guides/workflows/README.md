@@ -87,6 +87,8 @@ The **artifact matrix** below maps **planning** vs **implementation** (plus cros
 | `.ai/skills/code-implementation/reference.md` | Implementation | Context | Optional extended procedures for `code-implementation`. |
 | `.ai/skills/code-verify/skill.md` | Implementation | Skill | `milestone` / `uncommitted` / `last` verification gates. |
 | `.ai/skills/code-verify/reference.md` | Implementation | Context | Optional extended procedures for `code-verify`. |
+| `.ai/skills/code-repair/skill.md` | Implementation | Skill | Remediate verifier/migration/SPEC findings; mandatory re-verify. |
+| `.ai/skills/code-repair/reference.md` | Implementation | Context | Optional extended procedures for `code-repair`. |
 | `.ai/skills/dev-stack/skill.md` | Implementation | Skill | Isolated Docker Compose helper (`bin/start.sh`); safe `.env` handling. |
 | `.ai/skills/dev-stack/reference.md` | Implementation | Context | Optional extended procedures for `dev-stack`. |
 | `.ai/skills/process-router/skill.md` | Both | Skill | Read-only router: process questions → skill verb, guide, standard (no writes). |

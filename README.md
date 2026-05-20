@@ -170,7 +170,7 @@ Agent OS is a **gated pipeline**: each stage unlocks the next. Skills enforce th
 
 ### Skills at a glance
 
-All **11** skills live under [`skills/`](skills/README.md). Invoke as `@<skill-id>` plus a mode (e.g. `@plan-foundation status`).
+All **12** skills live under [`skills/`](skills/README.md). Invoke as `@<skill-id>` plus a mode (e.g. `@plan-foundation status`).
 
 | Skill | One line | Typical invoke |
 |-------|----------|----------------|
@@ -180,6 +180,7 @@ All **11** skills live under [`skills/`](skills/README.md). Invoke as `@<skill-i
 | **session-control** | Session bookends; updates HANDOFF + NEXT | `start` · `close` · `status` |
 | **code-implementation** | Run one milestone from `NEXT.md`; per-task gates | `plan - M{N}` · `start` · `continue` · `continue - N` · `complete` |
 | **code-verify** | Audits (not implementation): milestone, dirty tree, last commit/push | `milestone` · `uncommitted` · `last` |
+| **code-repair** | Fix verifier/migration/SPEC findings; re-verify before pass | `repair - from uncommitted` · `repair - custom - …` · `status` |
 | **feature-spec** | Author, review, or amend feature SPECs | `create - <slug>` · `review - <path>` · `amend - <slug>` |
 | **concept-run** | Run MOD-01…06 architecture/NFR prompts | `list` · `status` · `run - MOD-06` (required for agent-assisted code) |
 | **db-migration** | Idempotent numbered SQL scripts (no Alembic chain) | `init` · `create - <description>` · `run` · `status` · `verify` |

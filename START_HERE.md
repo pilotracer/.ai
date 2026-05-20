@@ -150,7 +150,7 @@ The skill will refuse to close cleanly if **secrets are in the diff**, **tests w
 
 1. **Do not** mark the task `done`. Per `.cursorrules` Core Principle 2, you cannot claim success when output shows failure.
 2. Paste the **actual exit code and last 20 lines** of the failure into the task `Notes` column.
-3. Diagnose root cause. Fix. Re-run.
+3. Diagnose root cause. Fix. Re-run the task gate, or run `@code-repair repair - from uncommitted` (or `from milestone` / `from migration` / `repair - custom - …`) when multiple verifier findings need a dedicated pass.
 4. If you cannot fix in this session: mark task `blocked` in `NEXT.md ## Current iteration` and add a row to `.work/plans/UNKNOWNS.md` with owner + what's blocked.
 5. Never silence a check (`# noqa`, `--no-verify`, baseline files) without an explicit comment citing the reason.
 

@@ -399,7 +399,7 @@ Confirms every script is truly idempotent:
 4. Assert: zero errors on second run.
 5. Compare schema (`pg_dump --schema-only`) before and after second run - must be identical.
 
-Failures produce a report listing the script name and the error message. The script must be fixed before merging.
+Failures produce a report listing the script name and the error message. The script must be fixed before merging. Recommend `@code-repair repair - from migration`, then re-run `@db-migration verify`.
 
 ---
 

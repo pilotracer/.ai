@@ -178,7 +178,7 @@ Waivers for high-risk milestones do not carry forward to the next high-risk mile
 
 ### Next step
 - pass / pass with gaps (waived): `@code-implementation complete` allowed if tasks done + CO1 gates pass
-- fail: `@code-implementation continue` + fix gaps
+- fail: `@code-repair repair - from milestone` (or `@code-implementation continue` + fix gaps)
 ```
 
 ---
@@ -221,7 +221,7 @@ If clean → report `clean` and **stop** (verdict: pass - nothing to audit).
 
 ### Next step
 - pass: safe to commit (`@session-control close commit`)
-- fail: fix before commit
+- fail: `@code-repair repair - from uncommitted` (or fix manually), then re-run `@code-verify uncommitted`
 ```
 
 ---
@@ -308,7 +308,7 @@ Only rows relevant to files in range (security, scope, test coverage partial) - 
 
 ### Next step
 - pass: commit/push is auditable; continue iteration or `@session-control close`
-- fail: fix and re-run `@code-verify last`
+- fail: `@code-repair repair - from last` (or fix manually), then re-run `@code-verify last`
 ```
 
 ---
@@ -317,7 +317,8 @@ Only rows relevant to files in range (security, scope, test coverage partial) - 
 
 | Skill | Use |
 |-------|-----|
-| `code-implementation` | **Auto-invokes `@code-verify uncommitted`** at end of every `continue` batch (see `code-implementation` § Batch-end sweep) - not optional. Also calls **milestone** before **complete** (CO2); task gate runs inline mechanical checks. |
+| `code-implementation` | **Auto-invokes `@code-verify uncommitted`** at end of every `continue` batch (see `code-implementation` § Batch-end sweep) - not optional. Also calls **milestone** before **complete** (CO2); task gate runs inline mechanical checks. On sweep **fail** → `@code-repair repair - from uncommitted`. |
+| `code-repair` | **Downstream remediator** - on any mode **fail**, recommend `@code-repair repair - from <same mode>`. Does not auto-invoke. |
 | `session-control` | **uncommitted** or **last** before `close commit` |
 | `concept-run` | Clear MOD rows before milestone **pass** |
 

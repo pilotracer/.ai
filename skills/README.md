@@ -35,6 +35,7 @@ Use for **new** skills and for any **rename** (update `.cursorrules`, this READM
 | db-migration | `db-migration/` | Idempotent numbered SQL migration scripts; no version table, no chain conflicts |
 | code-implementation | `code-implementation/` | Iteration execution: `NEXT.md` scope, task gates, completion |
 | code-verify | `code-verify/` | Verification: milestone, uncommitted, last commit/push |
+| code-repair | `code-repair/` | Remediate verifier/migration/SPEC findings; mandatory re-verify |
 | dev-stack | `dev-stack/` | Isolated Docker Compose helper (`bin/start.sh`); safe `.env` handling |
 | process-router | `process-router/` | Read-only router: process questions → skill, guide, or standard (no writes) |
 | feature-spec | `feature-spec/` | Author, review, amend feature SPECs per FEATURE_STANDARD |

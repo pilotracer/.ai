@@ -21,7 +21,7 @@ Update this table when registering a new skill or guide. Keep **Run next** comma
 | **bootstrap** | "Set up Agent OS", "Create .work", "Install cursorrules" | `@project-bootstrap init` · `bash .ai/templates/bootstrap.sh` | `.ai/skills/project-bootstrap/skill.md` |
 | **stack** | "Start Docker stack", "Dev environment" | `@dev-stack` (generate/update `bin/start.sh`) · `docker compose up` | `.ai/skills/dev-stack/skill.md` · `.cursorrules` § Docker |
 | **test-request** | "Add a test", "Tests for module X" | Read tutorial; then `@code-implementation continue` or new task in NEXT | `20260518-tutorial-request-new-test.md` · `20260518-tutorial-request-test-feature-module.md` |
-| **verify-fail** | "Tests failed", "Lint/type failed" | `.ai/START_HERE.md` §6 · fix · re-run task gate | `code-implementation/skill.md` § Task gate |
+| **verify-fail** | "Tests failed", "Lint/type failed", "Fix verify/audit findings" | `@code-repair repair - from uncommitted` (or matching source) · re-verify | `.ai/skills/code-repair/skill.md` · `code-implementation/skill.md` § Task gate |
 | **conventions** | "Naming", "type-check", "PR format" | Read section only | `.ai/standards/*CONVENTIONS*` (path from `.cursorrules`) |
 | **security** | "Threat model", "New column classification" | Read section only | `.ai/standards/*threat-model*` · `*data-classification*` |
 | **observability** | "Metrics/traces for feature" | SPEC §9 + standard | `{OBSERVABILITY_SPEC}` · `20260518-guide-observability-traceability-in-workflow.md` |

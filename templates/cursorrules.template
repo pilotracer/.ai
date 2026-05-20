@@ -130,6 +130,7 @@ Reusable agent skills live under `.ai/skills/`. Each skill is a subfolder contai
 | db-migration | `.ai/skills/db-migration/` | Idempotent numbered SQL migration scripts |
 | code-implementation | `.ai/skills/code-implementation/` | Iteration execution from NEXT.md |
 | code-verify | `.ai/skills/code-verify/` | Milestone, uncommitted, last commit/push audits |
+| code-repair | `.ai/skills/code-repair/` | Fix verifier/migration/SPEC findings; re-verify before pass |
 | dev-stack | `.ai/skills/dev-stack/` | Isolated Docker Compose dev stack helper (`bin/start.sh`) |
 | process-router | `.ai/skills/process-router/` | Read-only process Q&A router |
 | feature-spec | `.ai/skills/feature-spec/` | Author, review, amend feature SPECs |

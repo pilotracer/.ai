@@ -16,7 +16,7 @@ Execute implementation iterations derived from an **Approved master plan** (`{PL
 
 **Tool-agnostic** (Cursor, Claude Code, opencode, Codex). **Requires:** `implementation-ready: yes` from `@plan-master status`, or an explicit HANDOFF waiver noting which milestones may proceed early.
 
-**Pairs with:** `session-control` (bookends), `plan-master` (milestone source and revisions), `code-verify` (milestone / uncommitted / last audits), `db-migration` (all schema changes), `.ai/standards/*CONVENTIONS*`, `.ai/standards/*FEATURE_STANDARD*` (paths from `.cursorrules`).
+**Pairs with:** `session-control` (bookends), `plan-master` (milestone source and revisions), `code-verify` (milestone / uncommitted / last audits), `code-repair` (remediate verify/migration failures), `db-migration` (all schema changes), `.ai/standards/*CONVENTIONS*`, `.ai/standards/*FEATURE_STANDARD*` (paths from `.cursorrules`).
 
 **Registry:** [`.ai/skills/SKILL_DEPENDENCIES.md`](../SKILL_DEPENDENCIES.md).
 
@@ -360,7 +360,7 @@ Cheap audit on the **cumulative** changeset after a batch (or single-task `conti
 | 3 | Auto-invoke `@code-verify uncommitted` | Run the skill; fold its verdict (pass / fail) into Batch summary `Sweep verdict` |
 | 4 | Warnings inventory | Sum non-fatal lint/type warnings in files changed by the batch (per [Task gate](#task-gate) row "Warnings in touched files"). If any task left warnings in Notes, restate the total |
 
-**On sweep `fail`:** do **not** claim batch success. Report the failing checks (e.g. uncommitted scope violation, secrets, protected file, fresh gate fail). Stop. Recommend either a fix or `@session-control close` with the issue logged.
+**On sweep `fail`:** do **not** claim batch success. Report the failing checks (e.g. uncommitted scope violation, secrets, protected file, fresh gate fail). Stop. Recommend `@code-repair repair - from uncommitted` (or fix in-session + re-gate), or `@session-control close` with the issue logged.
 
 **On sweep `pass` with warnings or self-review findings:** batch succeeds; surface the findings in Batch summary and (when material) append to `{PLANS_ROOT}/UNKNOWNS.md` so they cannot get lost.
 

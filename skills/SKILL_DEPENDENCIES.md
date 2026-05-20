@@ -68,6 +68,8 @@ foundation-complete  →  plan-master-ready  →  implementation-ready
 | **code-implementation** `status` | - | Read-only |
 | **code-verify** `milestone` | Active milestone exists in `{MASTER_PLAN}` §19 **or** `NEXT.md` § Current iteration (M0 gate) | **Required** |
 | **code-verify** `uncommitted` / `last` | - | - |
+| **code-repair** `repair` | Findings from verifier report, fresh `@code-verify` / `@db-migration verify` / `@feature-spec review`, or **custom** brief (R0 gate) | **Recommended:** run source verifier if no report in chat |
+| **code-repair** `status` | - | Read-only |
 | **feature-spec** `create` | FEATURE_STANDARD; **CR0** hard-stops if `<slug>/` folder exists; warns if `plan-master-ready: no` | **Required** (brownfield) + **Recommended** (readiness) |
 | **feature-spec** `review` / `amend` / `status` / `approve` | FEATURE_STANDARD; `approve` runs `review` first and only flips Status on pass | - |
 | **feature-spec** before **Approved** | §15 concept registry | **Required** per FEATURE_STANDARD |
@@ -110,6 +112,8 @@ foundation-complete  →  plan-master-ready  →  implementation-ready
 | `@feature-spec create - <slug>` | Folder already exists | `@feature-spec amend - <slug>` |
 | `@project-bootstrap init` | Repo already bootstrapped | `@project-bootstrap status` (or run `init` with overwrite confirmation) |
 | "Ready to code?" in plan-foundation | Wrong skill | `@plan-master status` |
+| `@code-verify` / sweep **fail** | Findings need remediation | `@code-repair repair - from uncommitted` (or matching source mode) |
+| `@db-migration verify` **fail** | Script not idempotent or runner error | `@code-repair repair - from migration` |
 
 ---
 
@@ -119,7 +123,8 @@ All skills use the same verbs where applicable. This keeps muscle memory portabl
 
 | Canonical verb | Meaning | Skills that implement it |
 |----------------|---------|---------------------------|
-| `status` | Read-only: report current state | plan-foundation, plan-master, session-control, code-implementation, code-verify (via `last`/`uncommitted`/`milestone`), feature-spec, db-migration, concept-run, dev-stack, project-bootstrap |
+| `status` | Read-only: report current state | plan-foundation, plan-master, session-control, code-implementation, code-verify (via `last`/`uncommitted`/`milestone`), code-repair, feature-spec, db-migration, concept-run, dev-stack, project-bootstrap |
+| `repair` | Fix reported issues; re-verify | code-repair |
 | `start` | Begin a unit of work | session-control, code-implementation |
 | `continue` | Resume in-progress work | plan-foundation, plan-master, code-implementation |
 | `continue` + target (`code-implementation` only) | Batch tasks: `- N`, `- until blocked`, `- M{N}-T{a}..T{b}`; stop on gate fail or blocker | code-implementation |
