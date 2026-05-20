@@ -29,13 +29,22 @@ plan - M{N}
 
 ## 3. Stepping tasks (`continue`)
 
-For **each** pending task:
+| Invoke | Behavior |
+|--------|----------|
+| `@code-implementation continue` | Next **1** task (default) |
+| `@code-implementation continue - 5` | Up to **5** tasks, or **stop early** on gate fail / blocker (same as "next 5 or until failed") |
+| `@code-implementation continue - until blocked` | No task cap; stop on gate fail, blocker, or queue exhausted |
+| `@code-implementation continue - M4-T2..T6` | Inclusive range in iteration order |
 
-1. `continue` finds `in-progress` or first `pending`.  
+Per task in the batch:
+
+1. Find `in-progress` or next `pending` in the queue.  
 2. Implement **only** files listed on the task row.  
 3. **Task gate** must pass before `done YYYY-MM-DD`.  
-4. Schema change? → `@db-migration` per skill integration table.  
-5. Every ~3 tasks: optional `status` for human visibility.
+4. On pass, agent reports e.g. **`Batch 3/5: M4-T4 done`**.  
+5. On gate **fail** or **blocked** → **stop the batch** (do not skip to the next queued task).  
+6. Schema change? → `@db-migration`; batch stops unless user continues in the same message.  
+7. End of batch: read **batch summary** in the skill report; optional `@code-implementation status`.
 
 **Parallelism:** one active `in-progress` task at a time unless your team process explicitly allows parallel agents on disjoint file lists.
 

@@ -105,6 +105,7 @@ All skills use the same verbs where applicable. This keeps muscle memory portabl
 | `status` | Read-only: report current state | plan-foundation, plan-master, session-control, code-implementation, code-verify (via `last`/`uncommitted`/`milestone`), feature-spec, db-migration, concept-run, dev-stack, project-bootstrap |
 | `start` | Begin a unit of work | session-control, code-implementation |
 | `continue` | Resume in-progress work | plan-foundation, plan-master, code-implementation |
+| `continue` + target (`code-implementation` only) | Batch tasks: `- N`, `- until blocked`, `- M{N}-T{a}..T{b}`; stop on gate fail or blocker | code-implementation |
 | `close` | Wrap up + handoff | session-control |
 | `complete` | Mark a unit as done | code-implementation |
 | `plan` | Prepare next unit | code-implementation *(alias: `plan-iteration`)* |

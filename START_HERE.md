@@ -84,7 +84,10 @@ Replace `M{N}` with the milestone you're working on (see `NEXT.md ## Recommended
 
 ```text
 @code-implementation start          # first task; reads SPECs, CONVENTIONS, FEATURE_STANDARD
-@code-implementation continue        # repeat until all tasks done
+@code-implementation continue        # next 1 task (default)
+@code-implementation continue - 5    # next 5 tasks, or until gate fail / blocker
+@code-implementation continue - until blocked
+@code-implementation continue - M4-T2..T6   # explicit range
 @code-verify milestone               # before complete; plan + SPEC check matrix
 @code-verify uncommitted             # before commit (dirty tree)
 @code-verify last                    # after commit or push (whichever was last)

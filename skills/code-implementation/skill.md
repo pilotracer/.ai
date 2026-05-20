@@ -5,7 +5,8 @@ description: >-
   NEXT.md iteration block from the plan-master milestone, implement tasks per
   CONVENTIONS and FEATURE_STANDARD, gate each task on tests/lint, and finalize
   the iteration. Verification modes live in the **code-verify** skill. Use when the
-  user says code-implementation plan, start, continue, complete, or status.
+  user says code-implementation plan, start, continue (optional - N, until blocked,
+  or M{N}-T{a}..T{b}), complete, or status.
   Requires implementation-ready (plan-master Approved) or explicit HANDOFF waiver.
 ---
 
@@ -47,7 +48,10 @@ Normalize the user message to **verb** + optional **target**.
 | `@code-implementation` **status** | status | Read-only: task matrix, progress snapshot |
 | `@code-implementation` **plan** - M1 | plan | Generate/validate `## Current iteration` block from plan-master milestone |
 | `code-implementation` **start** | start | Load iteration block, read SPECs/CONVENTIONS, begin first task |
-| `code-implementation` **continue** | continue | Resume: find first incomplete task, implement, gate, advance |
+| `code-implementation` **continue** | continue | [Continue protocol](#continue-protocol) - default **1** task (see target table) |
+| `code-implementation` **continue** - 5 | continue | Batch: up to **5** tasks, same stop rules as below |
+| `code-implementation` **continue** - until blocked | continue | Batch: tasks until gate **fail**, **blocked**, or queue exhausted |
+| `code-implementation` **continue** - M4-T2..T6 | continue | Batch: inclusive task **range** in iteration order |
 | `code-implementation` **complete** | complete | Finalize iteration: CO2 `@code-verify milestone` + CO1 gates + update HANDOFF/NEXT |
 | `code-implementation` **verify** [uncommitted \| last] | - | **Legacy** - use `@code-verify` (see `code-verify` skill) |
 | `code-implementation` **task** T3 | task | Execute a single task by shorthand ID (active iteration context) |
@@ -55,7 +59,11 @@ Normalize the user message to **verb** + optional **target**.
 
 **Aliases:** `impl`, `code`, `implement` → map to **continue** if iteration block exists, else **start**. **`plan-iteration`** is the legacy alias of **`plan`** - both work.
 
+**Natural language (same semantics):** "implement the next 5 tasks", "continue until blocked/failed" → parse as **`continue - 5`** or **`continue - until blocked`** when the user is clearly invoking this skill.
+
 **Ambiguous:** if `NEXT.md` has an iteration block but status is unknown → run abbreviated **status** and ask once.
+
+**Disambiguation:** On **`continue`**, `- M4` alone is **not** a milestone (use **`plan - M4`**). After `-`, only: a positive integer (`5`), `until blocked`, or a task range (`M4-T2..T6`).
 
 ---
 
@@ -316,28 +324,86 @@ All mandatory checks (1–5, 7–8) are **pass**. If any **fail**, fix before pr
 
 ---
 
+## Continue target (parse `-` argument)
+
+Resolve the batch **before** the task loop. Default when `-` is omitted: **`count=1`**.
+
+| User target | Batch mode | Task queue |
+|-------------|------------|------------|
+| *(omit)* | `count=1` | Next incomplete tasks in iteration table order |
+| `- 5` or `- 5 tasks` | `count=5` | Next up to 5 incomplete tasks |
+| `- until blocked` | `until-blocked` | Next incomplete tasks until a **stop condition** (below) |
+| `- M4-T2..T6` | `range` | Inclusive `M4-T2` … `M4-T6` that exist in the active iteration block, in table order |
+
+**Range rules:**
+
+- Both endpoints must use full `M{N}-T{N}` ids (shorthand `T2..T6` allowed only when the active milestone is unambiguous - expand to `M{N}-T2..M{N}-T6`).
+- Skip tasks already `done` (do not count toward work; they are not in the queue).
+- If the range includes a `blocked` task that stays blocked after the unblock check → **stop the batch** at that task (do not skip within the range).
+
+**Equivalence:** `@code-implementation continue - 5` means **implement the next 5 incomplete tasks, or fewer if a stop condition fires first** (gate fail, blocker, protected file, schema detour, or queue exhausted). Same as "implement the next 5 tasks or until blocked/failed."
+
+---
+
 ## Continue protocol
 
 1. Run [ST0 - Implementation gate](#st0--implementation-gate) (abbreviated if start ran in the same session with no plan/HANDOFF change).
-2. **Unblock check:** Read `{PLANS_ROOT}/UNKNOWNS.md` and `{HANDOFF}`. Scan the iteration block for any task with status `blocked`:
-   a. For each `blocked` task: find the blocker entry in `### Owner blockers` and/or `UNKNOWNS.md` (entries with `blocks: T{N}`).
-   b. Check if the condition has changed: ADR decided, owner action completed, dependency landed, or HANDOFF lists the blocker as resolved.
-   c. If resolved → flip task status from `blocked` to `pending`; annotate `unblocked YYYY-MM-DD - <reason>`. If the corresponding UNKNOWNS row is resolved, update its `Status` to `Resolved` with date.
-   d. If unchanged → leave as `blocked`. If all tasks are `blocked` with no changes → do not advance; recommend `@session-control close` with blocker list.
-3. Read `NEXT.md §Current iteration`. Find the first task with status `in-progress` or `pending`.
-4. If `in-progress`: resume that task with file evidence (read the file before editing).
-5. If all tasks `pending`: treat as a fresh start - run ST0–ST5 abbreviated.
-6. Per task loop:
-   a. Read every file to be modified **before** making any change.
-   b. Implement per CONVENTIONS, FEATURE_STANDARD, and the SPEC rules (R1…) that govern this context.
-   c. Do not modify files outside the task's declared file list.
-   d. When implementation complete → run [Task gate](#task-gate).
-   e. On gate **pass**: update task status to `done YYYY-MM-DD`; move to next pending task.
-   f. On gate **fail**: report exact error; diagnose; fix; re-run gate. Do not advance until pass.
-7. **Schema change detected mid-task:** stop the task, invoke `@db-migration create` for the required migration script, then resume.
-8. **Blocked task:** see [Blocked task protocol](#blocked-task-protocol).
-7. Every 3 tasks or on user request: output abbreviated [status](#status-protocol).
-8. When all tasks are `done`: recommend **complete** mode. Do not auto-finalize.
+2. **Parse continue target** → [Continue target](#continue-target-parse--argument). Emit the planned queue in the opening report (task ids + batch mode).
+3. **Unblock check:** Read `{PLANS_ROOT}/UNKNOWNS.md` and `{HANDOFF}`. Scan the iteration block for any task with status `blocked`:
+   a. For each `blocked` task in the queue: find the blocker in `### Owner blockers` and/or `UNKNOWNS.md`.
+   b. If resolved → flip to `pending`; annotate `unblocked YYYY-MM-DD - <reason>`.
+   c. If still `blocked` when that task is reached → **stop batch**; recommend `@session-control close` with blocker list.
+4. If the queue is empty at start → report and recommend **complete** or **status**; do not implement.
+5. **Per-task loop** (for each task in the queue until batch limit or stop):
+   a. If task is `in-progress`: resume with file evidence (read before editing).
+   b. If task is `pending`: read every file to modify **before** any change.
+   c. Implement per CONVENTIONS, FEATURE_STANDARD, and SPEC rules (R1…).
+   d. Do not modify files outside the task's declared file list.
+   e. Run [Task gate](#task-gate).
+   f. On gate **pass**: mark `done YYYY-MM-DD`; emit progress line: **`Batch {k}/{limit}: {M{N}-T{N}} done`** (see [Batch progress lines](#batch-progress-lines)); advance `k`.
+   g. On gate **fail**: report exact output; diagnose; offer fix in-session. **Stop the batch** - do not start the next queued task until this task passes (user may re-run `continue` after fix).
+   h. **Schema change mid-task:** invoke `@db-migration create`; **stop batch** unless user asked to resume the same batch in the same message.
+   i. **Protected file** change needed without approval → **stop batch**; ask once.
+   j. **Blocked task** encountered → see [Blocked task protocol](#blocked-task-protocol); **stop batch**.
+6. After the loop ends, emit [Batch summary](#batch-summary) (mandatory when batch mode is not a single task, recommended always).
+7. When **all** iteration tasks are `done`: recommend **complete** - do not auto-finalize.
+
+### Batch progress lines
+
+After each task that reaches `done` in a batch:
+
+| Batch mode | Progress line format |
+|------------|----------------------|
+| `count=N` | `Batch {k}/{N}: {M{a}-T{b}} done` |
+| `until-blocked` | `Batch {k}: {M{a}-T{b}} done (limit: until blocked)` |
+| `range` | `Batch {k}/{R}: {M{a}-T{b}} done` where **R** = incomplete tasks in range at batch start |
+
+Example: `Batch 3/5: M4-T4 done`
+
+### Batch summary
+
+```markdown
+## code-implementation continue - batch summary
+
+**Mode:** count=5 | until-blocked | range M4-T2..M4-T6
+**Completed:** M4-T2, M4-T3 (2 tasks)
+**Stopped because:** task gate fail on M4-T4 | blocked on M4-T5 | batch limit reached | all queued tasks done
+**Next:** @code-implementation continue | @code-implementation continue - 3 | fix M4-T4 and re-run continue
+```
+
+### Stop conditions (all batch modes)
+
+Stop the batch when **any** occurs (whichever comes first):
+
+| # | Condition |
+|---|-----------|
+| 1 | Task gate **fail** on current task (after reporting; do not skip to next queued task) |
+| 2 | Task **blocked** and still blocked after unblock check |
+| 3 | **Protected file** change required without user approval in the same message |
+| 4 | **Schema change** requires `@db-migration create` (stop unless user explicitly continues batch in same message) |
+| 5 | **Batch limit** reached (`count=N` satisfied, or range fully processed) |
+| 6 | No more **pending** / **in-progress** tasks in the queue |
+| 7 | All iteration tasks **`done`** → recommend **complete** |
 
 ---
 

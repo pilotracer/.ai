@@ -13,6 +13,9 @@ Supplement to `skill.md`. Invocation examples, NEXT.md templates, mode compariso
 @code-implementation plan - M1
 @code-implementation start
 @code-implementation continue
+@code-implementation continue - 5
+@code-implementation continue - until blocked
+@code-implementation continue - M4-T2..T6
 @code-implementation complete
 @code-verify milestone
 @code-verify uncommitted
@@ -56,6 +59,8 @@ Diff-only audit: secrets, scope, tests/lint/type on changed files.
 | Run tests/lint | no | no | no | per task (task gate) | CO2 then CO1 if needed | yes (task gate) |
 | Run verify | - | - | - | optional `@code-verify uncommitted` | `@code-verify milestone` (CO2) | - |
 
+**Continue batch targets:** omit `-` → 1 task; `- N` → up to N tasks or until stop; `- until blocked` → no cap; `- M4-T2..T6` → inclusive range. All modes stop on gate fail or blocker (same as "next N tasks or until failed").
+
 **Three check layers:** **task gate** (mechanical, every task) · **`@code-verify uncommitted` / `last`** (diff audit, optional cadence) · **`@code-verify milestone`** (plan + SPEC matrix, before **complete**). Use **`code-verify`** skill for all verify modes.
 
 ---
@@ -67,8 +72,9 @@ Diff-only audit: secrets, scope, tests/lint/type on changed files.
 @code-implementation status     ← check if iteration block exists
 @code-implementation plan - M1  ← if block missing or invalid
 @code-implementation start      ← load context, begin T1
-@code-implementation continue   ← resume after interruption
-@code-implementation status     ← progress check (every 2–3 tasks)
+@code-implementation continue - 5   ← up to 5 tasks, or stop on fail/blocker
+@code-implementation continue - until blocked
+@code-implementation status     ← progress check between batches
 @code-verify milestone          ← approaching completion
 @code-verify uncommitted        ← before commit
 @code-verify last               ← after commit/push
@@ -85,7 +91,10 @@ Diff-only audit: secrets, scope, tests/lint/type on changed files.
 | What tasks remain? | `@code-implementation status` |
 | Generate iteration scope for M2 | `@code-implementation plan - M2` |
 | Start fresh on current iteration | `@code-implementation start` |
-| Resume after interruption | `@code-implementation continue` |
+| Resume one task | `@code-implementation continue` |
+| Resume next N tasks (stop on fail/blocker) | `@code-implementation continue - 5` |
+| Resume until gate fail or blocker | `@code-implementation continue - until blocked` |
+| Resume explicit task range | `@code-implementation continue - M4-T2..T6` |
 | Run a specific task (shorthand, active iteration) | `@code-implementation task T4` |
 | Run a specific task (globally unique ID) | `@code-implementation task M1-T4` |
 | Look up what a task requires (read-only) | `@plan-master show M1-T4` |
@@ -253,6 +262,10 @@ Return: pass | fail | gaps-found, with specific file/rule citations.
 | Second model unavailable for cross-LLM (**high-risk milestone** per threat model) | **fail** unless owner records a **human architect review** waiver in `{HANDOFF}` (name + date) per `code-verify` |
 | Cursor/agent session: MOD-06 skipped | **fail** at CO1; run `@concept-run - MOD-06` or attach output before complete. **`human-only`** opt-out requires explicit human declaration in the same message |
 | Protected file change needed | Stop; explain why; ask explicit permission; only proceed after yes |
+| `continue - 5` and task 3 gate fails | Batch stops at task 3; tasks 4–5 not started |
+| `continue - until blocked` and all tasks pass | Runs entire remaining queue; then recommend **complete** |
+| `continue - M4-T2..T6` but T4 already `done` | Queue is T2, T3, T5, T6 only (skip done) |
+| User says "implement next 5 tasks" | Same as `continue - 5` |
 
 ---
 
@@ -279,6 +292,8 @@ Return: pass | fail | gaps-found, with specific file/rule citations.
 | `/impl plan M1` | plan - M1 |
 | `/impl start` | start |
 | `/impl continue` | continue |
+| `/impl continue 5` | continue - 5 |
+| `/impl continue M4-T2..T6` | continue - M4-T2..T6 |
 | `/impl done` | complete |
 | `/impl verify` | `@code-verify milestone` (legacy: routes via `code-verify` skill) |
 

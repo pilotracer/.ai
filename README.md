@@ -178,7 +178,7 @@ All **11** skills live under [`skills/`](skills/README.md). Invoke as `@<skill-i
 | **plan-foundation** | Foundation docs 01–04, ADRs, SPECs, registries; certifies **plan-master-ready** | `greenfield` · `status` · `certify plan-master-ready` |
 | **plan-master** | Master plan with milestones; certifies **implementation-ready** | `greenfield` · `continue` · `status` · `revise` |
 | **session-control** | Session bookends; updates HANDOFF + NEXT | `start` · `close` · `status` |
-| **code-implementation** | Run one milestone from `NEXT.md`; per-task gates | `plan - M{N}` · `start` · `continue` · `complete` |
+| **code-implementation** | Run one milestone from `NEXT.md`; per-task gates | `plan - M{N}` · `start` · `continue` · `continue - N` · `complete` |
 | **code-verify** | Audits (not implementation): milestone, dirty tree, last commit/push | `milestone` · `uncommitted` · `last` |
 | **feature-spec** | Author, review, or amend feature SPECs | `create - <slug>` · `review - <path>` · `amend - <slug>` |
 | **concept-run** | Run MOD-01…06 architecture/NFR prompts | `list` · `status` · `run - MOD-06` (required for agent-assisted code) |
@@ -295,7 +295,7 @@ Pick one milestone from the master plan and execute it task by task.
 |--------|----------------|
 | **`@code-implementation plan - M1`** | Builds or validates the **`## Current iteration`** section in `NEXT.md` from master-plan **M1** (task IDs, files, acceptance notes). Required before the first line of code.   *(Legacy alias: `plan-iteration - M1`.)* |
 | **`@code-implementation start`** | Reads the relevant **SPECs** and **CONVENTIONS**, then implements the **first** task in the iteration. |
-| **`@code-implementation continue`** | Picks up the next incomplete task; runs the **task gate** (your project's test/lint/type commands from `.cursorrules`) before marking `done`. Repeat until all tasks are finished. |
+| **`@code-implementation continue`** | Next task (default **1**). Optional batch: **`continue - 5`** (next 5 or until fail/blocker), **`continue - until blocked`**, **`continue - M4-T2..T6`**. Per-task **task gate** before each `done`. |
 | **`@db-migration create - …`** | *Only if the task changes schema.* Writes an idempotent numbered SQL script under your migrations dir (see `.cursorrules`) - never inline DDL in app code. |
 | **Dev stack script** | *First time this milestone needs runtime.* Use your project's dev-stack entry (e.g. `bin/start.sh` from `@dev-stack`) to start the isolated compose stack. The agent runs checks **inside** containers when Docker is the canonical path. |
 
