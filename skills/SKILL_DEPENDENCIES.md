@@ -4,6 +4,23 @@
 
 **Invocation punctuation:** Use ASCII hyphen **`-`** between verb and argument (e.g. `@code-implementation plan - M1`, `@feature-spec create - my-slug`, `@process-router - how do I close?`). Do **not** use em dash `—` in commands (hard to type on most keyboards).
 
+## Work tree path resolution (mandatory)
+
+**Repository root** (`.git/`, `.cursorrules`) is **not** `{WORK_ROOT}`. All skills resolve placeholders from **repo root** per `.cursorrules` placeholder map (or this table).
+
+| Placeholder | Resolved path | Common wrong path (missing `.work/`) |
+|-------------|---------------|--------------------------------------|
+| `{WORK_ROOT}` | `.work/` | repo root, `work/` |
+| `{HANDOFF}` | `.work/context/HANDOFF.md` | `context/HANDOFF.md`, `HANDOFF.md` |
+| `{ITERATION_CARRIER}` | `.work/plans/NEXT.md` | `plans/NEXT.md`, bare `NEXT.md` at repo root |
+| `{PLANS_ROOT}` | `.work/plans/` | `plans/` |
+| `{FEATURE_SPEC_ROOT}` | `.work/features/` | `features/` |
+| `{DECISIONS_ROOT}` | `.work/decisions/` | `decisions/` |
+| `{PROMPTS_ROOT}` | `.work/prompts/` | `prompts/` |
+| `{MASTER_PLAN}` | `.work/plans/full/*-full-plan.md` (latest **Approved**) | `plans/full/…` |
+
+**Rule for agents:** In mandatory-read tables, `Read` tool calls, and blocked reports, use the **Resolved path** column. Do not strip the `.work/` prefix. Shorthand (`HANDOFF`, `NEXT.md`) in prose must still mean the resolved path above.
+
 **Readiness states** (do not conflate):
 
 ```text

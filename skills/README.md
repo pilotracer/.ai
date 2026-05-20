@@ -6,6 +6,8 @@ Portable, tool-agnostic workflows. Each skill is a folder with `skill.md` (+ opt
 
 **Invocation punctuation:** Use ASCII hyphen `-` between verb and argument (`@code-implementation plan - M1`). Not em dash `—`. See [`SKILL_DEPENDENCIES.md`](SKILL_DEPENDENCIES.md).
 
+**Work tree paths:** `{WORK_ROOT}` = `.work/` at repo root — never `context/` or `plans/` without the `.work/` prefix. See [`SKILL_DEPENDENCIES.md` § Work tree path resolution](SKILL_DEPENDENCIES.md#work-tree-path-resolution-mandatory).
+
 ---
 
 ## Naming protocol

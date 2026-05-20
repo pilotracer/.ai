@@ -28,6 +28,18 @@ Bookend AI work sessions so the next chat (or human) can resume without guessing
 - **`{PROMPTS_ROOT}/initial.md` is user-owned.** Do not read or create it on start/close unless the user explicitly names that path in the same invocation.
 - Every mode ends with a **Completion checklist** - each item `pass` | `fail` | `skip` with evidence.
 
+### Path resolution (mandatory before any Read)
+
+Resolve from **repository root** (see [`SKILL_DEPENDENCIES.md`](../SKILL_DEPENDENCIES.md) § Work tree path resolution). `{WORK_ROOT}` = **`.work/`** — not the repo root.
+
+| Artifact | Read / write this path |
+|----------|-------------------------|
+| `{HANDOFF}` | `.work/context/HANDOFF.md` |
+| `{ITERATION_CARRIER}` | `.work/plans/NEXT.md` |
+| `{PLANS_ROOT}/UNKNOWNS.md` | `.work/plans/UNKNOWNS.md` |
+
+**Never** open `context/HANDOFF.md`, `plans/NEXT.md`, or bare `HANDOFF.md` / `NEXT.md` at repo root — those paths are wrong for Agent OS.
+
 ---
 
 ## Parse invocation
@@ -72,20 +84,20 @@ If the user gives a **task goal** with start (e.g. `start - work on payments SPE
 
 Read these files **in full** (or confirm missing). Record `pass` only after reading.
 
-| # | File | Pass criteria |
+| # | File (repo-root path) | Pass criteria |
 |---|------|----------------|
 | 1 | `.cursorrules` | Can state: identity, 7 core principles, protected files, no-commit rule |
-| 2 | `{HANDOFF}` | Know: session-critical sections (§Session status through §Open owner actions). The artifact table (§What this cycle produced) and tail sections (§Hygiene, §Doc 04 gate, §Tracked inventory) are reference - skim for relevance, not mandatory for start. |
-| 3 | `{ITERATION_CARRIER}` | Know: single recommended next action + owner blockers |
-| 4 | `{PLANS_ROOT}/UNKNOWNS.md` | Know: every open unknown, its `Blocks` target (task / ADR / milestone), and its `Owner`. Cross-check against HANDOFF §Explicit unknowns and §Open owner actions - stale entries must be noted in the start report. |
-| 5 | `{PLANS_ROOT}/foundation/*-01-*-initial-scope.md` **if present** | Know one-sentence product intent **or** record *no doc 01 yet* and rely on README / HANDOFF. **Do not** read `{PROMPTS_ROOT}/initial.md` unless the user explicitly names it. |
+| 2 | `.work/context/HANDOFF.md` | Know: session-critical sections (§Session status through §Open owner actions). The artifact table (§What this cycle produced) and tail sections (§Hygiene, §Doc 04 gate, §Tracked inventory) are reference - skim for relevance, not mandatory for start. |
+| 3 | `.work/plans/NEXT.md` | Know: single recommended next action + owner blockers |
+| 4 | `.work/plans/UNKNOWNS.md` | Know: every open unknown, its `Blocks` target (task / ADR / milestone), and its `Owner`. Cross-check against HANDOFF §Explicit unknowns and §Open owner actions - stale entries must be noted in the start report. |
+| 5 | `.work/plans/foundation/*-01-*-initial-scope.md` **if present** | Know one-sentence product intent **or** record *no doc 01 yet* and rely on README / HANDOFF. **Do not** read `.work/prompts/initial.md` unless the user explicitly names it. |
 
-### S1b - Unblock check (when NEXT.md has an active iteration)
+### S1b - Unblock check (when `.work/plans/NEXT.md` has an active iteration)
 
-If `{ITERATION_CARRIER}` contains a `## Current iteration` block with task rows:
+If `.work/plans/NEXT.md` contains a `## Current iteration` block with task rows:
 
 1. Scan for tasks with status `blocked`.
-2. For each `blocked` task, find the blocker entry in `### Owner blockers` and/or `{PLANS_ROOT}/UNKNOWNS.md` (entries with `blocks: T{N}`).
+2. For each `blocked` task, find the blocker entry in `### Owner blockers` and/or `.work/plans/UNKNOWNS.md` (entries with `blocks: T{N}`).
 3. Check if the condition has changed: ADR decided, owner action marked done in HANDOFF §Open owner actions, or dependency completed.
 4. If resolved → flip task to `pending`; annotate `unblocked YYYY-MM-DD - <reason>`. If the UNKNOWNS row is also resolved, update its `Status` to `Resolved` with date.
 5. If unchanged → leave as `blocked`; surface in the start report `### Open blockers (owner)`.
@@ -185,7 +197,7 @@ All mandatory checks (1–4, 6–8) are **pass**, and row **5** is **pass** (doc
 
 Read-only snapshot. **No** HANDOFF/NEXT writes. **No** completion checklist.
 
-1. Read `{HANDOFF}` and `{ITERATION_CARRIER}`.
+1. Read `.work/context/HANDOFF.md` and `.work/plans/NEXT.md`.
 2. Run `git status -sb` and `git log -1 --oneline`.
 3. Output:
 
@@ -421,17 +433,16 @@ If the repo uses plan-foundation conventions, run **status** (read-only) and att
 
 ## Project layout (convention)
 
+**`{WORK_ROOT}` = `.work/`** at repo root (sibling of `.ai/` in consumer repos). Not the git root itself.
+
 ```
-{WORK_ROOT}/
-  context/
-    HANDOFF.md          ← session-control read/write ({HANDOFF})
-  plans/
-    NEXT.md             ← session-control + code-implementation ({ITERATION_CARRIER})
-  features/             ← feature-spec ({FEATURE_SPEC_ROOT})
-  prompts/              ← plan-foundation P0 ({PROMPTS_ROOT})
-  decisions/            ← ADRs ({DECISIONS_ROOT})
-.ai/
-  skills/               ← portable skills only
+.work/                          ← {WORK_ROOT}
+  context/HANDOFF.md            ← session-control ({HANDOFF})
+  plans/NEXT.md                 ← session-control + code-implementation ({ITERATION_CARRIER})
+  features/                     ← feature-spec ({FEATURE_SPEC_ROOT})
+  prompts/                      ← plan-foundation P0 ({PROMPTS_ROOT})
+  decisions/                    ← ADRs ({DECISIONS_ROOT})
+.ai/skills/                     ← portable skills only
 ```
 
-Projects without `{HANDOFF}`: see `reference.md` § bootstrap.
+Projects without `.work/context/HANDOFF.md`: see `reference.md` § bootstrap.

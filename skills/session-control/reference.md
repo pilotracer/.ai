@@ -195,7 +195,9 @@ FastAPI /health with DB ping; pydantic Settings from env per CONVENTIONS.
 
 ## Bootstrap (no HANDOFF yet)
 
-If `{HANDOFF}` is missing:
+**Path:** handoff lives at **`.work/context/HANDOFF.md`** (not `context/HANDOFF.md` at repo root). See `skill.md` § Path resolution.
+
+If `.work/context/HANDOFF.md` is missing:
 
 1. Tell user HANDOFF is required for session-control.
 2. Offer: create minimal HANDOFF from README + `git log` **or** run `plan-foundation` greenfield first.
