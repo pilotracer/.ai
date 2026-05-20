@@ -27,6 +27,7 @@ Manage database schema and data with **idempotent numbered SQL scripts** - no ve
 - **One script per conceptual change.** Don't cram unrelated DDL into one file. Don't split one table across three files.
 - **Stop on first error.** If a script fails, the runner halts. Fix the script, restart. No partial state.
 - **Never embed secrets.** Migration scripts contain DDL/DML only. Credentials, keys, tokens live in environment variables or KMS.
+- **Policy:** `.cursorrules` § **Migration policy** (startup runner, verify idempotency, verify applied, exceptions, test DB mutations) is canonical; this skill implements items 1–3.
 
 ---
 

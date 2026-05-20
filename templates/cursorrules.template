@@ -206,6 +206,7 @@ Customize this list for your stack (examples below):
 - Use ONLY synthetic/mock data in unit tests and local reproduction.
 - Never hardcode real customer emails or IDs.
 - Production database dumps are forbidden in test trees unless explicitly sanitized and approved.
+- Ad-hoc `INSERT`/`UPDATE`/`DELETE` on a database for tests or local reproduction requires **explicit human approval in the same message** (see § Database & Schema Rules → Migration policy item 5). Prefer fixtures, factories, and mocks.
 
 ### File Hygiene
 - Delete temporary files after use.
@@ -225,6 +226,16 @@ Customize paths and ORM for your project.
 - Maintain a **permanent historical ledger** of structural fixes (append-only).
 - NEVER delete, prune, or reorganize historical ledger entries.
 - Each entry must be idempotent (`ADD COLUMN IF NOT EXISTS`, etc.).
+
+### Migration policy (canonical)
+
+Numbered SQL under **`REPLACE:MIGRATIONS_DIR`** is the default schema path. Procedure: `@db-migration` (`.ai/skills/db-migration/skill.md`).
+
+1. **Startup:** `REPLACE:MIGRATION_RUNNER_PATH` runs all scripts in alphanumeric order on **every application start**, before the HTTP server accepts traffic. Each script must be idempotent (safe to re-run N times).
+2. **Verify idempotency:** After creating or changing a script, run `@db-migration verify` (or run the full runner twice in a dev DB) before claiming the migration is done.
+3. **Verify applied:** After stack start (`REPLACE:DEV_STACK_SCRIPT` or `docker compose up`), confirm runner logs (e.g. `migration.runner.complete` or `migration.run` with `result: ok`) and spot-check schema or reference data as appropriate for the change.
+4. **Exceptions:** One-off, destructive, non-numbered, manual hotfix, or migrations outside the numbered runner require **explicit human approval in the same message** — agents do not execute them. Present the exact SQL or steps; the human runs them.
+5. **Test database mutations:** Ad-hoc `INSERT`/`UPDATE`/`DELETE` on shared or dev databases for tests or local reproduction require **explicit human approval in the same message**; prefer fixtures, factories, and mocks. Mass backfills remain under **Backfills** below.
 
 ### Backfills
 - **STRICTLY PROHIBITED:** agents must not run mass data updates (backfills) against shared databases.

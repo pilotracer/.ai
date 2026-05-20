@@ -28,7 +28,7 @@ Execute implementation iterations derived from an **Approved master plan** (`{PL
 - **No code without reading the relevant SPEC(s) first.** Evidence-first: read before writing.
 - **No task is `done` until its gate passes.** Tests + lint + type-check must exit 0 before advancing.
 - **Scope discipline.** Do not modify any file not declared in the task's file list. Undo and document any accidental out-of-scope change.
-- **Schema changes go through `db-migration`.** Stop the task, create the migration script, resume. No inline DDL in application code.
+- **Schema changes go through `db-migration`.** Stop the task, create the migration script, resume. No inline DDL in application code. Follow `.cursorrules` § **Migration policy** (startup runner, verify, human approval for exceptions/test DML).
 - **Verification commands** come from `{AGENT_RULES_FILE}` § Docker (or § local/CI from `REPLACE:TECH_STACK_DOC` when not containerized). Never hardcode another project's service name, workdir, or toolchain.
 - **Protected files** per `{AGENT_RULES_FILE}` §Protected Files - require explicit user permission before modification. Stop and ask.
 - **No secrets in code, tests, or comments.** Use `.env` variables or KMS references.

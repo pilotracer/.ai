@@ -61,7 +61,13 @@ Pairs with: foundation architecture doc, `REPLACE:TECH_STACK_DOC`, ADRs under `.
 
 ## 9. Migrations
 
-- Scripts: `NNN_snake_case.sql`, idempotent, executed in order by `REPLACE:MIGRATION_RUNNER` on startup or via `@db-migration`.
+Binding policy: `.cursorrules` § **Migration policy**. Summary:
+
+- Scripts: `NNN_snake_case.sql`, idempotent; runner executes in order on **every application startup** (before traffic) or via `@db-migration` for create/verify in dev.
+- After create/change: `@db-migration verify` (double-run) before claiming done.
+- After stack start: confirm runner logs and spot-check schema/data as needed for the change.
+- Exceptions (one-off, destructive, non-numbered, manual hotfix, outside the runner): **human approval in the same message**; agents do not execute.
+- Test DB ad-hoc DML: **human approval**; prefer mocks/fixtures (see `.cursorrules` § Test Data).
 - Cross-context DDL requires extra review per `.cursorrules`.
 
 ## 10. Performance budgets
