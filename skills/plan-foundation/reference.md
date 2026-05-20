@@ -330,3 +330,167 @@ Use for **foundation-complete** artifact presence - **not** for plan-master-read
 | Files on disk → plan-master-ready | certify + S4 + integrity |
 | HANDOFF complete, empty UNKNOWNS | Deferred ADRs in UNKNOWNS |
 | P6 done → implementation-ready | P6 → plan-master-ready → plan-master → Approved → implementation-ready |
+
+---
+
+## Greenfield walkthrough - INTERACTION and IF templates
+
+Used by `@plan-foundation greenfield`. Skill body holds **Phase headers, Artifacts, and GATE checklists** (binding); this section holds the **questionnaires** (scaffolding the agent reads when running greenfield).
+
+### Interaction block format
+
+```markdown
+## INTERACTION: <id>
+**Q:** <question>
+**Type:** single_select | multi_select | free_text | confirm
+**Options:** (omit for free_text/confirm)
+- `value` | Label | Why this matters
+**Default:** <value>  (optional)
+**Skip if:** <file or ADR exists>  (optional)
+```
+
+Branch with `## IF: <id> = <value>`.
+
+### Owner decision questionnaires (any phase)
+
+When a product choice blocks SPECs (UX mode, vertical, compliance wording):
+
+1. Create `{PROMPTS_ROOT}/decision_<NNN>_<slug>.md` with questions + space for owner answers.
+2. Create `{DECISIONS_ROOT}/YYYYMMDD-<NNN>-<slug>-proposed.md`.
+3. After owner fills the prompt → **Decided** ADR + `{FEATURE_SPEC_ROOT}/<slug>/YYYYMMDD-SPEC-amendment-NN.md`.
+4. **Archive the prompt** - add "do not edit"; never delete owner answers.
+
+### Phase 0 - Capture (interactions)
+
+#### INTERACTION: p0-name
+
+**Q:** What is this project called? (Used in README, HANDOFF, and .cursorrules.)
+**Type:** free_text
+**Skip if:** README or HANDOFF already names the project and user did not ask to rename
+
+### Phase 1 - Exploration (interactions)
+
+#### INTERACTION: p1-integrations
+
+**Q:** External integrations in v1?
+**Type:** multi_select
+**Options:**
+- `rest-api` | REST API | External HTTPS service
+- `gov-api` | Government / regulatory API | Tax, customs, e-invoicing
+- `payment` | Payment gateway | Stripe, acquirer, etc.
+- `file-exchange` | File exchange | XSD, EDI, CSV import/export
+- `none` | None | No external deps in v1
+
+#### IF: p1-integrations includes gov-api or file-exchange
+
+Mirror vendor artifacts under `.ai/docs/integration/<vendor>-<version>/` + `MANIFEST.txt` (URL, path, SHA-256, date).
+
+#### INTERACTION: p1-adjacent
+
+**Q:** Adjacent modules users will eventually need?
+**Type:** multi_select
+**Options:**
+- `inventory` | Inventory | Stock, warehouses
+- `accounting` | Accounting | GL, journal entries
+- `crm` | CRM | Customer management
+- `pos` | POS | Hardware, quick-sale
+- `reporting` | BI/Reporting | Dashboards, exports
+- `ecommerce` | E-commerce | Online store sync
+- `none` | None | v1 is self-contained
+
+### Phase 2 - ADRs (interactions)
+
+#### INTERACTION: p2-backend
+
+**Q:** Backend stack?
+**Type:** single_select
+**Options:**
+- `python-fastapi` | Python + FastAPI
+- `ts-node` | TypeScript + Node.js
+- `go` | Go
+- `rust` | Rust
+- `csharp` | C# + .NET
+**Default:** python-fastapi
+
+#### INTERACTION: p2-frontend
+
+**Q:** Frontend?
+**Type:** single_select
+**Options:**
+- `nextjs` | Next.js + React
+- `react-vite` | React + Vite
+- `vue` | Vue/Nuxt
+- `svelte` | SvelteKit
+- `none` | API/CLI only
+**Default:** nextjs
+
+#### INTERACTION: p2-hosting
+
+**Q:** Hosting?
+**Type:** single_select
+**Options:**
+- `aws` | AWS
+- `gcp` | Google Cloud
+- `fly` | Fly.io
+- `railway` | Railway
+- `vps` | VPS / bare metal
+**Default:** aws
+
+#### INTERACTION: p2-tenancy
+
+**Q:** Multi-tenant?
+**Type:** single_select
+**Options:**
+- `schema-per-tenant` | Schema-per-tenant
+- `row-level` | Row-level (RLS)
+- `single-tenant` | Single-tenant deployments
+**Default:** schema-per-tenant for SaaS; single-tenant for on-prem products
+
+#### INTERACTION: p2-locales
+
+**Q:** UI/document languages?
+**Type:** multi_select
+**Options:** `en`, `es`, `zh`, `ru`, `pt`
+**Default:** en
+
+### Phase 5 - Infrastructure (interactions)
+
+#### INTERACTION: p5-local-dev
+
+**Q:** Local dev setup?
+**Type:** single_select
+**Options:** `docker-compose` | `bare` | `devcontainer`
+**Default:** docker-compose
+
+#### INTERACTION: p5-sandbox
+
+**Q:** Sandbox runbook for external API onboarding?
+**Type:** single_select
+**Options:** `yes` | `no`
+**Default:** yes if p1-integrations != none
+
+#### INTERACTION: p5-approve-compose
+
+**Q:** Review the docker compose proposal. Approve and create `docker-compose.yml`, `Dockerfile.*`, `.env.example`?
+**Type:** confirm
+**Depends on:** p5-local-dev = docker-compose
+**Affects:** docker-compose.yml, Dockerfile.api, Dockerfile.dashboard, .env.example, HANDOFF.md, NEXT.md
+
+#### IF: p5-approve-compose = yes
+
+Create the files per the proposal. Update HANDOFF and NEXT to reflect approval.
+
+### Phase 6 - Operations (interactions)
+
+#### INTERACTION: p6-done
+
+**Q:** Foundation P0–P6 is complete and **plan-master-ready** is certified. Proceed to **plan-master** for the master implementation plan (`{PLANS_ROOT}/full/YYYYMMDD-full-plan.md`)?
+**Type:** confirm
+**Skip if:** plan-master-ready is **no** - list blockers; use **continue** instead
+
+**On confirm:**
+
+1. Set HANDOFF: foundation gate snapshot complete; **Plan-master-ready: \<date\>**.
+2. Invoke: `@plan-master greenfield` (or `continue` if `*-full-plan.md` exists).
+3. After master plan exists: user runs `@plan-master status` for **implementation-ready** (not plan-foundation).
+4. M1 skeleton (NEXT.md) may start when **plan-master-ready: yes** even if master plan is Draft - document waiver if skipping plan-master.

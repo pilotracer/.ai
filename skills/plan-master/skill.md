@@ -75,15 +75,7 @@ Run **before** **greenfield**, **continue**, or **revise** (not before **status*
 
 ### Blocked-report shape
 
-Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blocked-report-shape):
-
-```markdown
-## @plan-master <command> - blocked (prerequisite)
-
-**Required:** <state or upstream step>
-**Detected:** <what's actually present>
-**Run first:** `<exact command to fix>`
-```
+Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blocked-report-shape) - header: `## @plan-master <command> - blocked (prerequisite)`.
 
 ### PG2 - Mode-specific (after PG1 passes)
 
@@ -186,34 +178,11 @@ Execute in order. At **each phase gate**, run [Continuous integrity rules](#cont
 
 **Objective:** Understand the project before proposing architecture.
 
-**Mandatory reads (when present):**
+**Mandatory reads (when present):** `{HANDOFF}`, `{ITERATION_CARRIER}`, foundation docs 01 + 04, `REPLACE:TECH_STACK_DOC`, ADR index + relevant ADRs, `.ai/standards/*CONVENTIONS*` + `*FEATURE_STANDARD*`, risk-critical SPECs. Skip absent files; do **not** read `{PROMPTS_ROOT}/initial.md` unless user names it.
 
-| # | Path |
-|---|------|
-| 1 | `{HANDOFF}` |
-| 2 | `{ITERATION_CARRIER}` |
-| 3 | `{PLANS_ROOT}/foundation/*-01-*-initial-scope.md` - **read if present; skip if absent** (do **not** read `{PROMPTS_ROOT}/initial.md` unless user explicitly names it) |
-| 4 | `{PLANS_ROOT}/foundation/YYYYMMDD-01-*-scope*.md` |
-| 5 | `{PLANS_ROOT}/foundation/YYYYMMDD-04-foundation-arch*.md` |
-| 6 | `REPLACE:TECH_STACK_DOC` (stack doc) |
-| 7 | `{DECISIONS_ROOT}/README.md` + relevant ADRs |
-| 8 | `.ai/standards/*CONVENTIONS*` + `*FEATURE_STANDARD*` (dated filenames per repo) |
-| 9 | Risk-critical SPECs (per threat model / foundation doc 01) |
+**Actions:** summarize product intent (one paragraph); extract existing decisions (flag conflicts, do not re-decide); detect hidden assumptions, regulatory surface; build initial risk + clarification questionnaire.
 
-**Actions:**
-
-- Summarize product intent in one paragraph.
-- Extract existing decisions (do not re-decide without flagging conflict).
-- Detect hidden assumptions, unrealistic expectations, regulatory/compliance surface.
-- Build initial risk assessment and clarification questionnaire.
-
-**Mandatory outputs:**
-
-- Project understanding summary
-- Key assumptions (registry started)
-- Critical uncertainties
-- Initial risk assessment
-- Clarification questionnaire (ask user if blockers remain)
+**Outputs:** project understanding summary, key assumptions (registry seeded), critical uncertainties, initial risk assessment, blocker questions for owner.
 
 **Grill when vague:** scale/traffic, budget, ops model, security, compliance, deployment, offline/real-time, integrations, maintainability.
 
@@ -225,21 +194,11 @@ Execute in order. At **each phase gate**, run [Continuous integrity rules](#cont
 
 **Objective:** Macro direction aligned with business goals.
 
-**Must include:**
-
-- Product vision, core goals, measurable success criteria
-- Functional requirements (numbered FR1…)
-- Non-functional requirements (NFR1…): performance, availability, security, privacy, i18n, accessibility, cost
-- Personas (link existing persona docs)
-- UX/UI principles (high level)
-- Technical constraints (from ADRs + stack doc)
-- Security model summary
-- Scalability, deployment, reliability, operational expectations
-- AI usage boundaries (if applicable)
+**Must include** (maps to MASTER_PLAN_STANDARD §2 rows 1–8): product vision + measurable success criteria, FR1…, NFR1… (performance, availability, security, privacy, i18n, accessibility, cost), personas (link existing), UX principles (high level), technical constraints (from ADRs + stack), security model summary, scalability/deployment/reliability/ops expectations, AI usage boundaries.
 
 **Must define:** architecture style, primary technologies, service/bounded-context boundaries, data flow, integration strategy, infrastructure strategy.
 
-**Each major choice:** rationale, alternatives, rejection reasoning → Decision log.
+**Each major choice:** rationale, alternatives, rejection reasoning → Decision log appendix.
 
 **Gate P1:** No FR1… without traceability stub; NFRs cover regulated/compliance path if applicable.
 
@@ -249,16 +208,7 @@ Execute in order. At **each phase gate**, run [Continuous integrity rules](#cont
 
 **Objective:** Professional-grade architecture consistent with foundation architecture doc and ADRs.
 
-**Must include (reference existing specs; gap-fill only):**
-
-- System architecture diagram (mermaid or ASCII)
-- Service/context decomposition
-- Domain boundaries and allowed dependencies
-- Database strategy, API standards, authZ/authN
-- State, caching, observability, logging, errors
-- Failure recovery, rate limiting, background jobs, events
-- Deployment, CI/CD, environments, secrets, configuration
-- Multi-tenancy, extensibility, versioning
+**Must include** (gap-fill only, reference existing specs; maps to STANDARD §2 rows 9–16): system diagram (mermaid/ASCII), service/context decomposition, domain boundaries + allowed dependencies, database/API/authZ-N strategies, observability/logging/errors, failure recovery + rate limiting + jobs + events, deployment/CI-CD/env/secrets/config, multi-tenancy/extensibility/versioning.
 
 **Must identify:** bottlenecks, SPOFs, scaling risks, maintenance risks, operational complexity.
 
@@ -268,14 +218,9 @@ Execute in order. At **each phase gate**, run [Continuous integrity rules](#cont
 
 ### Phase 3 - UX/UI planning
 
-**Objective:** Implementation-oriented UX guidance.
+**Objective:** Implementation-oriented UX guidance (maps to STANDARD §2 row 10).
 
-**Must include:**
-
-- UX philosophy, navigation, information architecture
-- Layout/responsive/accessibility standards
-- Consistency rules; empty/error/loading states
-- Onboarding; power-user efficiency (link interaction ADR / personas if present)
+**Must include:** UX philosophy, navigation/IA, layout/responsive/accessibility standards, consistency rules + empty/error/loading states, onboarding + power-user efficiency (link interaction ADR + personas).
 
 **Avoid:** unnecessary complexity, hidden critical paths.
 
@@ -285,44 +230,9 @@ Execute in order. At **each phase gate**, run [Continuous integrity rules](#cont
 
 ### Phase 4 - Incremental execution planning
 
-**Objective:** Convert architecture into executable phases/milestones.
+**Objective:** Convert architecture into executable milestones with task tables conforming to [MASTER_PLAN_STANDARD § 3](../../standards/20260519-MASTER_PLAN_STANDARD.md).
 
-**Each milestone M1… MUST contain:**
-
-| Field | Content |
-|-------|---------|
-| Objective | One sentence |
-| Scope | In / out |
-| Dependencies | Prior milestones, ADRs, owner actions |
-| Deliverables | Files/modules/SPECs |
-| Tasks | Task table (see schema below) |
-| Acceptance criteria | Measurable |
-| Validation steps | Tests, lint, manual checks |
-| Rollback considerations | Feature flags, migrations, deploy order |
-| Testing requirements | Unit/integration/e2e/sandbox |
-| Complexity | S/M/L |
-| Operational impact | Deploy, monitor, runbooks |
-
-### Task record schema
-
-Every task in the master plan uses the globally unique ID **`M{N}-T{N}`** (e.g. `M1-T3`). This ID is the stable reference for developer queries, PM tracking, traceability rows, and `code-implementation` execution.
-
-```markdown
-### Tasks - M{N}: {milestone name}
-
-| ID | Description | Files | FR/NFR | Complexity | Status |
-|----|-------------|-------|--------|------------|--------|
-| M{N}-T1 | … | `REPLACE:APP_ROOT/…` | FR-{N} | S/M/L | pending |
-| M{N}-T2 | … | `REPLACE:APP_ROOT/…` | NFR-{N} | S/M/L | pending |
-```
-
-**Rules:**
-
-- IDs are **globally unique** across all milestones in the plan. `M2-T1` ≠ `M1-T1`.
-- Shorthand `T{N}` is acceptable when the milestone context is unambiguous (e.g. inside an iteration block or a milestone section). Always use the full form in the traceability matrix and cross-milestone references.
-- Status values: `pending` | `in-progress` | `done YYYY-MM-DD` | `blocked` | `deferred`.
-- Each task links to ≥1 FR or NFR. Tasks with no FR/NFR link are flagged at Gate P4.
-- `code-implementation` inherits these rows verbatim when building the `## Current iteration` block in `NEXT.md`.
+**Per milestone:** apply the 11-field milestone schema from the standard and the `M{N}-T{N}` task table.
 
 **Optimize:** parallelization, minimal coupling, progressive validation.
 
@@ -336,91 +246,35 @@ Every task in the master plan uses the globally unique ID **`M{N}-T{N}`** (e.g. 
 
 **Objective:** Detect flaws before implementation at scale.
 
-**Run:**
+**Run:** contradiction analysis (plan vs ADRs vs SPECs); dependency consistency; scope alignment with P0 initial scope + foundation scope doc; architecture fitness, scalability, security, ops readiness, maintainability; AI hallucination risk review (unverified claims, invented APIs).
 
-- Contradiction analysis (plan vs ADRs vs SPECs)
-- Dependency consistency
-- Scope alignment with **P0 initial scope** (foundation doc 01) and foundation scope doc (01 expanded in P1)
-- Architecture fitness, scalability, security, operational readiness, maintainability
-- AI hallucination risk review (unverified claims, invented APIs)
+**Outputs:** risk registry updated, mitigations, unresolved concerns, integrity score = **pass** | **pass with waivers** | **fail**.
 
-**Outputs:**
-
-- Risk registry (updated)
-- Mitigation strategies
-- Unresolved concerns list
-- Integrity score: **pass** | **pass with waivers** | **fail**
-
-**Gate P5:** **fail** blocks **Approved** status; waivers need owner line in Decision log.
+**Gate P5:** **fail** blocks `Status: Approved`; waivers need owner line in Decision log (per STANDARD §4 approval gate).
 
 ---
 
 ### Phase 6 - AI-agent execution optimization
 
-**Objective:** Make the plan safe for autonomous/semi-autonomous agents.
+**Objective:** Make the plan safe for autonomous/semi-autonomous agents (maps to STANDARD §2 row 24).
 
-**Must:**
+**Must:** decompose into agent-friendly tasks with explicit file paths + constraints; state architectural invariants (cite CONVENTIONS + SPECs); define per-task validation; flag dangerous assumptions.
 
-- Decompose into agent-friendly tasks with explicit file paths and constraints
-- State architectural invariants (cite CONVENTIONS + relevant SPECs)
-- Define validation expectations per task
-- Flag dangerous assumptions
-
-**Should:**
-
-- Tag tasks: `model:tier` (light | standard | strong) where helpful
-- Recommend cross-model review for regulated/signing/KMS paths
+**Should:** tag tasks `model:tier` (light | standard | strong); recommend cross-model review for regulated / signing / KMS paths.
 
 **Gate P6:** Agent execution appendix present; session-control **start** checklist referenced for implementers.
 
 ---
 
-## Mandatory sections (final plan artifact)
+## Mandatory sections (artifact contract)
 
-The file `{PLANS_ROOT}/full/YYYYMMDD-full-plan.md` **must** contain these H2 sections (in order):
+The plan file structure - 25 H2 sections, header metadata, milestone schema, task record schema, approval gate - is defined in **[`.ai/standards/20260519-MASTER_PLAN_STANDARD.md`](../../standards/20260519-MASTER_PLAN_STANDARD.md)**. Do not restate the contract here.
 
-1. Executive Summary
-2. Project Goals
-3. Functional Requirements
-4. Non-Functional Requirements
-5. Constraints
-6. Assumptions
-7. Risks
-8. Unknowns / Open Questions
-9. Architecture Overview
-10. UX/UI Strategy
-11. Data Strategy
-12. Security Strategy
-13. Infrastructure Strategy
-14. Deployment Strategy
-15. Scalability Strategy
-16. Observability Strategy
-17. Testing Strategy
-18. Operational Strategy
-19. Incremental Execution Roadmap
-20. Acceptance Criteria (global)
-21. Validation Gates
-22. Rollback and Recovery Considerations
-23. Technical Debt Prevention Strategy
-24. AI-Agent Execution Guidance
-25. Long-Term Maintainability Strategy
+When authoring or revising a plan, this skill is responsible for:
 
-Plus appendices: **Decision log**, **Traceability matrix**, **Registries** (assumptions/unknowns/risks).
-
-**Header metadata (required):**
-
-```markdown
-# <Project> - Full implementation plan
-
-**Status:** Draft | Under review | Approved | Superseded
-**Version:** 1.0
-**Created:** YYYY-MM-DD
-**Advanced mode:** (if any)
-**Foundation snapshot:** (plan-foundation stage + implementation-ready yes/no)
-**Plan owner:** (role/name or TBD)
-```
-
-Large traceability matrices may live in `{PLANS_ROOT}/full/YYYYMMDD-full-plan-trace.md` with a link from the main plan.
+1. **Conforming** the artifact to that standard (every gate below references it).
+2. **Refusing to mark Approved** until the standard's § 4 approval gate is satisfied.
+3. **Reporting drift** if an existing plan file deviates from the standard's section list.
 
 ---
 

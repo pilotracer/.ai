@@ -1,12 +1,15 @@
-# Tutorial - generate a new `{ITERATION_CARRIER}` (or first `## Current iteration`)
+# Tutorial - generate / define the `## Current iteration` (NEXT sub-plan)
 
-**Doc type:** Authoring tutorial (portable).  
+**Doc type:** Authoring tutorial (portable). Covers both **new carrier file** (greenfield) and **define the sub-plan** (iteration block) cases - replaces the prior `tutorial-next-sub-plan-iteration.md`.
+
 **Prerequisites:** Approved `{MASTER_PLAN}` (or documented waiver in `{HANDOFF}`).  
 **Skill:** `@code-implementation plan - M{N}` (preferred) - reads milestone from plan and writes the block into `{ITERATION_CARRIER}`.   *(Legacy alias: `plan-iteration - M{N}`.)*
 
+**Synonym:** "Sub-plan" = **`## Current iteration`** block.
+
 ---
 
-## 1. What “NEXT” means in this workflow
+## 1. What "NEXT" means in this workflow
 
 `{ITERATION_CARRIER}` (often `NEXT.md`) is **not** the full roadmap. It holds:
 
@@ -14,6 +17,22 @@
 - **Exactly one** active `## Current iteration - M{N}: …` block - the **sub-plan** for the current milestone.
 
 The **master plan** owns M1…Mn **definitions**; the carrier owns **now**.
+
+```text
+{MASTER_PLAN} section 19  ──copy task ids──►  ## Current iteration  (sub-plan)
+        │                                              │
+        └── FR/NFR ids ─────────────────────► task table FR/NFR column
+```
+
+The sub-plan **never** invents new task ids; it **mirrors** the master plan for one milestone.
+
+### One-minute decision
+
+| Question | If yes |
+|----------|--------|
+| Is `{MASTER_PLAN}` Approved for this milestone? | Run **`@code-implementation plan - M{N}`**. |
+| Is the milestone missing from the plan? | **plan-master revise** first. |
+| Are you only fixing typos in an existing block? | [Fix NEXT tutorial](20260518-tutorial-next-fix.md). |
 
 ---
 
@@ -43,12 +62,33 @@ An iteration block is **valid** when **all** are true (mirror of `code-implement
 
 ---
 
-## 4. After `plan` (legacy `plan-iteration`) completes
+## 4. What `plan` does (operator view)
 
-1. Read the generated block as a human - fix typos only; do not renumber task ids.  
-2. Set first task to `pending`, others `pending`, none `done` yet.  
-3. Update `## Recommended next` top row to **`@code-implementation start`** (or your verb).  
+1. Reads latest Approved `{MASTER_PLAN}` and milestone **M{N}**.
+2. Copies task rows → preserves **`M{N}-T{n}`** ids.
+3. Adds file paths (from plan or SPEC); flags `TBD` + **Owner blockers** when unknown.
+4. Writes **In / Out of scope** from milestone scope text.
+5. Emits **Acceptance** + **Validation** (must include runnable tests per valid-block rules).
+6. Inserts **`### Concept / NFR registry`** when your skill version requires it.
+
+### After `plan` completes
+
+1. Read the generated block as a human - fix typos only; do not renumber task ids.
+2. Set first task to `pending`, others `pending`, none `done` yet.
+3. Update `## Recommended next` top row to **`@code-implementation start`** (or your verb).
 4. Commit or session-close per team habit.
+
+### Manual alternative (not recommended)
+
+If you cannot run the skill:
+
+1. Open master plan milestone **M{N}**.
+2. Copy the task table **verbatim** into `{ITERATION_CARRIER}`.
+3. Add columns: Complexity, Status, Notes.
+4. Build acceptance from milestone **Acceptance criteria** only.
+5. Copy **Validation** commands from plan section **21** or milestone validation row.
+
+Manual path has high **id drift** risk - prefer the skill.
 
 ---
 

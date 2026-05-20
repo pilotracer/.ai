@@ -35,8 +35,7 @@ The **canonical artifact matrix** - paths that participate in **planning** or **
 
 | Step | Guide |
 |------|--------|
-| 7 | [Generate new NEXT / first iteration block](20260518-tutorial-next-generate-new.md) |
-| 8 | [Define NEXT sub-plan (`@code-implementation plan`)](20260518-tutorial-next-sub-plan-iteration.md) |
+| 7 | [Generate / define NEXT iteration block (`@code-implementation plan`)](20260518-tutorial-next-generate-new.md) |
 | 9 | [Fix a broken NEXT.md](20260518-tutorial-next-fix.md) |
 
 ### D - Delivery loop (skills + tests)

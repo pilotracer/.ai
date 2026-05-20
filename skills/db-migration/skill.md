@@ -80,15 +80,7 @@ This prevents silent failures where `create` writes a script into a non-existent
 
 ### Blocked-report shape
 
-Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blocked-report-shape):
-
-```markdown
-## @db-migration <command> - blocked (prerequisite)
-
-**Required:** <state or upstream step>
-**Detected:** <what's actually present>
-**Run first:** `<exact command to fix>`
-```
+Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blocked-report-shape) - header: `## @db-migration <command> - blocked (prerequisite)`.
 
 ---
 
@@ -307,6 +299,9 @@ If this script introduces a new directory or a new bounded-context module, updat
 | 3 | Script matches the change type described | pass |
 | 4 | No secrets in script | pass |
 | 5 | DIRECTORY_MAP updated (if applicable) | pass/skip |
+| 6 | **Idempotency double-run executed** (`@db-migration verify` against the new script, or `@db-migration run` twice in a row in a dev DB) | pass/fail/skip - skip allowed only when DB not reachable; record reason |
+
+**Why row 6 is mandatory by default:** A script that fails on second run is not idempotent by definition - and silent failure on re-run produces drift the runner cannot detect (no version table). Verifying at create-time prevents shipping broken idempotency to other environments. Record the verify output (exit code + the runner's `migration.run` log line) as evidence in the create report.
 
 ---
 
@@ -467,5 +462,6 @@ For schema-per-tenant (PostgreSQL with multiple schemas), the runner iterates te
 | 6 | No secrets in scripts | pass/fail | |
 | 7 | Runner executed successfully (run mode) | pass/skip | |
 | 8 | Re-run produced no errors (verify mode) | pass/skip | |
+| 8b | **Idempotency double-run after create/add** (`@db-migration verify` on the new script) | pass/fail/skip | exit code + run log; skip only when DB not reachable |
 | 9 | All config files updated (init mode) | pass/skip | pyproject.toml, DOCS_TECH_STACK, .cursorrules, DIRECTORY_MAP |
 | 10 | Application starts and runs migrations (init/run mode) | pass/skip | |

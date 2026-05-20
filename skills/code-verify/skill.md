@@ -116,15 +116,7 @@ Before M1 (evidence gathering):
 
 ### Blocked-report shape
 
-Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blocked-report-shape):
-
-```markdown
-## @code-verify <command> - blocked (prerequisite)
-
-**Required:** <state or upstream step>
-**Detected:** <what's actually present>
-**Run first:** `<exact command to fix>`
-```
+Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blocked-report-shape) - header: `## @code-verify <command> - blocked (prerequisite)`.
 
 ### M1 - Gather evidence
 
@@ -325,9 +317,11 @@ Only rows relevant to files in range (security, scope, test coverage partial) - 
 
 | Skill | Use |
 |-------|-----|
-| `code-implementation` | Calls **milestone** before **complete** (CO2); task gate runs inline mechanical checks - optional `@code-verify uncommitted` before commit |
+| `code-implementation` | **Auto-invokes `@code-verify uncommitted`** at end of every `continue` batch (see `code-implementation` § Batch-end sweep) - not optional. Also calls **milestone** before **complete** (CO2); task gate runs inline mechanical checks. |
 | `session-control` | **uncommitted** or **last** before `close commit` |
 | `concept-run` | Clear MOD rows before milestone **pass** |
+
+Registry: `SKILL_DEPENDENCIES.md` § Self-verify auto-invoke.
 
 ---
 

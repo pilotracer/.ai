@@ -224,132 +224,42 @@ More: [`templates/README.md`](templates/README.md) · skill: [`skills/project-bo
 
 ---
 
-## Mini-tutorial - full lifecycle (agent chat)
+## Lifecycle at a glance (full command sequence)
 
-Step-by-step detail for each phase. **Panoramic map:** [Bird's-eye - how to use Agent OS](#birds-eye--how-to-use-agent-os) above.
-
-Replace `M1` with the milestone named in `.work/plans/NEXT.md`.  
-**Already past planning?** Jump to **§3**.
-
----
-
-### 1 · Foundation (once per project)
-
-Turn an idea into a **documented, reviewable blueprint** - still no application code.
-
-| Invoke | What happens |
-|--------|----------------|
-| **`@plan-foundation greenfield`** | Walks you through P0–P6: captures product intent and scope (**doc 01**), integration sources and evidence (**doc 02**), optional product lanes (**doc 03**), architecture and repo layout proposal (**doc 04**). Also seeds **ADRs**, **feature SPECs**, **ASSUMPTIONS / RISKS / UNKNOWNS**, and session files (`HANDOFF`, `NEXT`). |
-| **`@plan-foundation status`** | Read-only snapshot: which gates passed, what is missing, whether you are safe to approach the master plan. |
-| **`@plan-foundation certify plan-master-ready`** | Deep check that foundation artifacts are consistent and complete enough for **`@plan-master`** - certifies **plan-master-ready**, not implementation-ready. |
+The bird's-eye flow above is the conceptual map. Below is the **literal command sequence** to copy into chat. For "what each command does" detail, open the skill: `skills/<name>/skill.md`.
 
 ```text
+# Once per project (planning)
 @plan-foundation greenfield
-@plan-foundation status
 @plan-foundation certify plan-master-ready
-```
-
-**You should have:** `.work/plans/foundation/` (01–04), registries, SPECs, and a clear “what we are building” story.
-
----
-
-### 2 · Master plan (once per project)
-
-Turn the blueprint into an **approved execution roadmap** with milestones and tasks.
-
-| Invoke | What happens |
-|--------|----------------|
-| **`@plan-master greenfield`** | Authors `{PLANS_ROOT}/full/*-full-plan.md`: FR/NFR traceability, milestones **M1…M9**, per-task file lists, acceptance criteria, and links back to foundation + SPECs. |
-| **`@plan-master status`** | Read-only: plan exists, **Approved** or still Draft, integrity snapshot, and **`implementation-ready: yes/no`** - only this skill may mark implementation-ready. |
-
-```text
 @plan-master greenfield
-@plan-master status
-```
+@plan-master status                    # → implementation-ready: yes
 
-**Do not start broad coding until** the master plan is **Approved** and status shows **implementation-ready: yes**.
-
----
-
-### 3 · Open a coding session (every day)
-
-Bookend the day so the next chat does not start from zero.
-
-| Invoke | What happens |
-|--------|----------------|
-| **`@session-control start`** | Loads `.cursorrules`, `HANDOFF`, `NEXT`, `UNKNOWNS`, and P0 scope; marks the session **Open** with your goal; surfaces owner blockers. |
-| **`@code-implementation status`** | Shows the active **`## Current iteration`** block: which tasks are pending, in progress, done, or blocked. |
-
-```text
+# Every day (session)
 @session-control start
 @code-implementation status
-```
 
----
-
-### 4 · Plan and run one milestone (repeat per M{N})
-
-Pick one milestone from the master plan and execute it task by task.
-
-| Invoke | What happens |
-|--------|----------------|
-| **`@code-implementation plan - M1`** | Builds or validates the **`## Current iteration`** section in `NEXT.md` from master-plan **M1** (task IDs, files, acceptance notes). Required before the first line of code.   *(Legacy alias: `plan-iteration - M1`.)* |
-| **`@code-implementation start`** | Reads the relevant **SPECs** and **CONVENTIONS**, then implements the **first** task in the iteration. |
-| **`@code-implementation continue`** | Next task (default **1**). Optional batch: **`continue - 5`** (next 5 or until fail/blocker), **`continue - until blocked`**, **`continue - M4-T2..T6`**. Per-task **task gate** before each `done`. |
-| **`@db-migration create - …`** | *Only if the task changes schema.* Writes an idempotent numbered SQL script under your migrations dir (see `.cursorrules`) - never inline DDL in app code. |
-| **Dev stack script** | *First time this milestone needs runtime.* Use your project's dev-stack entry (e.g. `bin/start.sh` from `@dev-stack`) to start the isolated compose stack. The agent runs checks **inside** containers when Docker is the canonical path. |
-
-```text
+# Per milestone (replace M1 with the active milestone from NEXT.md)
 @code-implementation plan - M1
 @code-implementation start
-@code-implementation continue
-```
+@code-implementation continue          # or: continue - 5  /  continue - until blocked
 
-```text
+# Schema change mid-task (only when the task touches DB)
 @db-migration create - <short description>
-```
 
-```bash
-# Example - use the path from .cursorrules (REPLACE:DEV_STACK_SCRIPT)
-./bin/start.sh
-```
-
----
-
-### 5 · Close the milestone
-
-Prove the milestone is really done, then freeze progress in project memory.
-
-| Invoke | What happens |
-|--------|----------------|
-| **`@code-verify milestone`** | Audits the iteration against the master plan and SPECs: tests/lint/type evidence, scope, traceability gaps - **pass** before you claim the milestone. |
-| **`@code-implementation complete`** | Finalizes the iteration: moves work to **Done** in `NEXT.md`, refreshes `HANDOFF`, archives the iteration block, promotes residual risks to `UNKNOWNS` when needed. |
-
-```text
+# Close milestone
 @code-verify milestone
 @code-implementation complete
+
+# End session
+@session-control close                 # message only
+@session-control close commit          # add + commit safe dirty paths
+@session-control close commit push     # also push
 ```
 
----
-
-### 6 · End the session
-
-Leave a clean handoff for your future self (or the next agent).
-
-| Invoke | What happens |
-|--------|----------------|
-| **`@session-control close`** | Updates `HANDOFF` + `NEXT`, lists follow-ups, and **always** shows a draft commit message - **no git** unless you add `commit`. |
-| **`@session-control close commit`** | Updates HANDOFF/NEXT, then **runs `git add` + `git commit` in the shell** for all safe dirty paths (not HANDOFF-only). Shows commit SHA. |
-| **`@session-control close commit scoped`** | Commits only HANDOFF + NEXT (+ paths named in the report). |
-| **`@session-control close commit push`** | Commit + push current branch. |
-
-```text
-@session-control close
-@session-control close commit
-@session-control close commit push
-```
-
-**Next session:** `@session-control start` → read **Recommended next** in `.work/plans/NEXT.md` → pick the next `M{N}`.
+**Detail per command:** `skills/<name>/skill.md` (skill body holds the protocols; `reference.md` holds examples).
+**Operator decision tree:** [`START_HERE.md`](START_HERE.md) — answers "what do I invoke right now?".
+**Process Q&A:** `@process-router - <question>`.
 
 ---
 
@@ -365,7 +275,7 @@ Leave a clean handoff for your future self (or the next agent).
 
 ---
 
-## What you get
+## Pain → fix
 
 | Pain | Fix |
 |------|-----|

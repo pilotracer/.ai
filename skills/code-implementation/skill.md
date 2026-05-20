@@ -88,45 +88,7 @@ Do not run `plan` when the user asked for **status** only. For any **verify** re
 
 The `## Current iteration` section is owned by this skill. `session-control` and `plan-foundation` manage other sections; do not delete or rewrite theirs.
 
-```markdown
-## Current iteration - M{N}: {milestone name}
-
-**Milestone ref:** M{N} · `{PLANS_ROOT}/full/YYYYMMDD-full-plan.md §19`
-**Status:** planning | in-progress | blocked | complete
-**Started:** YYYY-MM-DD · **Target:** YYYY-MM-DD (optional)
-
-### In scope
-- {explicit list - derived from milestone §Scope in plan-master}
-
-### Out of scope (explicit)
-- {anything callers might assume is in scope but is not}
-
-### Tasks
-| ID | Description | Files | Status | Notes |
-|----|-------------|-------|--------|-------|
-| M{N}-T1 | … | `REPLACE:APP_ROOT/…` | pending | |
-| M{N}-T2 | … | `REPLACE:APP_ROOT/…` | in-progress | |
-| M{N}-T3 | … | `REPLACE:APP_ROOT/…` | done 2026-05-18 | |
-
-### Acceptance criteria
-- [ ] …
-
-### Validation steps
-- [ ] Tests: `{AGENT_RULES_FILE}` § Docker - `REPLACE:TEST_COMMAND` (containerized or local per project)
-- [ ] Lint: `REPLACE:LINT_COMMAND`
-- [ ] Type: `REPLACE:TYPECHECK_COMMAND` (strictness per CONVENTIONS)
-- [ ] Manual: …
-
-### Owner blockers
-- {none | list - each with owner and blocks (task ID or ADR)}
-
-### Cross-LLM verification
-- Triggered: no | yes · Date: … · Result: pass | fail | pending · Notes: …
-
-### Done this iteration
-| Task | Completed | Notes |
-|------|-----------|-------|
-```
+**Template + filled example:** `reference.md` § "NEXT.md iteration block - quick template". The template has subsections: header (Milestone ref / Status / Started / Target), **In scope**, **Out of scope (explicit)**, **Tasks** (table: `ID | Description | Files | Status | Notes`), **Acceptance criteria**, **Validation steps** (tests/lint/type/manual), **Owner blockers**, **Cross-LLM verification**, **Done this iteration**, **Concept / NFR registry (this iteration)**.
 
 ### Task ID convention
 
@@ -175,15 +137,7 @@ Generates or validates the `## Current iteration` block in `NEXT.md` from the ne
 
 ### Blocked-report shape
 
-Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blocked-report-shape), every prerequisite stop in this skill emits:
-
-```markdown
-## @code-implementation <command> - blocked (prerequisite)
-
-**Required:** <state or upstream step>
-**Detected:** <what's actually present>
-**Run first:** `<exact command to fix>`
-```
+Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blocked-report-shape) - header: `## @code-implementation <command> - blocked (prerequisite)`.
 
 ### PI2 - Select target milestone
 
@@ -365,8 +319,9 @@ Resolve the batch **before** the task loop. Default when `-` is omitted: **`coun
    h. **Schema change mid-task:** invoke `@db-migration create`; **stop batch** unless user asked to resume the same batch in the same message.
    i. **Protected file** change needed without approval → **stop batch**; ask once.
    j. **Blocked task** encountered → see [Blocked task protocol](#blocked-task-protocol); **stop batch**.
-6. After the loop ends, emit [Batch summary](#batch-summary) (mandatory when batch mode is not a single task, recommended always).
-7. When **all** iteration tasks are `done`: recommend **complete** - do not auto-finalize.
+6. **Batch-end sweep (mandatory).** After the loop ends for **any** reason - including a single-task `continue` where one or more files were modified - run the [Batch-end sweep](#batch-end-sweep) before reporting. Skip only when zero files changed (no completed task wrote to disk).
+7. Emit [Batch summary](#batch-summary) (mandatory when batch mode is not a single task, recommended always). Include sweep verdict.
+8. When **all** iteration tasks are `done`: recommend **complete** - do not auto-finalize.
 
 ### Batch progress lines
 
@@ -388,8 +343,28 @@ Example: `Batch 3/5: M4-T4 done`
 **Mode:** count=5 | until-blocked | range M4-T2..M4-T6
 **Completed:** M4-T2, M4-T3 (2 tasks)
 **Stopped because:** task gate fail on M4-T4 | blocked on M4-T5 | batch limit reached | all queued tasks done
+**Sweep verdict:** pass | fail | skip - no files changed   (see Batch-end sweep)
 **Next:** @code-implementation continue | @code-implementation continue - 3 | fix M4-T4 and re-run continue
 ```
+
+### Batch-end sweep
+
+Cheap audit on the **cumulative** changeset after a batch (or single-task `continue`) finishes. Prevents the "issues surface only after I ask" pattern - per-task gates run on one task's files; this sweep looks at the union.
+
+**Run only when at least one task in the loop changed files.** If the loop stopped before any file changed (e.g. gate fail on first task pre-edit, blocker, protected-file refusal), record `skip - no files changed` and proceed to Batch summary.
+
+| # | Step | How |
+|---|------|-----|
+| 1 | Cumulative diff snapshot | `git diff --stat` and `git diff --name-only` (working tree vs HEAD) |
+| 2 | Cross-task self-review | Read the union diff. State in 3-6 bullets: refactor leftovers, dead helpers from completed tasks, symbol renames that may have stale call-sites, any file touched by more than one task in the batch |
+| 3 | Auto-invoke `@code-verify uncommitted` | Run the skill; fold its verdict (pass / fail) into Batch summary `Sweep verdict` |
+| 4 | Warnings inventory | Sum non-fatal lint/type warnings in files changed by the batch (per [Task gate](#task-gate) row "Warnings in touched files"). If any task left warnings in Notes, restate the total |
+
+**On sweep `fail`:** do **not** claim batch success. Report the failing checks (e.g. uncommitted scope violation, secrets, protected file, fresh gate fail). Stop. Recommend either a fix or `@session-control close` with the issue logged.
+
+**On sweep `pass` with warnings or self-review findings:** batch succeeds; surface the findings in Batch summary and (when material) append to `{PLANS_ROOT}/UNKNOWNS.md` so they cannot get lost.
+
+**Honesty:** The sweep replaces neither task gates nor `@code-verify milestone`. It is the **minimum** post-batch audit. `@code-verify milestone` is still required before **complete**.
 
 ### Stop conditions (all batch modes)
 
@@ -405,6 +380,8 @@ Stop the batch when **any** occurs (whichever comes first):
 | 6 | No more **pending** / **in-progress** tasks in the queue |
 | 7 | All iteration tasks **`done`** → recommend **complete** |
 
+Regardless of which stop condition fired, run [Batch-end sweep](#batch-end-sweep) before emitting Batch summary if any file changed during the loop.
+
 ---
 
 ## Task gate
@@ -417,18 +394,45 @@ Run after every task implementation before marking `done`. All checks must pass.
 | Full suite (smoke) | Same section - full `REPLACE:TEST_COMMAND` | Exit 0 |
 | Lint | `REPLACE:LINT_COMMAND` (via compose exec when containerized) | Exit 0 |
 | Type check | `REPLACE:TYPECHECK_COMMAND` | Exit 0 per CONVENTIONS or documented baseline exceptions |
+| **Warnings in touched files** | Re-read lint/type output | Count non-fatal warnings in files this task changed; **0** or listed in task `Notes` |
 | No secrets in diff | `git diff --unified=0` reviewed | Same rules as `code-verify` S1 - no keys, tokens, passwords, PEM material |
 | Protected files | `git diff --name-only` reviewed | No `.cursorrules` §Protected Files paths unless user explicitly approved |
 | Scope discipline | `git diff --name-only` | All paths in declared task file list |
 | MOD-06 (AI-assisted) | `@concept-run - MOD-06` when iteration touched code | Output attached to PR, task `Notes`, or iteration registry; **required** before **complete** (see CO1) |
+| **SC1 self-critique** | [SC1 - Self-critique](#sc1--self-critique) below | Five bullets recorded in task `Notes` or iteration log |
 
 **Also verify (manual - no single exit code):**
 
-- **Residual risks / deferred sub-work:** Before marking a task `done`, any follow-up work, untested edge cases, or known limitations discovered during implementation must be captured in the task's `Notes` column or appended to `{PLANS_ROOT}/UNKNOWNS.md` with a new U* row. Do not let deferred sub-work exist only in the agent report - promote it to a tracked artifact.  
-- **Observability:** If the task touches HTTP handlers, jobs, logging, or outbound calls: confirm fields and correlation/trace behavior match the feature SPEC §9 and `{OBSERVABILITY_SPEC}` (once customized for the project); otherwise note `n/a - no observability surfaces touched`.  
+- **Residual risks / deferred sub-work:** Before marking a task `done`, any follow-up work, untested edge cases, or known limitations discovered during implementation must be captured in the task's `Notes` column or appended to `{PLANS_ROOT}/UNKNOWNS.md` with a new U* row. Do not let deferred sub-work exist only in the agent report - promote it to a tracked artifact.
+- **TODO / FIXME hygiene:** If the diff added any `TODO`, `FIXME`, `HACK`, or `XXX` comment, promote it to a `U*` row in `{PLANS_ROOT}/UNKNOWNS.md` **or** capture it in task `Notes` with owner/follow-up before marking `done`.
+- **Observability:** If the task touches HTTP handlers, jobs, logging, or outbound calls: confirm fields and correlation/trace behavior match the feature SPEC §9 and `{OBSERVABILITY_SPEC}` (once customized for the project); otherwise note `n/a - no observability surfaces touched`.
 - **Concept / MOD prompts:** Cursor/agent sessions are **AI-assisted: yes** by default (see `.ai/concepts/README.md` § Trigger table). Run MOD-06 per task or batch before **complete**; attach output skeleton to PR or iteration `Notes`. For multi-package edits, attach coupling-audit (MOD-01) when boundaries crossed. Rows in `### Concept / NFR registry` with `Applies=yes` must not remain `pending` before **complete** (CO1).
 
-**On any gate failure:** report exact output. Diagnose root cause. Fix. Re-run. Do not mark task `done` or proceed to the next task until all checks pass.
+### SC1 - Self-critique
+
+Two-minute structured re-read of the task diff before marking `done`. Answer all five in task `Notes` (or, in batch mode, the iteration log) - one bullet each, ≤1 line. **Do not** answer with "none" or "n/a" reflexively; if a row is truly empty, write the reason (e.g. `none - touched only one self-contained file`).
+
+| # | Prompt | Purpose |
+|---|--------|---------|
+| 1 | What did I change beyond the declared file list or task scope, even if accidentally? | Scope drift |
+| 2 | What is the most likely failure mode for this code in 3 months? | Hidden brittleness |
+| 3 | Which referenced file did I assume unchanged but did not re-read this session? | Stale-assumption bugs |
+| 4 | Is there a test for the first failure mode I would expect? If no, where is it captured? | Coverage gap → must land in `Notes` or `UNKNOWNS.md` |
+| 5 | Any non-fatal lint / type / compiler warnings in touched files? Count + summary. | Warning rot |
+
+If SC1 surfaces a real concern (not just "looks fine") → **either fix it now or open a `U*` row** in `{PLANS_ROOT}/UNKNOWNS.md` referencing this task. Marking `done` while leaving an SC1 concern undocumented is a gate **fail**.
+
+### Post-fix re-gate
+
+When the agent applies a fix in response to **any** reported issue - user-flagged, batch-end sweep finding, lint regression, or test failure - it **must re-run the full task gate** for the affected task(s) before claiming the fix succeeded. Visual inspection alone is not evidence of repair. The progress line for the re-gated task becomes:
+
+```text
+Task M{N}-T{N} re-gated <YYYY-MM-DD> after fix: pass | fail (<reason>)
+```
+
+This applies whether the original issue was caught inside the same batch, in a follow-up message, or on a later session.
+
+**On any gate failure:** report exact output. Diagnose root cause. Fix. Re-gate per above. Do not mark task `done` or proceed to the next task until all checks pass.
 
 **Scope violation** (file outside task list modified): stop immediately. Undo or stash the out-of-scope change. Document why in task Notes. If the out-of-scope change is genuinely necessary, update the task file list and note the expansion before proceeding.
 
@@ -600,18 +604,17 @@ When a task cannot proceed mid-implementation:
 
 ## Anti-patterns
 
-- Starting implementation without a valid iteration block in NEXT.md.
-- Writing code without reading the relevant SPEC(s) first.
-- Marking a task `done` before the task gate passes.
+*(Behaviors not covered by Hard rules above; Hard rules are not restated here.)*
+
+- Writing code without reading the relevant SPEC(s) first - the read precedes the edit.
 - Reporting "tests pass" without running them and reviewing output.
-- Modifying files outside the declared task file list.
-- Inline `CREATE TABLE` / `ALTER TABLE` in application code.
-- Touching protected files without explicit user permission.
-- Running verification on the host when `{AGENT_RULES_FILE}` requires containers (or the reverse).
 - Skipping the task gate because "it's a small change."
+- Skipping **SC1 self-critique** because the task "looked simple".
+- Claiming a fix succeeded without **re-gating** the affected task(s).
+- Skipping the **Batch-end sweep** at end of `continue` (single-task or batch).
 - Proceeding to complete without `@code-verify milestone`.
 - Skipping the **Concept / NFR registry** subsection in the active iteration when a concept pack is documented in agent rules.
-- Skipping **MOD-06** in a Cursor/agent session by self-classifying as non-AI.
+- Skipping **MOD-06** by self-classifying an agent session as non-AI.
 - Passing **Observability** in `@code-verify milestone` without checking SPEC §9 fields on touched code paths.
 - Inventing a resolution for an owner-decision blocker.
 - Editing merged SPECs or archived decision prompts during implementation.
@@ -630,8 +633,11 @@ When a task cannot proceed mid-implementation:
 | 3 | SPEC(s) read before implementation | pass/skip | paths |
 | 4 | CONVENTIONS + FEATURE_STANDARD read | pass/skip | |
 | 5 | Task gate passed per task | pass/fail | exit codes |
+| 5b | SC1 self-critique recorded per task | pass/fail | bullets in Notes |
+| 5c | Post-fix re-gate executed (if any fix applied) | pass/skip | task ids re-gated |
 | 6 | No out-of-scope files modified | pass/fail | git diff |
 | 7 | No secrets in output | pass/fail | |
 | 8 | Schema changes via db-migration | pass/skip | |
+| 8b | Batch-end sweep run (continue mode) | pass/fail/skip | sweep verdict |
 | 9 | `@code-verify milestone` (complete mode) | pass/skip | verdict |
 | 10 | NEXT.md + HANDOFF updated (complete mode) | pass/skip | |

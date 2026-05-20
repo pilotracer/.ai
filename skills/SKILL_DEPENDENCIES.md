@@ -46,7 +46,7 @@ foundation-complete  →  plan-master-ready  →  implementation-ready
 | **plan-master** `integrity` | Target artifacts exist (foundation set **or** master plan for P5) | Invoked by plan-foundation certify **or** standalone |
 | **plan-master** `status` / `show` *(alias: `task`)* | - | Read-only |
 | **code-implementation** `plan` *(alias: `plan-iteration`)* | Approved `*-full-plan.md` **or** HANDOFF M{N} waiver (PI1 gate) | **Required** |
-| **code-implementation** `start` / `continue` | Valid `NEXT.md` iteration block; **implementation-ready** or HANDOFF waiver (ST0 gate) | **Required** |
+| **code-implementation** `start` / `continue` | Valid `NEXT.md` iteration block; **implementation-ready** or HANDOFF waiver (ST0 gate); auto-invokes `@code-verify uncommitted` at batch end (see § Self-verify auto-invoke) | **Required** |
 | **code-implementation** `complete` | Active iteration; `@code-verify milestone` pass | **Required** |
 | **code-implementation** `status` | - | Read-only |
 | **code-verify** `milestone` | Active milestone exists in `{MASTER_PLAN}` §19 **or** `NEXT.md` § Current iteration (M0 gate) | **Required** |
@@ -57,7 +57,7 @@ foundation-complete  →  plan-master-ready  →  implementation-ready
 | **concept-run** `run` | Applicable trigger (SPEC §15, iteration registry, diff scope) | Per `.ai/concepts/README.md` |
 | **concept-run** `list` / `status` | - | Read-only |
 | **db-migration** `init` | Repo at Agent OS root; **IB0** brownfield gate detects existing runner + `001_init.sql` | - (brownfield prompts keep / overwrite-runner / overwrite-all / abort) |
-| **db-migration** `create` / `add` / `run` / `verify` | `db-migration init` already run (runner module + `001_init.sql` baseline present) | **Required** |
+| **db-migration** `create` / `add` / `run` / `verify` | `db-migration init` already run (runner module + `001_init.sql` baseline present); `create` / `add` auto-invokes idempotency double-run (`@db-migration verify` on the new script, see § Self-verify auto-invoke) | **Required** |
 | **db-migration** `status` | - | Read-only |
 | **dev-stack** `init` | User request / `docker-compose*.yml` present; brownfield gate refuses to silently overwrite existing `bin/start.sh` | - |
 | **dev-stack** `status` | - | Read-only |
@@ -139,6 +139,23 @@ When a gate stops execution, the skill emits a uniform block so users always see
 ```
 
 Skills must not invent ad-hoc error messages for prerequisite failures.
+
+---
+
+## Self-verify auto-invoke
+
+Some mutating skills must invoke a verifier on the artifact they just produced **before** declaring the mode complete. This is in addition to per-step mechanical gates and prevents "issues surface only after the user prompts again".
+
+| Skill / mode | Auto-invokes | When | Skip allowed? |
+|--------------|--------------|------|----------------|
+| `code-implementation` `continue` (any `-` target) | `@code-verify uncommitted` over cumulative batch diff (see `code-implementation` § Batch-end sweep) | After per-task loop ends, before Batch summary | Only when zero files changed during the loop |
+| `code-implementation` `complete` | `@code-verify milestone` | CO2, before final gates | No |
+| `db-migration` `create` / `add` | `@db-migration verify` (or `run` twice in dev DB) on the new script | C6, before declaring create complete | Only when DB not reachable; record reason |
+| `feature-spec` `approve` | `@feature-spec review` | Before flipping `Status: Approved` | No |
+
+**Honesty:** Auto-invoked verifiers run with the **same evidence rules** as standalone invocations. A `pass` claim without exit code, file path, or quoted output is treated as `unverified` per `.cursorrules` Core Principle 5.
+
+**Post-fix re-gate** (separate from auto-invoke): when an agent applies a fix in response to **any** reported issue, the affected task's gate **must** be re-run before claiming repair. See `code-implementation` § Post-fix re-gate.
 
 ---
 

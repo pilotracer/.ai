@@ -81,15 +81,7 @@ Orchestrate **feature SPEC** artifacts under `{FEATURE_SPEC_ROOT}/<feature-slug>
 
 ### Blocked-report shape
 
-Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blocked-report-shape), every prerequisite stop in this skill emits:
-
-```markdown
-## @feature-spec <command> - blocked (prerequisite)
-
-**Required:** <state or upstream step>
-**Detected:** <what's actually present>
-**Run first:** `<exact command to fix>`
-```
+Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blocked-report-shape) - header: `## @feature-spec <command> - blocked (prerequisite)`.
 
 ---
 

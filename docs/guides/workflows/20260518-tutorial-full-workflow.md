@@ -132,7 +132,7 @@ You now have **end-to-end traceability** from business language to validation wi
 |-------|--------|
 | Foundation | [plan-foundation](20260518-guide-plan-foundation.md) |
 | Master plan | [plan-master](20260518-guide-plan-master-full.md) |
-| NEXT sub-plan | [plan / sub-plan](20260518-tutorial-next-sub-plan-iteration.md) |
+| NEXT sub-plan | [plan / sub-plan](20260518-tutorial-next-generate-new.md) |
 | Delivery loop | [Multiple iterations](20260518-tutorial-implement-multiple-iterations.md) |
 | Verify & test in dev | [Verify / audit / test](20260518-tutorial-verify-audit-test-development.md) |
 | Tests in process | [Testing in workflow](20260518-guide-testing-and-test-suite-in-workflow.md) |

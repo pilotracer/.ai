@@ -376,15 +376,7 @@ Before **certify**:
 
 ### Blocked-report shape
 
-Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blocked-report-shape), every prerequisite stop in this skill emits:
-
-```markdown
-## @plan-foundation <command> - blocked (prerequisite)
-
-**Required:** <state or upstream step>
-**Detected:** <what's actually present>
-**Run first:** `<exact command to fix>`
-```
+Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blocked-report-shape) - header: `## @plan-foundation <command> - blocked (prerequisite)`.
 
 ---
 
@@ -584,32 +576,15 @@ Use when the user asks to **certify**, **verify for plan-master**, or **plan-mas
 
 ---
 
-## Interaction blocks (format)
+## Greenfield interaction templates (delegated)
 
-```markdown
-## INTERACTION: <id>
-**Q:** <question>
-**Type:** single_select | multi_select | free_text | confirm
-**Options:** (omit for free_text/confirm)
-- `value` | Label | Why this matters
-**Default:** <value>  (optional)
-**Skip if:** <file or ADR exists>  (optional)
-```
-
-Branch with `## IF: <id> = <value>`.
-
-### Owner decision questionnaires (any phase)
-
-When a product choice blocks SPECs (UX mode, vertical, compliance wording):
-
-1. Create `{PROMPTS_ROOT}/decision_<NNN>_<slug>.md` with questions + space for owner answers.
-2. Create `{DECISIONS_ROOT}/YYYYMMDD-<NNN>-<slug>-proposed.md`.
-3. After owner fills the prompt → **Decided** ADR + `{FEATURE_SPEC_ROOT}/<slug>/YYYYMMDD-SPEC-amendment-NN.md`.
-4. **Archive the prompt** - add "do not edit"; never delete owner answers.
+Question scaffolding, defaults, and IF branches for `@plan-foundation greenfield` live in **`reference.md` § Greenfield walkthrough**. Skill body holds only **Phase headers, Artifacts, GATE checklists** (binding). When running greenfield, read the reference section once per phase to drive the questionnaire.
 
 ---
 
 ## Phase 0 - Capture
+
+**Artifacts:**
 
 ```
 {PLANS_ROOT}/foundation/YYYYMMDD-01-<slug>-initial-scope.md   - P0 mini-plan (greenfield creates; plan-foundation owns)
@@ -619,15 +594,9 @@ When a product choice blocks SPECs (UX mode, vertical, compliance wording):
 {PLANS_ROOT}/UNKNOWNS.md
 ```
 
-## INTERACTION: p0-name
+**Greenfield questions:** `p0-name` - see `reference.md` § Phase 0.
 
-**Q:** What is this project called? (Used in README, HANDOFF, and .cursorrules.)
-**Type:** free_text
-**Skip if:** README or HANDOFF already names the project and user did not ask to rename
-
----
-
-## GATE: p0
+### GATE: p0
 
 - [ ] **P0 initial scope** mini-plan at `{PLANS_ROOT}/foundation/*-01-*-initial-scope.md` (founder intent captured verbatim)
 - [ ] `.cursorrules` created with project name and evidence-first / no-PII principles
@@ -638,34 +607,6 @@ When a product choice blocks SPECs (UX mode, vertical, compliance wording):
 ---
 
 ## Phase 1 - Exploration
-
-## INTERACTION: p1-integrations
-
-**Q:** External integrations in v1?
-**Type:** multi_select
-**Options:**
-- `rest-api` | REST API | External HTTPS service
-- `gov-api` | Government / regulatory API | Tax, customs, e-invoicing
-- `payment` | Payment gateway | Stripe, acquirer, etc.
-- `file-exchange` | File exchange | XSD, EDI, CSV import/export
-- `none` | None | No external deps in v1
-
-## IF: p1-integrations includes gov-api or file-exchange
-
-Mirror vendor artifacts under `.ai/docs/integration/<vendor>-<version>/` + `MANIFEST.txt` (URL, path, SHA-256, date).
-
-## INTERACTION: p1-adjacent
-
-**Q:** Adjacent modules users will eventually need?
-**Type:** multi_select
-**Options:**
-- `inventory` | Inventory | Stock, warehouses
-- `accounting` | Accounting | GL, journal entries
-- `crm` | CRM | Customer management
-- `pos` | POS | Hardware, quick-sale
-- `reporting` | BI/Reporting | Dashboards, exports
-- `ecommerce` | E-commerce | Online store sync
-- `none` | None | v1 is self-contained
 
 **Artifacts:**
 
@@ -679,9 +620,9 @@ Mirror vendor artifacts under `.ai/docs/integration/<vendor>-<version>/` + `MANI
 
 Doc 01 sections: Audience, Assumption ledger, Scope, Risks; heading **Architecture directions (non-prescriptive - architecture foundation in doc 04)** per [Terminology](#terminology-required--prevents-confusion-with-plan-master). Doc 04: Bounded contexts, decisions register §13, foundation-ready gate §14 - title may say "plan" but role is **architecture foundation**, not `*-full-plan.md`.
 
----
+**Greenfield questions:** `p1-integrations`, `p1-adjacent` and IF branch for gov-api / file-exchange - see `reference.md` § Phase 1.
 
-## GATE: p1
+### GATE: p1
 
 - [ ] Scope doc (01) exists; uses **architecture foundation in doc 04** wording (not "full plan in doc 04")
 - [ ] Architecture foundation doc (04) exists with bounded contexts + dependency direction
@@ -696,59 +637,6 @@ Doc 01 sections: Audience, Assumption ledger, Scope, Risks; heading **Architectu
 
 ## Phase 2 - ADRs
 
-## INTERACTION: p2-backend
-
-**Q:** Backend stack?
-**Type:** single_select
-**Options:**
-- `python-fastapi` | Python + FastAPI
-- `ts-node` | TypeScript + Node.js
-- `go` | Go
-- `rust` | Rust
-- `csharp` | C# + .NET
-**Default:** python-fastapi
-
-## INTERACTION: p2-frontend
-
-**Q:** Frontend?
-**Type:** single_select
-**Options:**
-- `nextjs` | Next.js + React
-- `react-vite` | React + Vite
-- `vue` | Vue/Nuxt
-- `svelte` | SvelteKit
-- `none` | API/CLI only
-**Default:** nextjs
-
-## INTERACTION: p2-hosting
-
-**Q:** Hosting?
-**Type:** single_select
-**Options:**
-- `aws` | AWS
-- `gcp` | Google Cloud
-- `fly` | Fly.io
-- `railway` | Railway
-- `vps` | VPS / bare metal
-**Default:** aws
-
-## INTERACTION: p2-tenancy
-
-**Q:** Multi-tenant?
-**Type:** single_select
-**Options:**
-- `schema-per-tenant` | Schema-per-tenant
-- `row-level` | Row-level (RLS)
-- `single-tenant` | Single-tenant deployments
-**Default:** schema-per-tenant for SaaS; single-tenant for on-prem products
-
-## INTERACTION: p2-locales
-
-**Q:** UI/document languages?
-**Type:** multi_select
-**Options:** `en`, `es`, `zh`, `ru`, `pt`
-**Default:** en
-
 **Artifacts:**
 
 ```
@@ -759,9 +647,9 @@ Doc 01 sections: Audience, Assumption ledger, Scope, Risks; heading **Architectu
 
 ADR: Context → Decision → Consequences → Alternatives → References. Status: `Proposed | Decided | Deferred | Superseded`.
 
----
+**Greenfield questions:** `p2-backend`, `p2-frontend`, `p2-hosting`, `p2-tenancy`, `p2-locales` - see `reference.md` § Phase 2.
 
-## GATE: p2
+### GATE: p2
 
 - [ ] ADR index current
 - [ ] Stack, hosting, tenancy ADRs **Decided**
@@ -788,7 +676,7 @@ SPEC sections: Purpose · In/Out scope · Domain language · Rules (R1…) · Da
 
 ---
 
-## GATE: p3
+### GATE: p3
 
 - [ ] Conventions + feature standard + directory map on disk
 - [ ] ≥1 feature SPEC with numbered behavioural rules
@@ -815,7 +703,7 @@ Optional: `{PLANS_ROOT}/operations/YYYYMMDD-cpa-shortlist.md`, `YYYYMMDD-regulat
 
 ---
 
-## GATE: p4
+### GATE: p4
 
 - [ ] Tech stack pins versions; TODOs trace to ADRs or `UNKNOWNS.md`
 - [ ] Threat model + data classification exist
@@ -830,20 +718,6 @@ Optional: `{PLANS_ROOT}/operations/YYYYMMDD-cpa-shortlist.md`, `YYYYMMDD-regulat
 
 ## Phase 5 - Infrastructure
 
-## INTERACTION: p5-local-dev
-
-**Q:** Local dev setup?
-**Type:** single_select
-**Options:** `docker-compose` | `bare` | `devcontainer`
-**Default:** docker-compose
-
-## INTERACTION: p5-sandbox
-
-**Q:** Sandbox runbook for external API onboarding?
-**Type:** single_select
-**Options:** `yes` | `no`
-**Default:** yes if p1-integrations != none
-
 **Artifacts:**
 
 ```
@@ -853,24 +727,9 @@ Optional: `{PLANS_ROOT}/operations/YYYYMMDD-cpa-shortlist.md`, `YYYYMMDD-regulat
 
 **Rule:** `docker-compose.yml`, `Dockerfile.*`, `.env.example` - create only after explicit owner approval.
 
----
+**Greenfield questions:** `p5-local-dev`, `p5-sandbox`, `p5-approve-compose` and IF branch - see `reference.md` § Phase 5.
 
-## INTERACTION: p5-approve-compose
-
-**Q:** Review the docker compose proposal. Approve and create `docker-compose.yml`, `Dockerfile.*`, `.env.example`?
-**Type:** confirm
-**Depends on:** p5-local-dev = docker-compose
-**Affects:** docker-compose.yml, Dockerfile.api, Dockerfile.dashboard, .env.example, HANDOFF.md, NEXT.md
-
----
-
-## IF: p5-approve-compose = yes
-
-Create the files per the proposal. Update HANDOFF and NEXT to reflect approval.
-
----
-
-## GATE: p5
+### GATE: p5
 
 - [ ] Docker approved + files created, OR bare-metal documented, OR approval pending in HANDOFF
 - [ ] Sandbox runbook if external integration
@@ -894,7 +753,7 @@ README.md
 
 ---
 
-## GATE: p6 (FINAL)
+### GATE: p6 (FINAL)
 
 - [ ] README start-here table
 - [ ] HANDOFF fresh-start checklist + gate snapshot
@@ -907,20 +766,7 @@ README.md
 
 **Not at P6:** implementation-ready (requires Approved master plan - evaluate after plan-master).
 
----
-
-## INTERACTION: p6-done
-
-**Q:** Foundation P0–P6 is complete and **plan-master-ready** is certified. Proceed to **plan-master** for the master implementation plan (`{PLANS_ROOT}/full/YYYYMMDD-full-plan.md`)?
-**Type:** confirm
-**Skip if:** plan-master-ready is **no** - list blockers; use **continue** instead
-
-**On confirm:**
-
-1. Set HANDOFF: foundation gate snapshot complete; **Plan-master-ready: \<date\>**.
-2. Invoke: `@plan-master greenfield` (or `continue` if `*-full-plan.md` exists).
-3. After master plan exists: user runs `@plan-master status` for **implementation-ready** (not plan-foundation).
-4. M1 skeleton (NEXT.md) may start when **plan-master-ready: yes** even if master plan is Draft - document waiver if skipping plan-master.
+**Greenfield question:** `p6-done` (confirm) - see `reference.md` § Phase 6.
 
 Foundation orchestration certifies **plan-master-ready**; **plan-master** authors the [master plan artifact](#master-plan-artifact).
 
