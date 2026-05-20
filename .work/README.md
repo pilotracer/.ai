@@ -1,6 +1,6 @@
-# `.work/` — project working tree
+# `.work/` - project working tree
 
-> **This `.work/` tree is a demo skeleton inside the Agent OS framework repo.** When you bootstrap Agent OS into your own repo (`bash .ai/templates/bootstrap.sh`), the same layout is created at your repo root and the files are filled in by skills (**`@plan-foundation`**, **`@plan-master`**, **`@session-control`**, **`@code-implementation`**, **`@feature-spec`**) as you work. This README itself is permanent navigation — it does not change per session.
+> **This `.work/` tree is a demo skeleton inside the Agent OS framework repo.** When you bootstrap Agent OS into your own repo (`bash .ai/templates/bootstrap.sh`), the same layout is created at your repo root and the files are filled in by skills (**`@plan-foundation`**, **`@plan-master`**, **`@session-control`**, **`@code-implementation`**, **`@feature-spec`**) as you work. This README itself is permanent navigation - it does not change per session.
 
 **Purpose:** All **project-specific** artifacts: plans, SPECs, ADRs, prompts, and session handoff.
 
@@ -12,9 +12,9 @@
 |------|----------|
 | `.work/plans/` | Foundation docs (`*-01-*` … `*-04-*`), master plan (`full/*-full-plan.md`), registries, `NEXT.md`, operations runbooks |
 | `.work/features/<slug>/` | Feature SPECs, amendments, `CHANGELOG.md` per FEATURE_STANDARD |
-| `.work/prompts/` | Decision questionnaires; optional user scratch (`initial.md` — **not read by skills** unless user names it) |
+| `.work/prompts/` | Decision questionnaires; optional user scratch (`initial.md` - **not read by skills** unless user names it) |
 | `.work/decisions/` | ADRs (`YYYYMMDD-NNN-*.md`) |
-| `.work/context/` | `HANDOFF.md` — read/write via `@session-control` |
+| `.work/context/` | `HANDOFF.md` - read/write via `@session-control` |
 
 ## Placeholder map
 

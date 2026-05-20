@@ -1,8 +1,8 @@
-# Guide — foundation plan (`plan-foundation` skill)
+# Guide - foundation plan (`plan-foundation` skill)
 
 **Doc type:** Planning reference guide (portable).  
-**Skill:** `plan-foundation` — canonical file: `{SKILLS_ROOT}/plan-foundation/skill.md`.  
-**Output home (typical):** `.work/plans/foundation/` docs **01–04**, ADRs, SPECs, registries — **not** the master execution plan.
+**Skill:** `plan-foundation` - canonical file: `{SKILLS_ROOT}/plan-foundation/skill.md`.  
+**Output home (typical):** `.work/plans/foundation/` docs **01–04**, ADRs, SPECs, registries - **not** the master execution plan.
 
 ---
 
@@ -12,8 +12,8 @@
 
 It **stops** at **plan-master-ready** certification. It does **not** replace:
 
-- `{MASTER_PLAN}` (`*-full-plan.md`) — owned by **plan-master**.  
-- `{ITERATION_CARRIER}` tactical tasks — owned by **code-implementation** after the master plan is Approved.
+- `{MASTER_PLAN}` (`*-full-plan.md`) - owned by **plan-master**.  
+- `{ITERATION_CARRIER}` tactical tasks - owned by **code-implementation** after the master plan is Approved.
 
 ---
 
@@ -26,7 +26,7 @@ It **stops** at **plan-master-ready** certification. It does **not** replace:
 | Check if you can start plan-master | `status` |
 | Formal gate before master plan | `@plan-foundation certify plan-master-ready` (exact phrase per `plan-foundation/skill.md` parse table) |
 
-Parse table lives in **`plan-foundation/skill.md`** — read it before invoking.
+Parse table lives in **`plan-foundation/skill.md`** - read it before invoking.
 
 ---
 
@@ -34,12 +34,12 @@ Parse table lives in **`plan-foundation/skill.md`** — read it before invoking.
 
 Your skill file is authoritative; typically:
 
-- **P0** — registry bootstrap (`ASSUMPTIONS`, `RISK_REGISTRY`, `UNKNOWNS`), HANDOFF shape.  
-- **P1** — foundation docs folder + doc **01** scope.  
-- **P2** — integration / evidence (doc **02**).  
-- **P3** — adjacency / ERP lanes (doc **03**, optional).  
-- **P4** — architecture foundation (doc **04**) — **not** “full plan” wording.  
-- **P5–P6** — integrity, SPECs, ADRs, directory map, **certify plan-master-ready**.
+- **P0** - registry bootstrap (`ASSUMPTIONS`, `RISK_REGISTRY`, `UNKNOWNS`), HANDOFF shape.  
+- **P1** - foundation docs folder + doc **01** scope.  
+- **P2** - integration / evidence (doc **02**).  
+- **P3** - adjacency / ERP lanes (doc **03**, optional).  
+- **P4** - architecture foundation (doc **04**) - **not** “full plan” wording.  
+- **P5–P6** - integrity, SPECs, ADRs, directory map, **certify plan-master-ready**.
 
 ---
 
@@ -63,4 +63,4 @@ Your skill file is authoritative; typically:
 
 ## 6. Next step
 
-Run **`@plan-master status`** then **`@plan-master greenfield`** (or `continue`) per `plan-master` skill — see [Guide — master / full plan](20260518-guide-plan-master-full.md).
+Run **`@plan-master status`** then **`@plan-master greenfield`** (or `continue`) per `plan-master` skill - see [Guide - master / full plan](20260518-guide-plan-master-full.md).

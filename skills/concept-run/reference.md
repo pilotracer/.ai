@@ -1,4 +1,4 @@
-# concept-run — reference
+# concept-run - reference
 
 Supplement to `skill.md`. Invocation examples, concept mapping, trigger quick-reference, and edge cases.
 
@@ -55,7 +55,7 @@ Run each pending applicable concept in the current iteration registry.
 | Adding billable deploy units, new services | MOD-03 | `cost-model/` | Recommended |
 | Changing ownership, on-call surface, service ratio | MOD-04 | `ops-headcount/` | Recommended |
 | Extracting a package, changing modular boundaries | MOD-05 | `modularity-vs-distribution/` | Recommended |
-| `@code-implementation` in Cursor/agent session (code touched) | MOD-06 | `ai-amplification/` | **Required** — default **AI-assisted: yes**; **`human-only`** opt-out only |
+| `@code-implementation` in Cursor/agent session (code touched) | MOD-06 | `ai-amplification/` | **Required** - default **AI-assisted: yes**; **`human-only`** opt-out only |
 
 The authoritative trigger table is in `.ai/concepts/README.md` § Trigger table. The above is a quick reference.
 
@@ -76,13 +76,13 @@ The authoritative trigger table is in `.ai/concepts/README.md` § Trigger table.
 
 | Situation | Behavior |
 |-----------|----------|
-| Concept pack missing (no `.ai/concepts/`) | `list` reports `N/A — no pack`; `run` refuses with instructions |
+| Concept pack missing (no `.ai/concepts/`) | `list` reports `N/A - no pack`; `run` refuses with instructions |
 | `prompt.md` not found for MOD id | Report gap; suggest owner create the missing prompt |
 | Required input missing (e.g. no diff for MOD-01) | Ask user once for the missing input; do not invent |
 | `run-all - pending` finds no pending rows | Report `nothing to run` and suggest `@concept-run list` |
 | Quantitative claim without evidence tag | Reject the claim; restate with `estimated` or `assumption` |
 | MOD-03 invoked for task that adds no billable units | Mark `N/A` in output with reason; do not fabricate cost lines |
-| `Status=gap` rows found | Treat as resolved — do not re-run unless user asks |
+| `Status=gap` rows found | Treat as resolved - do not re-run unless user asks |
 | Agent session with code changes but MOD-06 skipped | **fail** in `@code-verify milestone`; re-run before **complete** |
 
 ---

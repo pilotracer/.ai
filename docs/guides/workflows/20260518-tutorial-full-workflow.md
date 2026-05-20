@@ -1,4 +1,4 @@
-# Tutorial — full workflow (example)
+# Tutorial - full workflow (example)
 
 **Doc type:** Step-by-step tutorial (portable).  
 **Prerequisite:** [Path bootstrap](20260518-tutorial-path-bootstrap.md) completed in your clone (placeholders point at real files).
@@ -18,7 +18,7 @@
 
 ---
 
-## Phase 0 — One-time setup (per repository)
+## Phase 0 - One-time setup (per repository)
 
 1. Open [Path bootstrap](20260518-tutorial-path-bootstrap.md).  
 2. Copy the placeholder table into `{AGENT_RULES_FILE}` and fill the **right column**.  
@@ -28,9 +28,9 @@
 
 ---
 
-## Phase 1 — Intake (idea → scoped feature)
+## Phase 1 - Intake (idea → scoped feature)
 
-1. Create a **proposal** (tracker ticket or `{FEATURE_SPEC_ROOT}/../plans/proposals/YYYYMMDD-slug.md` — use your FEATURE_STANDARD).  
+1. Create a **proposal** (tracker ticket or `{FEATURE_SPEC_ROOT}/../plans/proposals/YYYYMMDD-slug.md` - use your FEATURE_STANDARD).  
 2. Name the **bounded contexts** touched (even tentative).  
 3. Open `{CONCEPTS_INDEX}` and list which **concept ids** might apply (coupling, network, cost, ops, modularity, AI amplification).  
 4. Record a **preliminary** concept table in the ticket: `id` | `likely yes/no` | `reason`.
@@ -39,7 +39,7 @@
 
 ---
 
-## Phase 2 — Feature SPEC (behavior + NFR)
+## Phase 2 - Feature SPEC (behavior + NFR)
 
 1. Create `{FEATURE_SPEC_ROOT}/<slug>/YYYYMMDD-SPEC.md` using your feature template (must include **Observability** and **Concept / NFR registry** sections if your standard requires them).  
 2. Write **numbered behavioural rules** (R1, R2, …) so tests and PRs can cite them.  
@@ -50,17 +50,17 @@
 
 ---
 
-## Phase 3 — Master plan alignment
+## Phase 3 - Master plan alignment
 
 1. Open `{MASTER_PLAN}`.  
-2. Confirm the milestone that will deliver this feature lists the right **FR/NFR** rows (add or fix rows if drift — see [Tutorial — fix existing plans](20260518-tutorial-fix-existing-plans.md)).  
+2. Confirm the milestone that will deliver this feature lists the right **FR/NFR** rows (add or fix rows if drift - see [Tutorial - fix existing plans](20260518-tutorial-fix-existing-plans.md)).  
 3. If the feature adds a new **deployable** or **sync chain**, run the relevant **concept prompts** (`cost-model`, `network-cost`, `ops-headcount`, …) and **attach** outputs to the ADR or plan appendix with evidence tags.
 
 **Exit criterion:** milestone text matches SPEC scope; no orphan FR ids.
 
 ---
 
-## Phase 4 — Iteration block (`{ITERATION_CARRIER}`)
+## Phase 4 - Iteration block (`{ITERATION_CARRIER}`)
 
 1. Run your implementation skill’s **plan** mode (e.g. `@code-implementation plan - M{N}`; legacy alias `plan-iteration`) **or** manually create the iteration section using the same shape your skill defines.  
 2. Ensure the block includes:  
@@ -68,21 +68,21 @@
    - In / out of scope.  
    - Task table with **ids**, **files**, **FR/NFR**.  
    - Acceptance criteria + **validation commands** (runnable).  
-   - **`### Concept / NFR registry (this iteration)`** — copy from SPEC or mark N/A per row with reason.  
+   - **`### Concept / NFR registry (this iteration)`** - copy from SPEC or mark N/A per row with reason.  
 3. Add **Cross-LLM** or peer review row if your process uses it.
 
 **Exit criterion:** iteration block passes your skill’s **valid iteration** checklist.
 
 ---
 
-## Phase 5 — Session open (optional but recommended)
+## Phase 5 - Session open (optional but recommended)
 
 1. Run **session start** skill (if present) or manually read `{HANDOFF}`, `{ITERATION_CARRIER}`, `{CONCEPTS_INDEX}`.  
 2. Note dirty git tree, blockers, and which **MOD** prompts you expect to run this week.
 
 ---
 
-## Phase 6 — Implement tasks
+## Phase 6 - Implement tasks
 
 For **each** task:
 
@@ -94,7 +94,7 @@ For **each** task:
 
 ---
 
-## Phase 7 — Verify
+## Phase 7 - Verify
 
 1. Run implementation **verify** protocol against `{MASTER_PLAN}` milestone acceptance + **concept registry** rows marked `yes`.  
 2. Confirm **observability** row: log/trace fields for touched paths or documented `n/a`.  
@@ -102,7 +102,7 @@ For **each** task:
 
 ---
 
-## Phase 8 — Complete iteration + session close
+## Phase 8 - Complete iteration + session close
 
 1. Run **complete** protocol: archive tasks, update `{ITERATION_CARRIER}` **Recommended next**, refresh `{HANDOFF}`.  
 2. Session **close** with commit message draft.  
@@ -110,7 +110,7 @@ For **each** task:
 
 ---
 
-## Quick reference — artifact chain
+## Quick reference - artifact chain
 
 ```text
 Proposal

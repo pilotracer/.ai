@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Consumer adoption smoke — bootstrap + artifact inventory.
+# Consumer adoption smoke - bootstrap + artifact inventory.
 # Usage: bash scripts/smoke-consumer.sh
 set -euo pipefail
 
@@ -33,7 +33,7 @@ test "$(find .ai/skills -mindepth 1 -maxdepth 1 -type d | wc -l)" -eq 11
 
 echo ""
 echo "Next (manual / agent chat):"
-echo "  1. Edit .cursorrules — replace every REPLACE: token"
+echo "  1. Edit .cursorrules - replace every REPLACE: token"
 echo "  2. @session-control start"
 echo "  3. @plan-foundation greenfield  (full pipeline)"
 echo "     OR see docs/adoption/minimal-adoption.md (lite path)"

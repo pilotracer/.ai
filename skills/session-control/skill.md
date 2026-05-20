@@ -22,11 +22,11 @@ Bookend AI work sessions so the next chat (or human) can resume without guessing
 
 - **Default close:** never `git commit` or `git push`. Only when close invocation includes **`commit`** and/or **`push`** (see [Parse invocation](#parse-invocation)).
 - **`close commit` / `close commit push`:** **MUST** run `git add` + `git commit` in the shell (see [C4b](#c4b--git-actions-modifiers-only)). A dirty tree after close with only a draft message is **fail**.
-- **Always** show the commit message — drafted, used for commit, or `none — working tree clean`.
+- **Always** show the commit message - drafted, used for commit, or `none - working tree clean`.
 - Never edit files marked **archived** or **do not edit** in HANDOFF.
 - Never paste secrets from `.env`, `credentials/`, or tokens into chat or HANDOFF.
 - **`{PROMPTS_ROOT}/initial.md` is user-owned.** Do not read or create it on start/close unless the user explicitly names that path in the same invocation.
-- Every mode ends with a **Completion checklist** — each item `pass` | `fail` | `skip` with evidence.
+- Every mode ends with a **Completion checklist** - each item `pass` | `fail` | `skip` with evidence.
 
 ---
 
@@ -36,15 +36,15 @@ Normalize the user message to **verb** + optional **modifiers**. The word `sessi
 
 | User says | Verb | Git on close |
 |-----------|------|----------------|
-| `@session-control` **start** | start | — |
-| `session-control` **start** - \<goal\> | start | — |
+| `@session-control` **start** | start | - |
+| `session-control` **start** - \<goal\> | start | - |
 | `@session-control` **close** | close | draft message only |
 | `session-control` **close** | close | draft message only |
-| `session-control` **close** **commit** | close | commit all **safe** dirty paths (default scope — [C4b](#c4b--git-actions-modifiers-only)) |
+| `session-control` **close** **commit** | close | commit all **safe** dirty paths (default scope - [C4b](#c4b--git-actions-modifiers-only)) |
 | `session-control` **close** **commit** **scoped** | close | commit only HANDOFF + NEXT + paths listed in close report |
 | `session-control` **close** **commit** **push** | close | commit then push |
 | `session-control` **close** **push** | close | treat as **commit push** (`push` requires commit) |
-| `@session-control` **status** | status | — |
+| `@session-control` **status** | status | - |
 
 **Aliases (same verb):** `begin`, `open` → start; `end`, `handoff` → close.
 
@@ -54,13 +54,13 @@ Normalize the user message to **verb** + optional **modifiers**. The word `sessi
 
 ---
 
-## Step 0 — Pick a mode
+## Step 0 - Pick a mode
 
 | Mode | Triggers | Action |
 |------|----------|--------|
 | **start** | `start`, optional goal | [Start protocol](#start-protocol) |
 | **close** | `close` [commit] [push] | [Close protocol](#close-protocol) |
-| **status** | `status` | [Status protocol](#status-protocol) — compact snapshot; no HANDOFF writes |
+| **status** | `status` | [Status protocol](#status-protocol) - compact snapshot; no HANDOFF writes |
 
 If the user gives a **task goal** with start (e.g. `start - work on payments SPEC`), capture it in the start report and use HANDOFF's conditional reading table.
 
@@ -68,30 +68,30 @@ If the user gives a **task goal** with start (e.g. `start - work on payments SPE
 
 ## Start protocol
 
-### S1 — Baseline reads (mandatory)
+### S1 - Baseline reads (mandatory)
 
 Read these files **in full** (or confirm missing). Record `pass` only after reading.
 
 | # | File | Pass criteria |
 |---|------|----------------|
 | 1 | `.cursorrules` | Can state: identity, 7 core principles, protected files, no-commit rule |
-| 2 | `{HANDOFF}` | Know: session-critical sections (§Session status through §Open owner actions). The artifact table (§What this cycle produced) and tail sections (§Hygiene, §Doc 04 gate, §Tracked inventory) are reference — skim for relevance, not mandatory for start. |
+| 2 | `{HANDOFF}` | Know: session-critical sections (§Session status through §Open owner actions). The artifact table (§What this cycle produced) and tail sections (§Hygiene, §Doc 04 gate, §Tracked inventory) are reference - skim for relevance, not mandatory for start. |
 | 3 | `{ITERATION_CARRIER}` | Know: single recommended next action + owner blockers |
-| 4 | `{PLANS_ROOT}/UNKNOWNS.md` | Know: every open unknown, its `Blocks` target (task / ADR / milestone), and its `Owner`. Cross-check against HANDOFF §Explicit unknowns and §Open owner actions — stale entries must be noted in the start report. |
+| 4 | `{PLANS_ROOT}/UNKNOWNS.md` | Know: every open unknown, its `Blocks` target (task / ADR / milestone), and its `Owner`. Cross-check against HANDOFF §Explicit unknowns and §Open owner actions - stale entries must be noted in the start report. |
 | 5 | `{PLANS_ROOT}/foundation/*-01-*-initial-scope.md` **if present** | Know one-sentence product intent **or** record *no doc 01 yet* and rely on README / HANDOFF. **Do not** read `{PROMPTS_ROOT}/initial.md` unless the user explicitly names it. |
 
-### S1b — Unblock check (when NEXT.md has an active iteration)
+### S1b - Unblock check (when NEXT.md has an active iteration)
 
 If `{ITERATION_CARRIER}` contains a `## Current iteration` block with task rows:
 
 1. Scan for tasks with status `blocked`.
 2. For each `blocked` task, find the blocker entry in `### Owner blockers` and/or `{PLANS_ROOT}/UNKNOWNS.md` (entries with `blocks: T{N}`).
 3. Check if the condition has changed: ADR decided, owner action marked done in HANDOFF §Open owner actions, or dependency completed.
-4. If resolved → flip task to `pending`; annotate `unblocked YYYY-MM-DD — <reason>`. If the UNKNOWNS row is also resolved, update its `Status` to `Resolved` with date.
+4. If resolved → flip task to `pending`; annotate `unblocked YYYY-MM-DD - <reason>`. If the UNKNOWNS row is also resolved, update its `Status` to `Resolved` with date.
 5. If unchanged → leave as `blocked`; surface in the start report `### Open blockers (owner)`.
 6. If no iteration block exists → skip.
 
-### S2 — Conditional reads (task-based)
+### S2 - Conditional reads (task-based)
 
 If HANDOFF §"Fresh start" lists extras, or the user named a domain, read those paths before claiming start complete.
 
@@ -103,7 +103,7 @@ If HANDOFF §"Fresh start" lists extras, or the user named a domain, read those 
 | Foundation planning | `plan-foundation` skill → **status** mode (read-only) |
 | Security / new columns | threat-model, data-classification |
 
-### S3 — Environment snapshot (evidence)
+### S3 - Environment snapshot (evidence)
 
 Run (or explain why skipped):
 
@@ -112,7 +112,7 @@ git status -sb
 git log -1 --oneline
 ```
 
-Optional — running services (use first that works):
+Optional - running services (use first that works):
 
 ```bash
 docker compose ps 2>/dev/null || podman-compose ps 2>/dev/null || true
@@ -120,36 +120,36 @@ docker compose ps 2>/dev/null || podman-compose ps 2>/dev/null || true
 
 Record: branch, clean/dirty, last commit, services up/down if checked.
 
-### S4 — Session goal (interaction)
+### S4 - Session goal (interaction)
 
-Capture goal from (in order): text after `start —`, else HANDOFF **Recommended pick-up** / repository state, else ask **once**:
+Capture goal from (in order): text after `start -`, else HANDOFF **Recommended pick-up** / repository state, else ask **once**:
 
 **Q:** What is the primary goal for this session? (one line)
 
 Do **not** ask if goal is already clear from invocation or HANDOFF. Store in start report only; do not rewrite HANDOFF unless user asks.
 
-### S4b — Coding goal readiness (when goal implies implementation)
+### S4b - Coding goal readiness (when goal implies implementation)
 
 If the session goal mentions coding, M1, implementation, or a feature task:
 
 1. Run `@plan-master status` (read-only) or read HANDOFF for **Implementation-ready** and milestone waivers.
 2. If **implementation-ready: no** and no HANDOFF waiver for the named milestone → note in start report under **### Readiness (do not implement yet)** with redirect: `@plan-master status` → approve plan, or add HANDOFF waiver, or `@code-implementation plan - M{N}` only after prerequisites pass.
-3. Do **not** invoke `@code-implementation start` from session-control — route the user to that skill after gates pass.
+3. Do **not** invoke `@code-implementation start` from session-control - route the user to that skill after gates pass.
 
-### S5 — Mark session open (HANDOFF)
+### S5 - Mark session open (HANDOFF)
 
 Update **only** the `## Session status` block at the top of `{HANDOFF}`:
 
-- **Open:** `<YYYY-MM-DD>` — goal: \<user goal or "not specified"\>
+- **Open:** `<YYYY-MM-DD>` - goal: \<user goal or "not specified"\>
 - **Updated:** today's date
 - Preserve prior "Closed" history in `## What this cycle produced` on **close**, not on start.
 
-If user invoked **status** mode, skip S5 and S6 — use [Status protocol](#status-protocol).
+If user invoked **status** mode, skip S5 and S6 - use [Status protocol](#status-protocol).
 
-### S6 — Start report (mandatory output)
+### S6 - Start report (mandatory output)
 
 ```markdown
-## Session started — <Project Name>
+## Session started - <Project Name>
 
 **Date:** <ISO date> · **Branch:** <branch> · **Working tree:** clean | dirty
 
@@ -167,7 +167,7 @@ If user invoked **status** mode, skip S5 and S6 — use [Status protocol](#statu
 | 9 | HANDOFF marked Open | pass/skip | |
 
 ### You are cleared to work when
-All mandatory checks (1–4, 6–8) are **pass**, and row **5** is **pass** (doc 01 read) or **skip** (no doc 01 yet — note in report). If any mandatory **fail**, fix before implementation.
+All mandatory checks (1–4, 6–8) are **pass**, and row **5** is **pass** (doc 01 read) or **skip** (no doc 01 yet - note in report). If any mandatory **fail**, fix before implementation.
 
 ### Pick up here
 <quote recommended next from NEXT.md>
@@ -176,7 +176,7 @@ All mandatory checks (1–4, 6–8) are **pass**, and row **5** is **pass** (doc
 <from HANDOFF / NEXT>
 
 ### Principles reminder (3 bullets max)
-<from .cursorrules — not a full paste>
+<from .cursorrules - not a full paste>
 ```
 
 ---
@@ -190,9 +190,9 @@ Read-only snapshot. **No** HANDOFF/NEXT writes. **No** completion checklist.
 3. Output:
 
 ```markdown
-## Session status — <Project>
+## Session status - <Project>
 
-**Session:** Open | Closed — <date> — <goal if Open>
+**Session:** Open | Closed - <date> - <goal if Open>
 **Branch:** <branch> · **Tree:** clean | dirty
 **Pick up:** <one line from NEXT.md>
 **Owner blockers:** <short list or none>
@@ -208,7 +208,7 @@ Optional: one line on dirty files (no full diff). For full context load, use **s
 
 If C1 secrets **fail**, **stop** - do not run C5, C6, or C4b; report failure in C8.
 
-### C1 — Working tree audit (mandatory)
+### C1 - Working tree audit (mandatory)
 
 ```bash
 git status
@@ -227,9 +227,9 @@ Classify:
 
 **Secrets scan (mandatory):** Before summarizing diffs, confirm `git status` does not list paths matching: `credentials/`, `.env`, `.env.*` (except `.env.example`), `*.pem`, `*.p12`, `*.key`, `*.pfx`, `*.p8`, `*id_rsa*`, `*.token`, `*.secret`. If any match → checklist **fail**, **halt close** (no HANDOFF/NEXT/git); tell user to unstage/remove and never commit content.
 
-### C2 — Verification gate (this session)
+### C2 - Verification gate (this session)
 
-Per `.cursorrules` Completion Gate — answer honestly:
+Per `.cursorrules` Completion Gate - answer honestly:
 
 | Question | Answer |
 |----------|--------|
@@ -240,7 +240,7 @@ Per `.cursorrules` Completion Gate — answer honestly:
 
 Do not claim "all good" if tests failed.
 
-### C3 — Follow-ups required
+### C3 - Follow-ups required
 
 Detect and list:
 
@@ -251,15 +251,15 @@ Detect and list:
 - [ ] Docker/infra left running (optional note)
 - [ ] Temp files under `tmp/` that should be deleted
 - [ ] SPECs promised but not written
-- [ ] Archived prompts at risk of edit — **warn**
+- [ ] Archived prompts at risk of edit - **warn**
 
-### C4 — Commit message (always)
+### C4 - Commit message (always)
 
-**Always** produce the commit message block in the close report — even when the tree is clean (`none — working tree clean`).
+**Always** produce the commit message block in the close report - even when the tree is clean (`none - working tree clean`).
 
 Format per `.cursorrules` (plain text, no surrounding quotes):
 
-- **Subject:** `type: short description` — ≤72 chars, imperative mood (`add`, `fix`, not `added`).
+- **Subject:** `type: short description` - ≤72 chars, imperative mood (`add`, `fix`, not `added`).
 - **Body:** optional; wrap ~72 chars; **why**, not file list. Omit if subject is self-contained.
 
 Valid types: `feat`, `fix`, `refactor`, `docs`, `chore`, `style`, `test`.
@@ -267,7 +267,7 @@ Valid types: `feat`, `fix`, `refactor`, `docs`, `chore`, `style`, `test`.
 - One message if changes are cohesive; suggest **split** with multiple message blocks if not.
 - Label in report: **Commit message (draft)** vs **Commit message (used)**.
 
-### C4b — Git actions (modifiers only)
+### C4b - Git actions (modifiers only)
 
 | Modifier | Action |
 |----------|--------|
@@ -276,21 +276,21 @@ Valid types: `feat`, `fix`, `refactor`, `docs`, `chore`, `style`, `test`.
 | `commit scoped` | After C5/C6: stage only `{HANDOFF}`, `{ITERATION_CARRIER}`, and paths explicitly tied to this session in the close report. |
 | `commit push` | After successful commit: `git push` (current branch). Warn before force-push. |
 
-**Hard rule — agents MUST execute git:** Typing `@session-control close commit` does not commit by itself. The agent **MUST** run shell commands below. Checklist item 6 is **fail** if the tree still has unstaged safe changes and no commit SHA was produced.
+**Hard rule - agents MUST execute git:** Typing `@session-control close commit` does not commit by itself. The agent **MUST** run shell commands below. Checklist item 6 is **fail** if the tree still has unstaged safe changes and no commit SHA was produced.
 
 **Default commit scope** (when modifier is `commit` or `commit push`, not `scoped`):
 
 1. Run `git status --porcelain` (from C1).
 2. Build the stage list = every path with status `M`, `A`, `D`, `R`, `C`, or `??` (untracked) **except** paths matching:
-   - Secrets scan patterns (C1) — never add
-   - `tmp/`, `.obfuscation/output/` — never add unless user explicitly named them for commit
-   - Protected files per `{AGENT_RULES_FILE}` §Protected Files — **do not add**; list in close report as follow-up
+   - Secrets scan patterns (C1) - never add
+   - `tmp/`, `.obfuscation/output/` - never add unless user explicitly named them for commit
+   - Protected files per `{AGENT_RULES_FILE}` §Protected Files - **do not add**; list in close report as follow-up
 3. Stage by top-level area when many files share a prefix (typical):
    ```bash
    git add .ai/ .work/ apis/ dashboard/ bin/ DOCS_TECH_STACK.md README.md
    ```
    Or stage explicit paths from step 2 if the diff is small.
-4. **Do not** default to HANDOFF + NEXT only — that is **`commit scoped`**, not default `commit`.
+4. **Do not** default to HANDOFF + NEXT only - that is **`commit scoped`**, not default `commit`.
 5. If the only remaining dirty paths are excluded (protected / secrets), commit what was staged and report exclusions.
 
 **Commit command shape:**
@@ -314,15 +314,15 @@ git log -1 --oneline
 
 **On commit failure:** report hook output; do not claim close complete for git step; HANDOFF/NEXT updates still stand if already written.
 
-**Clean tree + `commit` modifier:** skip commit; report `Commit message (used): none — working tree clean`.
+**Clean tree + `commit` modifier:** skip commit; report `Commit message (used): none - working tree clean`.
 
 **Never:** `git commit --no-verify`, `git push --force` unless user explicitly requests in the same message.
 
-### C5 — Update HANDOFF (mandatory on close)
+### C5 - Update HANDOFF (mandatory on close)
 
 Rewrite top sections (keep history table append-only style):
 
-1. **Session status:** `Closed: <date>` — one-line summary of session outcome.
+1. **Session status:** `Closed: <date>` - one-line summary of session outcome.
 2. **Updated:** today.
 3. **Repository state:** current truth (planning vs code, blockers).
 4. **Recommended pick-up file:** point to `NEXT.md`.
@@ -334,21 +334,21 @@ Rewrite top sections (keep history table append-only style):
 
 Do not delete historical rows in artifact tables; append new entries.
 
-### C6 — Update NEXT.md (mandatory on close)
+### C6 - Update NEXT.md (mandatory on close)
 
 - Move completed items to **Done** with date.
 - Set **one** clear **Recommended next**.
 - Refresh **Blocked on owner**.
 - Update foundation gate / pre-merge checklist if applicable.
 
-### C7 — Optional: plan-foundation status
+### C7 - Optional: plan-foundation status
 
-If the repo uses plan-foundation conventions, run **status** (read-only) and attach ≤5 lines — foundation-complete + plan-master-ready (not implementation-ready; that is plan-master).
+If the repo uses plan-foundation conventions, run **status** (read-only) and attach ≤5 lines - foundation-complete + plan-master-ready (not implementation-ready; that is plan-master).
 
-### C8 — Close report (mandatory output)
+### C8 - Close report (mandatory output)
 
 ```markdown
-## Session closed — <Project Name>
+## Session closed - <Project Name>
 
 **Date:** <ISO date> · **Branch:** <branch>
 
@@ -369,11 +369,11 @@ If the repo uses plan-foundation conventions, run **status** (read-only) and att
 
 ### Commit message
 **Status:** draft | used  
-**Message:** (plain text below — always present)
+**Message:** (plain text below - always present)
 
     type: subject line here
 
-    Optional body — why, not what.
+    Optional body - why, not what.
 
 **Git:** no commit (default) | committed \<sha\> | push \<remote/branch\> result
 
@@ -393,10 +393,10 @@ If the repo uses plan-foundation conventions, run **status** (read-only) and att
 | **Start** | Prior HANDOFF says `Closed` → treat as new session; do not assume prior chat memory |
 | **Start** | Missing HANDOFF → offer to run `plan-foundation` greenfield or create minimal HANDOFF |
 | **Start** | Dirty tree at start → note in report; ask if continuing WIP or stashing |
-| **Start** | HANDOFF already **Open**, new `start —` goal differs | Update Open line with new goal + date; do not silently drop prior goal (note change in start report) |
+| **Start** | HANDOFF already **Open**, new `start -` goal differs | Update Open line with new goal + date; do not silently drop prior goal (note change in start report) |
 | **Close** | Large uncommitted diff → suggest commit split |
 | **Close** | User says "close without updating HANDOFF" → only allowed if they confirm; mark checklist item `skip` with reason |
-| **Close** | Protected files changed → flag for explicit owner review — see `{AGENT_RULES_FILE}` §Protected Files |
+| **Close** | Protected files changed → flag for explicit owner review - see `{AGENT_RULES_FILE}` §Protected Files |
 | **Close** | `close commit` / `close commit push` → run C4b in shell after HANDOFF/NEXT; stage **default scope**; always echo SHA + post-commit `git status -sb` |
 | **Close** | User expected commit but tree still dirty | **fail** item 6/6b; list unstaged paths; do not claim "close commit" succeeded |
 | **Close** | `push` without network → report failure; do not claim pushed |

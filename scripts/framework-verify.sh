@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Agent OS framework verification — run locally or in CI.
+# Agent OS framework verification - run locally or in CI.
 # Usage: bash scripts/framework-verify.sh   (from repo root)
 set -euo pipefail
 

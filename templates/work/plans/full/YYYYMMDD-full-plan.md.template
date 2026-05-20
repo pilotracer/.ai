@@ -1,4 +1,4 @@
-# REPLACE:PROJECT_NAME — Full implementation plan
+# REPLACE:PROJECT_NAME - Full implementation plan
 
 **Status:** Draft  
 **Version:** 0.1  
@@ -25,7 +25,7 @@ One paragraph: what we are building, for whom, and the delivery shape (milestone
 
 ## 3. Functional requirements
 
-### FR1 — REPLACE:DOMAIN_A
+### FR1 - REPLACE:DOMAIN_A
 
 | ID | Requirement | Trace |
 |----|-------------|-------|
@@ -78,7 +78,7 @@ One paragraph: what we are building, for whom, and the delivery shape (milestone
 
 ## 19. Incremental execution roadmap (task tables)
 
-### M1 — Platform skeleton
+### M1 - Platform skeleton
 
 | ID | Description | Files | FR/NFR | Size | Status |
 |----|-------------|-------|--------|------|--------|
@@ -86,7 +86,7 @@ One paragraph: what we are building, for whom, and the delivery shape (milestone
 
 **Acceptance:** health endpoint 200; migrations idempotent; task gates pass.
 
-### M2 — REPLACE:M2_TITLE
+### M2 - REPLACE:M2_TITLE
 
 *(repeat per milestone)*
 
@@ -104,6 +104,6 @@ One paragraph: what we are building, for whom, and the delivery shape (milestone
 
 ---
 
-## Appendix — Assumptions and unknowns
+## Appendix - Assumptions and unknowns
 
 Link `.work/plans/ASSUMPTIONS.md`, `UNKNOWNS.md`.

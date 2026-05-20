@@ -1,4 +1,4 @@
-# code-implementation — reference
+# code-implementation - reference
 
 Supplement to `skill.md`. Invocation examples, NEXT.md templates, mode comparison, and edge cases.
 
@@ -31,16 +31,16 @@ Legacy aliases (still accepted):
 ### Claude Code / opencode / Codex
 
 ```
-Follow .ai/skills/code-implementation/skill.md — status. Read-only.
+Follow .ai/skills/code-implementation/skill.md - status. Read-only.
 ```
 
 ```
-Follow .ai/skills/code-implementation/skill.md — plan - M1.
+Follow .ai/skills/code-implementation/skill.md - plan - M1.
 Derive iteration block from plan-master and write it to NEXT.md.
 ```
 
 ```
-Follow .ai/skills/code-verify/skill.md — uncommitted.
+Follow .ai/skills/code-verify/skill.md - uncommitted.
 Diff-only audit: secrets, scope, tests/lint/type on changed files.
 ```
 
@@ -54,7 +54,7 @@ Diff-only audit: secrets, scope, tests/lint/type on changed files.
 | Write NEXT.md | no | yes | no | task status | yes | task status |
 | Write HANDOFF | no | no | no | no | yes | no |
 | Run tests/lint | no | no | no | per task (task gate) | CO2 then CO1 if needed | yes (task gate) |
-| Run verify | — | — | — | optional `@code-verify uncommitted` | `@code-verify milestone` (CO2) | — |
+| Run verify | - | - | - | optional `@code-verify uncommitted` | `@code-verify milestone` (CO2) | - |
 
 **Three check layers:** **task gate** (mechanical, every task) · **`@code-verify uncommitted` / `last`** (diff audit, optional cadence) · **`@code-verify milestone`** (plan + SPEC matrix, before **complete**). Use **`code-verify`** skill for all verify modes.
 
@@ -100,7 +100,7 @@ Diff-only audit: secrets, scope, tests/lint/type on changed files.
 
 ## Example milestone map (illustrative)
 
-Validate with `@plan-master status` and the **approved** `{PLANS_ROOT}/full/YYYYMMDD-full-plan.md` task section — do not copy this table into a live project without aligning to your master plan.
+Validate with `@plan-master status` and the **approved** `{PLANS_ROOT}/full/YYYYMMDD-full-plan.md` task section - do not copy this table into a live project without aligning to your master plan.
 
 | Milestone | Name (example) | Key artifacts |
 |-----------|----------------|---------------|
@@ -113,10 +113,10 @@ Validate with `@plan-master status` and the **approved** `{PLANS_ROOT}/full/YYYY
 
 ---
 
-## NEXT.md iteration block — quick template
+## NEXT.md iteration block - quick template
 
 ```markdown
-## Current iteration — M1: platform skeleton (example)
+## Current iteration - M1: platform skeleton (example)
 
 **Milestone ref:** M1 · `{PLANS_ROOT}/full/YYYYMMDD-full-plan.md` (task section)
 **Status:** in-progress
@@ -152,7 +152,7 @@ Validate with `@plan-master status` and the **approved** `{PLANS_ROOT}/full/YYYY
 
 ### Concept / NFR registry (this iteration)
 <!-- Required by skill.md § Valid iteration block criteria #6.
-     One row per MOD-01…MOD-06 (or single `N/A — no pack` row if the repo has no concept pack). -->
+     One row per MOD-01…MOD-06 (or single `N/A - no pack` row if the repo has no concept pack). -->
 | Concept id | Applies | Status | Evidence / trigger |
 |------------|---------|--------|-------------------|
 | MOD-01 | yes/no | pending/done/n-a | … |
@@ -160,7 +160,7 @@ Validate with `@plan-master status` and the **approved** `{PLANS_ROOT}/full/YYYY
 | MOD-03 | yes/no | pending/done/n-a | … |
 | MOD-04 | yes/no | pending/done/n-a | … |
 | MOD-05 | yes/no | pending/done/n-a | … |
-| MOD-06 | **yes** | pending | Cursor/agent session — required before complete unless human-only |
+| MOD-06 | **yes** | pending | Cursor/agent session - required before complete unless human-only |
 
 ### Cross-LLM verification
 - Triggered: no
@@ -180,10 +180,10 @@ Validate with `@plan-master status` and the **approved** `{PLANS_ROOT}/full/YYYY
 ████████░░ 80% (7 / 9 tasks done)   ← illustrative only
 ```
 
-### Compact datagrid (illustrative — not live status)
+### Compact datagrid (illustrative - not live status)
 
 ```
-## M1 — platform skeleton — in-progress (example)
+## M1 - platform skeleton - in-progress (example)
 
 | ID    | Task                                | Status (example) |
 |-------|-------------------------------------|------------------|
@@ -202,16 +202,16 @@ Render the task matrix in a canvas with colour-coded status cells (done=green, i
 
 ---
 
-## Cross-LLM verification — prompt template
+## Cross-LLM verification - prompt template
 
 When triggering cross-LLM verification, use this compact prompt format:
 
 ```
-Milestone: M{N} — {name}
+Milestone: M{N} - {name}
 Objective: {one paragraph from plan-master §19}
 
 Tasks implemented:
-- T1: {description} — Files: {list}
+- T1: {description} - Files: {list}
 - T2: …
 
 SPEC rules in scope (R1…):
@@ -232,7 +232,7 @@ Return: pass | fail | gaps-found, with specific file/rule citations.
 | Event | code-implementation action |
 |-------|-----------------------|
 | `session-control start` | Optional: run `@code-implementation status` to see current iteration before beginning |
-| Interruption mid-task | Run `@session-control close` — HANDOFF notes "in-flight: T{N}" |
+| Interruption mid-task | Run `@session-control close` - HANDOFF notes "in-flight: T{N}" |
 | `session-control close commit` | After `code-implementation complete`, provides the draft commit message |
 
 ---
@@ -248,8 +248,8 @@ Return: pass | fail | gaps-found, with specific file/rule citations.
 | Task T3 depends on T2 which is blocked | Mark T3 `blocked (depends on T2)`; surface both in status |
 | All tasks done but test suite fails | Do not run complete; fix failing tests; re-run gate |
 | Verify returns `fail` | Fix all high/med gaps; re-run verify; only skip low gaps with waiver |
-| User asks for implementation-ready check | Redirect: `@plan-master status` — not code-implementation |
-| Second model unavailable for cross-LLM (M1–M3) | Log `skipped — single-model session`; does not block complete |
+| User asks for implementation-ready check | Redirect: `@plan-master status` - not code-implementation |
+| Second model unavailable for cross-LLM (M1–M3) | Log `skipped - single-model session`; does not block complete |
 | Second model unavailable for cross-LLM (**high-risk milestone** per threat model) | **fail** unless owner records a **human architect review** waiver in `{HANDOFF}` (name + date) per `code-verify` |
 | Cursor/agent session: MOD-06 skipped | **fail** at CO1; run `@concept-run - MOD-06` or attach output before complete. **`human-only`** opt-out requires explicit human declaration in the same message |
 | Protected file change needed | Stop; explain why; ask explicit permission; only proceed after yes |

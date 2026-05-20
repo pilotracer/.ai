@@ -1,4 +1,4 @@
-# session-control — reference
+# session-control - reference
 
 Supplement to `skill.md`. Invocation examples, HANDOFF templates, and edge cases.
 
@@ -6,7 +6,7 @@ Supplement to `skill.md`. Invocation examples, HANDOFF templates, and edge cases
 
 ## Invocation examples
 
-**Canonical forms** — do not require the word `session`:
+**Canonical forms** - do not require the word `session`:
 
 | Action | Prompt |
 |--------|--------|
@@ -34,11 +34,11 @@ Prior Cursor skill ids (treat as equivalent prompts): `@session-manager` → **s
 ### Claude Code / opencode / Codex
 
 ```
-Follow .ai/skills/session-control/skill.md — start.
+Follow .ai/skills/session-control/skill.md - start.
 ```
 
 ```
-Follow .ai/skills/session-control/skill.md — close commit push.
+Follow .ai/skills/session-control/skill.md - close commit push.
 ```
 
 ### Close modifiers (git)
@@ -72,7 +72,7 @@ Default `close` never runs `git commit` or `git push`. User runs git manually fr
 @session-control start - implement platform health route
 ```
 
-**Close (default — no git write):**
+**Close (default - no git write):**
 
 ```
 @session-control close
@@ -112,14 +112,14 @@ Expect: commit then `git push -u` if needed; report shows push result or error.
 
 ---
 
-## HANDOFF — Session status templates
+## HANDOFF - Session status templates
 
 ### Open (after start)
 
 ```markdown
 ## Session status
 
-**Open:** 2026-05-18 — goal: bootstrap platform health route
+**Open:** 2026-05-18 - goal: bootstrap platform health route
 
 **Updated:** 2026-05-18
 
@@ -131,7 +131,7 @@ Treat prior closed sessions as historical only; see "What this cycle produced" b
 ```markdown
 ## Session status
 
-**Closed:** 2026-05-18 — platform skeleton landed; tests not yet run
+**Closed:** 2026-05-18 - platform skeleton landed; tests not yet run
 
 **Updated:** 2026-05-18
 
@@ -178,7 +178,7 @@ Session bookends for context load and close hygiene; no application code.
 **Planning + infra:**
 
 ```
-docs: close planning session — docker compose approved
+docs: close planning session - docker compose approved
 
 HANDOFF and NEXT updated; compose files on disk; application source not started.
 ```
@@ -224,10 +224,10 @@ Do not invent project history.
 | `credentials/` in `git status` | **fail** secrets check; do not summarize content |
 | User closes mid-task | HANDOFF notes "in-flight: …" under Repository state |
 | Multiple logical commits | close report suggests 2+ message blocks |
-| HANDOFF already Open, new `start —` goal | Set Open line to new goal + today's date; note prior goal in start report |
+| HANDOFF already Open, new `start -` goal | Set Open line to new goal + today's date; note prior goal in start report |
 | HANDOFF says Open but user runs start again (same goal) | Refresh date only; do not duplicate artifact table |
 | Git submodules dirty | `git submodule status`; flag dirty subs; audit each if relevant |
-| Secrets scan fail | **Halt** close — no HANDOFF/NEXT/commit until resolved |
+| Secrets scan fail | **Halt** close - no HANDOFF/NEXT/commit until resolved |
 
 ---
 

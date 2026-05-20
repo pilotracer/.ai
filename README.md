@@ -1,4 +1,4 @@
-# Agent OS — process framework for coding agents
+# Agent OS - process framework for coding agents
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 ![Last commit](https://img.shields.io/github/last-commit/PiloTracer/.ai)
@@ -26,10 +26,10 @@ Then in chat:
 
 ## What you get
 
-- **Skills** — `@session-control`, `@code-implementation`, `@plan-foundation`, … run the playbook (11 in total).
-- **Standards** — binding contracts (CONVENTIONS, FEATURE_STANDARD, observability, security) keep agent output honest.
-- **`.work/`** — the project's memory: plans, SPECs, ADRs, `HANDOFF.md`, `NEXT.md`. Survives session boundaries.
-- **Gates** — `plan-master-ready`, `implementation-ready`, milestone verify; skip a step and the agent **stops** with a redirect.
+- **Skills** - `@session-control`, `@code-implementation`, `@plan-foundation`, … run the playbook (11 in total).
+- **Standards** - binding contracts (CONVENTIONS, FEATURE_STANDARD, observability, security) keep agent output honest.
+- **`.work/`** - the project's memory: plans, SPECs, ADRs, `HANDOFF.md`, `NEXT.md`. Survives session boundaries.
+- **Gates** - `plan-master-ready`, `implementation-ready`, milestone verify; skip a step and the agent **stops** with a redirect.
 
 Result: less re-prompting, fewer "where were we?" threads, a loop you can run **start → ship → hand off** every session.
 
@@ -48,7 +48,7 @@ Docs often show paths like `.ai/START_HERE.md`. That applies when Agent OS lives
 
 Bootstrap always runs from the **application repo root** (parent of `.ai/`): `bash .ai/templates/bootstrap.sh`.
 
-**This framework repo:** `.cursorrules` and `DOCS_TECH_STACK.md` at the root intentionally keep unfilled `REPLACE:` tokens — they are templates, not a misconfigured product.
+**This framework repo:** `.cursorrules` and `DOCS_TECH_STACK.md` at the root intentionally keep unfilled `REPLACE:` tokens - they are templates, not a misconfigured product.
 
 ---
 
@@ -64,7 +64,7 @@ Bootstrap always runs from the **application repo root** (parent of `.ai/`): `ba
 
 ---
 
-## Bird's-eye — how to use Agent OS
+## Bird's-eye - how to use Agent OS
 
 Agent OS is a **gated pipeline**: each stage unlocks the next. Skills enforce the gates; if you skip a step, the agent should **stop** and tell you what to run instead ([`skills/SKILL_DEPENDENCIES.md`](skills/SKILL_DEPENDENCIES.md)).
 
@@ -83,13 +83,13 @@ Agent OS is a **gated pipeline**: each stage unlocks the next. Skills enforce th
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│  ONCE PER PROJECT — planning gates (no application code yet)                 │
+│  ONCE PER PROJECT - planning gates (no application code yet)                 │
 └─────────────────────────────────────────────────────────────────────────────┘
 
   @project-bootstrap init
         │
         │  Creates: .cursorrules · DOCS_TECH_STACK.md · .work/ skeleton
-        │  (scaffold only — fill REPLACE: tokens; no planning gates)
+        │  (scaffold only - fill REPLACE: tokens; no planning gates)
         ▼
   @plan-foundation greenfield
         │
@@ -111,7 +111,7 @@ Agent OS is a **gated pipeline**: each stage unlocks the next. Skills enforce th
         ▼
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│  EVERY SESSION — bookends (planning or coding)                               │
+│  EVERY SESSION - bookends (planning or coding)                               │
 └─────────────────────────────────────────────────────────────────────────────┘
 
   @session-control start          ← load HANDOFF · NEXT · UNKNOWNS · rules
@@ -123,7 +123,7 @@ Agent OS is a **gated pipeline**: each stage unlocks the next. Skills enforce th
   @session-control close commit push
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│  PER MILESTONE M{N} — repeat until the master plan is done                  │
+│  PER MILESTONE M{N} - repeat until the master plan is done                  │
 └─────────────────────────────────────────────────────────────────────────────┘
 
   @code-implementation plan - M{N}
@@ -144,7 +144,7 @@ Agent OS is a **gated pipeline**: each stage unlocks the next. Skills enforce th
         └──► next M{N+1} or @session-control close
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│  ANYTIME — supporting skills (invoke when the work needs them)               │
+│  ANYTIME - supporting skills (invoke when the work needs them)               │
 └─────────────────────────────────────────────────────────────────────────────┘
 
   @process-router - <question>      lost? read-only signpost (no file writes)
@@ -184,7 +184,7 @@ All **11** skills live under [`skills/`](skills/README.md). Invoke as `@<skill-i
 | **concept-run** | Run MOD-01…06 architecture/NFR prompts | `list` · `status` · `run - MOD-06` (required for agent-assisted code) |
 | **db-migration** | Idempotent numbered SQL scripts (no Alembic chain) | `init` · `create - <description>` · `run` · `status` · `verify` |
 | **dev-stack** | Generate or update isolated Docker `bin/start.sh` | `init` · `status` |
-| **process-router** | Read-only: “how do I…?” → right skill or guide | `— <question>` · `help` |
+| **process-router** | Read-only: “how do I…?” → right skill or guide | `- <question>` · `help` |
 
 Gates between skills: [`skills/SKILL_DEPENDENCIES.md`](skills/SKILL_DEPENDENCIES.md).
 
@@ -194,7 +194,7 @@ Gates between skills: [`skills/SKILL_DEPENDENCIES.md`](skills/SKILL_DEPENDENCIES
 
 Cursor and compatible agents read **`.cursorrules` at the repository root** (sibling to `.ai/` in an application repo, or at this root when Agent OS is the git root).
 
-**Recommended — one command from repo root:**
+**Recommended - one command from repo root:**
 
 ```bash
 bash .ai/templates/bootstrap.sh
@@ -213,20 +213,20 @@ Then:
 1. Replace every **`REPLACE:`** token in `.cursorrules` ([checklist](templates/README.md)).
 2. Customize [`.ai/standards/`](standards/) templates and point `.cursorrules` at your dated filenames.
 3. Run **`@plan-foundation greenfield`** (foundation docs 01–04).
-4. Keep a **single** rules file — do not add `AGENTS.md` unless your team standardizes on it.
+4. Keep a **single** rules file - do not add `AGENTS.md` unless your team standardizes on it.
 
 | Situation | What to do |
 |-----------|------------|
 | **New adoption** | `bootstrap.sh` or `@project-bootstrap init` |
-| **Existing `.cursorrules`** | `@project-bootstrap status` — merge manually; do not blind overwrite |
+| **Existing `.cursorrules`** | `@project-bootstrap status` - merge manually; do not blind overwrite |
 
 More: [`templates/README.md`](templates/README.md) · skill: [`skills/project-bootstrap/`](skills/project-bootstrap/skill.md)
 
 ---
 
-## Mini-tutorial — full lifecycle (agent chat)
+## Mini-tutorial - full lifecycle (agent chat)
 
-Step-by-step detail for each phase. **Panoramic map:** [Bird's-eye — how to use Agent OS](#birds-eye--how-to-use-agent-os) above.
+Step-by-step detail for each phase. **Panoramic map:** [Bird's-eye - how to use Agent OS](#birds-eye--how-to-use-agent-os) above.
 
 Replace `M1` with the milestone named in `.work/plans/NEXT.md`.  
 **Already past planning?** Jump to **§3**.
@@ -235,13 +235,13 @@ Replace `M1` with the milestone named in `.work/plans/NEXT.md`.
 
 ### 1 · Foundation (once per project)
 
-Turn an idea into a **documented, reviewable blueprint** — still no application code.
+Turn an idea into a **documented, reviewable blueprint** - still no application code.
 
 | Invoke | What happens |
 |--------|----------------|
 | **`@plan-foundation greenfield`** | Walks you through P0–P6: captures product intent and scope (**doc 01**), integration sources and evidence (**doc 02**), optional product lanes (**doc 03**), architecture and repo layout proposal (**doc 04**). Also seeds **ADRs**, **feature SPECs**, **ASSUMPTIONS / RISKS / UNKNOWNS**, and session files (`HANDOFF`, `NEXT`). |
 | **`@plan-foundation status`** | Read-only snapshot: which gates passed, what is missing, whether you are safe to approach the master plan. |
-| **`@plan-foundation certify plan-master-ready`** | Deep check that foundation artifacts are consistent and complete enough for **`@plan-master`** — certifies **plan-master-ready**, not implementation-ready. |
+| **`@plan-foundation certify plan-master-ready`** | Deep check that foundation artifacts are consistent and complete enough for **`@plan-master`** - certifies **plan-master-ready**, not implementation-ready. |
 
 ```text
 @plan-foundation greenfield
@@ -260,7 +260,7 @@ Turn the blueprint into an **approved execution roadmap** with milestones and ta
 | Invoke | What happens |
 |--------|----------------|
 | **`@plan-master greenfield`** | Authors `{PLANS_ROOT}/full/*-full-plan.md`: FR/NFR traceability, milestones **M1…M9**, per-task file lists, acceptance criteria, and links back to foundation + SPECs. |
-| **`@plan-master status`** | Read-only: plan exists, **Approved** or still Draft, integrity snapshot, and **`implementation-ready: yes/no`** — only this skill may mark implementation-ready. |
+| **`@plan-master status`** | Read-only: plan exists, **Approved** or still Draft, integrity snapshot, and **`implementation-ready: yes/no`** - only this skill may mark implementation-ready. |
 
 ```text
 @plan-master greenfield
@@ -296,7 +296,7 @@ Pick one milestone from the master plan and execute it task by task.
 | **`@code-implementation plan - M1`** | Builds or validates the **`## Current iteration`** section in `NEXT.md` from master-plan **M1** (task IDs, files, acceptance notes). Required before the first line of code.   *(Legacy alias: `plan-iteration - M1`.)* |
 | **`@code-implementation start`** | Reads the relevant **SPECs** and **CONVENTIONS**, then implements the **first** task in the iteration. |
 | **`@code-implementation continue`** | Picks up the next incomplete task; runs the **task gate** (your project's test/lint/type commands from `.cursorrules`) before marking `done`. Repeat until all tasks are finished. |
-| **`@db-migration create - …`** | *Only if the task changes schema.* Writes an idempotent numbered SQL script under your migrations dir (see `.cursorrules`) — never inline DDL in app code. |
+| **`@db-migration create - …`** | *Only if the task changes schema.* Writes an idempotent numbered SQL script under your migrations dir (see `.cursorrules`) - never inline DDL in app code. |
 | **Dev stack script** | *First time this milestone needs runtime.* Use your project's dev-stack entry (e.g. `bin/start.sh` from `@dev-stack`) to start the isolated compose stack. The agent runs checks **inside** containers when Docker is the canonical path. |
 
 ```text
@@ -310,7 +310,7 @@ Pick one milestone from the master plan and execute it task by task.
 ```
 
 ```bash
-# Example — use the path from .cursorrules (REPLACE:DEV_STACK_SCRIPT)
+# Example - use the path from .cursorrules (REPLACE:DEV_STACK_SCRIPT)
 ./bin/start.sh
 ```
 
@@ -322,7 +322,7 @@ Prove the milestone is really done, then freeze progress in project memory.
 
 | Invoke | What happens |
 |--------|----------------|
-| **`@code-verify milestone`** | Audits the iteration against the master plan and SPECs: tests/lint/type evidence, scope, traceability gaps — **pass** before you claim the milestone. |
+| **`@code-verify milestone`** | Audits the iteration against the master plan and SPECs: tests/lint/type evidence, scope, traceability gaps - **pass** before you claim the milestone. |
 | **`@code-implementation complete`** | Finalizes the iteration: moves work to **Done** in `NEXT.md`, refreshes `HANDOFF`, archives the iteration block, promotes residual risks to `UNKNOWNS` when needed. |
 
 ```text
@@ -338,7 +338,7 @@ Leave a clean handoff for your future self (or the next agent).
 
 | Invoke | What happens |
 |--------|----------------|
-| **`@session-control close`** | Updates `HANDOFF` + `NEXT`, lists follow-ups, and **always** shows a draft commit message — **no git** unless you add `commit`. |
+| **`@session-control close`** | Updates `HANDOFF` + `NEXT`, lists follow-ups, and **always** shows a draft commit message - **no git** unless you add `commit`. |
 | **`@session-control close commit`** | Updates HANDOFF/NEXT, then **runs `git add` + `git commit` in the shell** for all safe dirty paths (not HANDOFF-only). Shows commit SHA. |
 | **`@session-control close commit scoped`** | Commits only HANDOFF + NEXT (+ paths named in the report). |
 | **`@session-control close commit push`** | Commit + push current branch. |
@@ -369,9 +369,9 @@ Leave a clean handoff for your future self (or the next agent).
 
 | Pain | Fix |
 |------|-----|
-| Re-explaining workflows every chat | **Skills** — `@session-control`, `@code-implementation`, … |
-| Drifty code style | **Standards** — conventions, SPEC template, directory map |
-| Architecture surprises at AI speed | **Concepts** MOD-01…06 — run before big splits |
+| Re-explaining workflows every chat | **Skills** - `@session-control`, `@code-implementation`, … |
+| Drifty code style | **Standards** - conventions, SPEC template, directory map |
+| Architecture surprises at AI speed | **Concepts** MOD-01…06 - run before big splits |
 | Context evaporates overnight | **`.work/`** + session bookends |
 
 ---
@@ -392,8 +392,8 @@ Leave a clean handoff for your future self (or the next agent).
 
 | Layer | Role |
 |-------|------|
-| **`.ai/`** | *How* we work — skills, standards, concepts, guides (copy to other repos). |
-| **`.work/`** | *What* this project decided — plans, SPECs, HANDOFF, NEXT. |
+| **`.ai/`** | *How* we work - skills, standards, concepts, guides (copy to other repos). |
+| **`.work/`** | *What* this project decided - plans, SPECs, HANDOFF, NEXT. |
 | **`.cursorrules`** | Binding agent rules at the **repo root** ([template](templates/cursorrules.template)). |
 
 Skill prerequisite gates: [`skills/SKILL_DEPENDENCIES.md`](skills/SKILL_DEPENDENCIES.md).
@@ -404,12 +404,12 @@ Skill prerequisite gates: [`skills/SKILL_DEPENDENCIES.md`](skills/SKILL_DEPENDEN
 
 | Folder | Role |
 |--------|------|
-| [`skills/`](skills/README.md) | Executable playbooks — full registry |
+| [`skills/`](skills/README.md) | Executable playbooks - full registry |
 | [`standards/`](standards/) | Engineering contract **templates** (customize per project) |
 | [`concepts/`](concepts/README.md) | MOD-01…06 architecture prompts |
 | [`docs/guides/workflows/`](docs/guides/workflows/README.md) | Tutorials + artifact matrix |
 | [`docs/integration/`](docs/integration/) | Vendor mirror layout + `MANIFEST` template (project adds artifacts) |
-| [`templates/`](templates/README.md) | **`cursorrules.template`** — copy to repo root as `.cursorrules`; **`.ai/.cursorrules`** mirrors the template when present (keep in sync) |
+| [`templates/`](templates/README.md) | **`cursorrules.template`** - copy to repo root as `.cursorrules`; **`.ai/.cursorrules`** mirrors the template when present (keep in sync) |
 | `plans/`, `features/`, … | **Pointers only** → `.work/` |
 
 ---
@@ -417,13 +417,13 @@ Skill prerequisite gates: [`skills/SKILL_DEPENDENCIES.md`](skills/SKILL_DEPENDEN
 ## Required reads (when work is active)
 
 1. [`START_HERE.md`](START_HERE.md)
-2. **`.cursorrules`** (repo root — install via [First-time setup](#first-time-setup--install-cursorrules-human) if missing)
+2. **`.cursorrules`** (repo root - install via [First-time setup](#first-time-setup--install-cursorrules-human) if missing)
 3. `.work/context/HANDOFF.md`
 4. `.work/plans/NEXT.md`
 5. `.work/plans/foundation/*-01-*-initial-scope.md` when present
-6. For code: customize then use your dated standards under `standards/` (templates ship as `20260517-*.md` — rename or copy after replacing `REPLACE:` tokens)
+6. For code: customize then use your dated standards under `standards/` (templates ship as `20260517-*.md` - rename or copy after replacing `REPLACE:` tokens)
 
-Agent rules file: **`.cursorrules` only** — do not add `AGENTS.md` without owner approval.
+Agent rules file: **`.cursorrules` only** - do not add `AGENTS.md` without owner approval.
 
 ---
 

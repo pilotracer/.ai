@@ -1,4 +1,4 @@
-# NEXT — planning backlog
+# NEXT - planning backlog
 
 > **This is a template file.** In your adopter repo it is maintained by **`@code-implementation`** (the `## Current iteration` block) and **`@session-control close`** (the `## Recommended next` row). In this framework repo it stays as a demo skeleton.
 
@@ -18,7 +18,7 @@
 
 | # | Item | Notes |
 |---|------|-------|
-| — | (none) | |
+| - | (none) | |
 
 ---
 
@@ -34,10 +34,10 @@
 
 ## Current iteration
 
-*(No active iteration — run `@code-implementation plan - M1` after master plan is **Approved** and `implementation-ready: yes`.)*
+*(No active iteration - run `@code-implementation plan - M1` after master plan is **Approved** and `implementation-ready: yes`.)*
 
 ```markdown
-## Current iteration — M{N}: <milestone name>
+## Current iteration - M{N}: <milestone name>
 
 **Milestone ref:** M{N} · `{MASTER_PLAN}` §<task section>
 **Status:** planning | in-progress | complete

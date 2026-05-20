@@ -3,14 +3,14 @@ name: plan-foundation
 description: >-
   Orchestrate foundation planning (P0–P6) and certify plan-master-ready. Use for
   foundation status, continue, greenfield, or certify. Does not author the master
-  implementation plan or certify implementation-ready — that is plan-master.
+  implementation plan or certify implementation-ready - that is plan-master.
 ---
 
 # plan-foundation
 
-**Workflow orchestrator** for project foundation — from idea through **plan-master-ready** certification. Stops there; **plan-master** owns the master roadmap and **implementation-ready**. Tool-agnostic (Cursor, Claude Code, opencode, Codex). Project-agnostic: paths use `.ai/` as the documentation root; adapt backend folder name (`apis/`, `src/`, `server/`) per ADR. **Product-intent capture** lives in **P0** of this skill: greenfield creates the **P0 initial scope** mini-plan at `{PLANS_ROOT}/foundation/YYYYMMDD-01-<slug>-initial-scope.md` (foundation doc 01). There is **no** separate `project-init` or `code-foundation` skill in this registry.
+**Workflow orchestrator** for project foundation - from idea through **plan-master-ready** certification. Stops there; **plan-master** owns the master roadmap and **implementation-ready**. Tool-agnostic (Cursor, Claude Code, opencode, Codex). Project-agnostic: paths use `.ai/` as the documentation root; adapt backend folder name (`apis/`, `src/`, `server/`) per ADR. **Product-intent capture** lives in **P0** of this skill: greenfield creates the **P0 initial scope** mini-plan at `{PLANS_ROOT}/foundation/YYYYMMDD-01-<slug>-initial-scope.md` (foundation doc 01). There is **no** separate `project-init` or `code-foundation` skill in this registry.
 
-**Hard rule — `{PROMPTS_ROOT}/initial.md`:** User-owned scratch only. This skill **must not** read or create it unless the user **explicitly** names that path in the same invocation.
+**Hard rule - `{PROMPTS_ROOT}/initial.md`:** User-owned scratch only. This skill **must not** read or create it unless the user **explicitly** names that path in the same invocation.
 
 **Canonical path:** `.ai/skills/plan-foundation/skill.md` (this file). **Invocation examples:** `reference.md`.
 
@@ -37,7 +37,7 @@ description: >-
 
 ---
 
-## Foundation documentation — goals and boundaries
+## Foundation documentation - goals and boundaries
 
 **Canonical folder:** `{PLANS_ROOT}/foundation/` (plan-foundation **P1** output).
 
@@ -55,7 +55,7 @@ These documents are **inputs** to plan-master. They are **not** the plan-master 
 | Artifact | Goal |
 |----------|------|
 | `{DECISIONS_ROOT}/` | Record **Decided** architectural choices |
-| `{FEATURE_SPEC_ROOT}/*/SPEC` | Per-context **what** (rules R1…, test plan) — not **when/order** |
+| `{FEATURE_SPEC_ROOT}/*/SPEC` | Per-context **what** (rules R1…, test plan) - not **when/order** |
 | `REPLACE:TECH_STACK_DOC` | Pinned stack versions |
 | `{PLANS_ROOT}/ASSUMPTIONS.md`, `RISK_REGISTRY.md`, `UNKNOWNS.md` | Persistent planning memory (linked by plan-master) |
 | `{HANDOFF}`, `{ITERATION_CARRIER}` | Session continuity; NEXT = **one** tactical next action only |
@@ -65,11 +65,11 @@ These documents are **inputs** to plan-master. They are **not** the plan-master 
 - Not a single unified implementation plan (that is `*-full-plan.md`).
 - Not approved for broad multi-milestone execution until plan-master **Approved**.
 - Not a substitute for feature SPECs or ADRs.
-- Doc 04 may say "foundation ready" or "gate to start code" — that is **foundation-complete / plan-master-ready** language, **not** implementation-ready.
+- Doc 04 may say "foundation ready" or "gate to start code" - that is **foundation-complete / plan-master-ready** language, **not** implementation-ready.
 
-**When foundation docs are "done":** P1 gate passes + shared integrity — then pursue **plan-master-ready** certification, then `@plan-master greenfield`.
+**When foundation docs are "done":** P1 gate passes + shared integrity - then pursue **plan-master-ready** certification, then `@plan-master greenfield`.
 
-### Terminology (required — prevents confusion with plan-master)
+### Terminology (required - prevents confusion with plan-master)
 
 | Avoid in speech and markdown | Use instead |
 |------------------------------|-------------|
@@ -80,13 +80,13 @@ These documents are **inputs** to plan-master. They are **not** the plan-master 
 **Canonical doc 01 heading (use on greenfield and when fixing legacy text):**
 
 ```markdown
-## Architecture directions (non-prescriptive — architecture foundation in doc 04)
+## Architecture directions (non-prescriptive - architecture foundation in doc 04)
 ```
 
 **Canonical doc 01 reference to doc 04 (recommended next artifacts list):**
 
 ```markdown
-**Architecture foundation (doc 04):** `{PLANS_ROOT}/foundation/YYYYMMDD-04-foundation-architecture.md` — … **Not** the master implementation plan (`*-full-plan.md`).
+**Architecture foundation (doc 04):** `{PLANS_ROOT}/foundation/YYYYMMDD-04-foundation-architecture.md` - … **Not** the master implementation plan (`*-full-plan.md`).
 ```
 
 Agents **MUST** use this terminology in status/certify reports when pointing at `{PLANS_ROOT}/foundation/04`. Never call doc 04 "the full plan."
@@ -111,7 +111,7 @@ P0–P6 foundation gates
     ↓
 foundation-complete (artifacts + gates; not sufficient alone)
     ↓
-plan-master-ready certification (semantic validation — THIS skill certifies)
+plan-master-ready certification (semantic validation - THIS skill certifies)
     ↓
 @plan-master greenfield | continue → {PLANS_ROOT}/full/YYYYMMDD-full-plan.md
     ↓
@@ -126,7 +126,7 @@ code per approved roadmap + SPECs
 |-------|---------|--------------|
 | **foundation-complete** | P0–P6 artifact/gate checklists pass | plan-foundation status |
 | **plan-master-ready** | Foundation mature enough for master strategic plan | plan-foundation + `plan-master integrity` |
-| **implementation-ready** | Master plan validated; safe for broad implementation | **plan-master** status (after Approved `*-full-plan.md`) — **not** plan-foundation |
+| **implementation-ready** | Master plan validated; safe for broad implementation | **plan-master** status (after Approved `*-full-plan.md`) - **not** plan-foundation |
 
 **When to invoke plan-master during foundation:**
 
@@ -136,10 +136,10 @@ code per approved roadmap + SPECs
 | Contradictions between ADR and SPEC | **integrity** |
 | Before certifying **plan-master-ready** | **integrity** (required) |
 | After **plan-master-ready** certified | **greenfield** or **continue** (master plan artifact) |
-| **implementation-ready** (user asks) | Redirect to `@plan-master status` — out of plan-foundation scope |
+| **implementation-ready** (user asks) | Redirect to `@plan-master status` - out of plan-foundation scope |
 | User asks for roadmap / milestones | **continue** or **status** |
 
-Do not duplicate plan-master content in foundation artifacts — **reference** and **link** traceability rows.
+Do not duplicate plan-master content in foundation artifacts - **reference** and **link** traceability rows.
 
 ---
 
@@ -153,7 +153,7 @@ Do not duplicate plan-master content in foundation artifacts — **reference** a
 | **implementation-ready** | plan-master status | Safe to execute approved roadmap |
 | Code | FEATURE_STANDARD + SPECs | Application source |
 
-**Shared terminology:** Phase (P0–P6 foundation) vs Phase (0–6 plan-master) — always prefix **foundation P*** or **plan-master P*** in reports. Never conflate **plan-master-ready** with **implementation-ready**.
+**Shared terminology:** Phase (P0–P6 foundation) vs Phase (0–6 plan-master) - always prefix **foundation P*** or **plan-master P*** in reports. Never conflate **plan-master-ready** with **implementation-ready**.
 
 ---
 
@@ -177,7 +177,7 @@ Optional sibling for large projects:
 | **Status** | Draft → Under review → **Approved** → Superseded |
 | **Canonical role** | Whole-system implementation roadmap (milestones, NFRs, agent tasks) |
 | **When required for implementation-ready** | Status must be **Approved** (or explicit owner waiver in HANDOFF) |
-| **Registries** | Links to `ASSUMPTIONS.md`, `RISK_REGISTRY.md`, `UNKNOWNS.md` — no duplicate lists |
+| **Registries** | Links to `ASSUMPTIONS.md`, `RISK_REGISTRY.md`, `UNKNOWNS.md` - no duplicate lists |
 
 plan-foundation **does not** author the master plan and **does not** certify implementation-ready. It **certifies plan-master-ready** so plan-master can run; plan-master **certifies implementation-ready** when the master plan is Approved.
 
@@ -324,20 +324,20 @@ For **Decided** ADRs on stack, tenancy, regulated/signing paths, KMS, or interac
 
 ---
 
-## Step 0 — Pick a mode (always first)
+## Step 0 - Pick a mode (always first)
 
 Detect from the user message. If ambiguous, ask once:
 
 | Mode | User intent (examples) | Action |
 |------|------------------------|--------|
-| **status** | "foundation status", "plan-master-ready?", "foundation-complete?" | [Status protocol](#status-protocol) — read-only; **foundation-complete** + **plan-master-ready** only |
-| **continue** | "continue foundation", "what's next", "resume planning" | [Continue protocol](#continue-protocol) — detect phase → next gate |
-| **greenfield** | new project, empty repo, "start foundation" | [Greenfield protocol](#greenfield-protocol) — P0→P6 |
+| **status** | "foundation status", "plan-master-ready?", "foundation-complete?" | [Status protocol](#status-protocol) - read-only; **foundation-complete** + **plan-master-ready** only |
+| **continue** | "continue foundation", "what's next", "resume planning" | [Continue protocol](#continue-protocol) - detect phase → next gate |
+| **greenfield** | new project, empty repo, "start foundation" | [Greenfield protocol](#greenfield-protocol) - P0→P6 |
 | **certify** | "certify plan-master-ready", "verify foundation for plan-master" | Run [Plan-master readiness](#s4--plan-master-readiness); update HANDOFF if pass |
 
 **Do not** run greenfield INTERACTIONs when the user asked for **status** only.
 
-**Registry:** Full matrix — [`.ai/skills/SKILL_DEPENDENCIES.md`](../SKILL_DEPENDENCIES.md).
+**Registry:** Full matrix - [`.ai/skills/SKILL_DEPENDENCIES.md`](../SKILL_DEPENDENCIES.md).
 
 ---
 
@@ -348,9 +348,9 @@ Detect from the user message. If ambiguous, ask once:
 | **greenfield** | [GF0](#gf0--bootstrap-artifacts) |
 | **certify** | [CF0](#cf0--foundation-complete) |
 | **continue** | Foundation started (≥1 foundation doc or HANDOFF notes P0); else suggest **greenfield** |
-| **status** | — (read-only) |
+| **status** | - (read-only) |
 
-### GF0 — Bootstrap artifacts
+### GF0 - Bootstrap artifacts
 
 Before P0 INTERACTIONs:
 
@@ -364,14 +364,14 @@ Before P0 INTERACTIONs:
    - **Run first:** `@project-bootstrap init`
 3. If `REPLACE:` tokens remain in `.cursorrules` → warn; foundation may proceed but record unfilled tokens in the greenfield report.
 
-### CF0 — Foundation-complete
+### CF0 - Foundation-complete
 
 Before **certify**:
 
 1. Evaluate [Foundation-complete (artifact check)](#s3b--foundation-complete-artifact-check).
 2. If **foundation-complete: no** → **stop** with the [blocked-report shape](#blocked-report-shape):
    - **Required:** `foundation-complete: yes` (P0–P6 gates closed)
-   - **Detected:** `foundation-complete: no` — failing phase/gate list from status
+   - **Detected:** `foundation-complete: no` - failing phase/gate list from status
    - **Run first:** `@plan-foundation continue` (finish the failing phase, then re-invoke `certify`)
 
 ### Blocked-report shape
@@ -379,7 +379,7 @@ Before **certify**:
 Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blocked-report-shape), every prerequisite stop in this skill emits:
 
 ```markdown
-## @plan-foundation <command> — blocked (prerequisite)
+## @plan-foundation <command> - blocked (prerequisite)
 
 **Required:** <state or upstream step>
 **Detected:** <what's actually present>
@@ -390,14 +390,14 @@ Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blo
 
 ## Status protocol
 
-### S1 — Resolve project identity
+### S1 - Resolve project identity
 
 1. Read `README.md` (first `#` heading or project name in intro).
 2. Else read `{HANDOFF}` (title or "Repository state").
 3. Else read `.cursorrules` (Identity section).
-4. If none exist: ask once — **"What is this project called?"** — then use that label in the report only (do not invent files).
+4. If none exist: ask once - **"What is this project called?"** - then use that label in the report only (do not invent files).
 
-### S2 — Read session artifacts (if present)
+### S2 - Read session artifacts (if present)
 
 | File | Purpose |
 |------|---------|
@@ -411,7 +411,7 @@ Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blo
 | `{PLANS_ROOT}/UNKNOWNS.md` | Open questions and blockers |
 | `{PLANS_ROOT}/full/*-full-plan.md` | If present: note path only; **do not** evaluate implementation-ready in foundation status |
 
-### S3 — Evaluate phases (evidence-based)
+### S3 - Evaluate phases (evidence-based)
 
 For each phase, set: **done** | **partial** | **not started**. Use the [Gate completion model](#gate-completion-model) and phase GATE sections. Cite paths as evidence. Mark inferences as **Unverified**. A phase is **not** `done` if [shared gate integrity](#shared-gate-integrity-every-gate) failed.
 
@@ -437,19 +437,19 @@ For each phase, set: **done** | **partial** | **not started**. Use the [Gate com
 | **Plan-master ready** | [Plan-master readiness](#s4--plan-master-readiness) **yes** |
 | **Implementation started** | Application source tree exists |
 
-### S3b — Foundation-complete (artifact check)
+### S3b - Foundation-complete (artifact check)
 
 **foundation-complete: yes** when P0–P6 gates pass per [Gate completion model](#gate-completion-model) (file + integrity per phase).
 
 This is **necessary but not sufficient** for plan-master or implementation. Always report **foundation-complete** separately from **plan-master-ready**.
 
-### S4 — Plan-master readiness
+### S4 - Plan-master readiness
 
 Answer **plan-master-ready: yes** only when **all** are true:
 
 1. **foundation-complete: yes** (P0–P6 gates done per gate completion model).
-2. Core ADRs **Decided** (stack, hosting, tenancy — project defines "core"; deferred ADRs documented in `UNKNOWNS.md`).
-3. Highest-risk bounded context(s) have SPECs with numbered rules (project defines — e.g. payments, compliance).
+2. Core ADRs **Decided** (stack, hosting, tenancy - project defines "core"; deferred ADRs documented in `UNKNOWNS.md`).
+3. Highest-risk bounded context(s) have SPECs with numbered rules (project defines - e.g. payments, compliance).
 4. Directory map exists and aligns with foundation doc 04 bounded contexts.
 5. Registries populated and reviewed: `ASSUMPTIONS.md`, `RISK_REGISTRY.md`, `UNKNOWNS.md`.
 6. No **unresolved architectural contradictions** (ADR ↔ foundation doc 04 ↔ SPECs), or waivers in HANDOFF.
@@ -464,7 +464,7 @@ If any fail → **plan-master-ready: no** + list blockers + recommend **continue
 
 **Anti-pattern:** Running `@plan-master greenfield` when plan-master-ready is **no**.
 
-### S5 — Out of scope: implementation-ready
+### S5 - Out of scope: implementation-ready
 
 **Do not** evaluate or certify **implementation-ready** in plan-foundation modes (status, certify, continue, greenfield).
 
@@ -474,12 +474,12 @@ If the user asks "implementation-ready?" or "ready to code?":
 2. If no `*-full-plan.md` → recommend `@plan-master greenfield` after certify.
 3. If master plan exists → redirect: `@plan-master status` (implementation-ready is defined in plan-master skill).
 
-**M1 skeleton** (tactical): may proceed when **plan-master-ready: yes** per NEXT.md and HANDOFF waivers — not the same as implementation-ready.
+**M1 skeleton** (tactical): may proceed when **plan-master-ready: yes** per NEXT.md and HANDOFF waivers - not the same as implementation-ready.
 
-### S6 — Status report format (mandatory)
+### S6 - Status report format (mandatory)
 
 ```markdown
-## Foundation status — <Project Name>
+## Foundation status - <Project Name>
 
 **As of:** <date> · **Mode:** status (read-only)
 
@@ -489,8 +489,8 @@ If the user asks "implementation-ready?" or "ready to code?":
 - **Plan-master-ready:** yes | no | not evaluated
 - **Recommended next:** <continue foundation | certify | @plan-master greenfield>
 
-### Implementation-ready (redirect only — do not score here)
-- Master plan: <missing | path — use @plan-master status for Approved/implementation-ready>
+### Implementation-ready (redirect only - do not score here)
+- Master plan: <missing | path - use @plan-master status for Approved/implementation-ready>
 
 ### Phase progress
 | Phase | Status | Evidence |
@@ -513,7 +513,7 @@ If the user asks "implementation-ready?" or "ready to code?":
 
 ### Integrity (plan-master)
 - Last run: <date or not run> · Result: pass | fail | waived
-- **Invoke:** `@plan-master integrity` (Cursor) or "Follow .ai/skills/plan-master/skill.md — integrity mode" (opencode/Codex)
+- **Invoke:** `@plan-master integrity` (Cursor) or "Follow .ai/skills/plan-master/skill.md - integrity mode" (opencode/Codex)
 ```
 
 **Rules:** Do not modify files in status mode unless the user asks. Do not edit prompts marked **archived** or "do not edit".
@@ -522,16 +522,16 @@ If the user asks "implementation-ready?" or "ready to code?":
 
 ## Continue protocol
 
-1. Run **Status protocol** S1–S3 (short form — no full report unless user wants it).
+1. Run **Status protocol** S1–S3 (short form - no full report unless user wants it).
 2. Find the **first phase** not `done`.
 3. If **partial**: complete that phase's **GATE** checklist (artifacts + [shared gate integrity](#shared-gate-integrity-every-gate)); produce missing artifacts.
 4. Present the next **INTERACTION** only for unanswered questions in that phase (skip if answers exist in ADRs, foundation docs, or archived decision prompts).
 5. Update registries (`ASSUMPTIONS`, `RISK_REGISTRY`, `UNKNOWNS`) when assumptions, risks, or unknowns change.
 6. At GATE p3+ → apply [Architecture fitness review](#architecture-fitness-review); run `plan-master integrity` if contradictions found.
-**Invoke as:** `@plan-master integrity` (Cursor) or "Follow .ai/skills/plan-master/skill.md — integrity mode" (opencode/Codex). Returns integrity score: pass | pass with waivers | fail.
+**Invoke as:** `@plan-master integrity` (Cursor) or "Follow .ai/skills/plan-master/skill.md - integrity mode" (opencode/Codex). Returns integrity score: pass | pass with waivers | fail.
 7. Update `HANDOFF.md` and `NEXT.md` when a gate **passes** completion model (not merely when files are written).
 8. At P6 done → evaluate [Plan-master readiness](#s4--plan-master-readiness) → offer `p6-done` confirm only if **plan-master-ready** (or list blockers).
-9. After **plan-master-ready**: recommend `@plan-master greenfield` | `continue` — do not author master plan in plan-foundation.
+9. After **plan-master-ready**: recommend `@plan-master greenfield` | `continue` - do not author master plan in plan-foundation.
 10. After master plan exists → tell user to run `@plan-master status` for implementation-ready (not plan-foundation).
 11. Do not write broad multi-milestone implementation without **plan-master** Approved master plan (or HANDOFF waiver).
 
@@ -541,14 +541,14 @@ If the user asks "implementation-ready?" or "ready to code?":
 
 Use when the user asks to **certify**, **verify for plan-master**, or **plan-master-ready**.
 
-0. Run [CF0 — Foundation-complete](#cf0--foundation-complete).
+0. Run [CF0 - Foundation-complete](#cf0--foundation-complete).
 1. Run **Status protocol** S1–S3 (full evaluation).
 2. Run `@plan-master integrity` on foundation artifacts (read-only if status-only; update HANDOFF on certify).
-3. Evaluate [S4 — Plan-master readiness](#s4--plan-master-readiness) criterion by criterion with evidence.
+3. Evaluate [S4 - Plan-master readiness](#s4--plan-master-readiness) criterion by criterion with evidence.
 4. Output certification report:
 
 ```markdown
-## Plan-master-ready certification — <Project>
+## Plan-master-ready certification - <Project>
 
 **Foundation-complete:** yes | no
 **Plan-master-ready:** yes | no
@@ -567,15 +567,15 @@ Use when the user asks to **certify**, **verify for plan-master**, or **plan-mas
 - Next: `@plan-foundation continue` (phase/gate)
 ```
 
-5. Do **not** create `*-full-plan.md` in certify mode — that is **plan-master**'s job.
+5. Do **not** create `*-full-plan.md` in certify mode - that is **plan-master**'s job.
 
 ---
 
 ## Greenfield protocol
 
-0. Run [GF0 — Bootstrap artifacts](#gf0--bootstrap-artifacts).
-1. **Project name first** — run `p0-name` before any other INTERACTION unless user already gave the name in the same message.
-2. Create the **P0 initial scope** mini-plan at `{PLANS_ROOT}/foundation/YYYYMMDD-01-<project-slug>-initial-scope.md` (foundation doc 01). Capture the raw product idea verbatim in a **Founder intent** subsection under **Assumption ledger**; add placeholder sections for audience, scope expansion, and architecture directions (filled in P1). **Do not** write `{PROMPTS_ROOT}/initial.md` — that path is user-owned scratch; skills read doc 01 instead.
+0. Run [GF0 - Bootstrap artifacts](#gf0--bootstrap-artifacts).
+1. **Project name first** - run `p0-name` before any other INTERACTION unless user already gave the name in the same message.
+2. Create the **P0 initial scope** mini-plan at `{PLANS_ROOT}/foundation/YYYYMMDD-01-<project-slug>-initial-scope.md` (foundation doc 01). Capture the raw product idea verbatim in a **Founder intent** subsection under **Assumption ledger**; add placeholder sections for audience, scope expansion, and architecture directions (filled in P1). **Do not** write `{PROMPTS_ROOT}/initial.md` - that path is user-owned scratch; skills read doc 01 instead.
 3. Create empty planning registries: `ASSUMPTIONS.md`, `RISK_REGISTRY.md`, `UNKNOWNS.md` (templates in reference.md).
 4. Walk phases P0→P6; at each **GATE**, present checklist + shared integrity; wait for approval before the next phase.
 5. Use **Assumption ledger** in foundation doc 01; sync to `ASSUMPTIONS.md` at GATE p1.
@@ -605,16 +605,16 @@ When a product choice blocks SPECs (UX mode, vertical, compliance wording):
 1. Create `{PROMPTS_ROOT}/decision_<NNN>_<slug>.md` with questions + space for owner answers.
 2. Create `{DECISIONS_ROOT}/YYYYMMDD-<NNN>-<slug>-proposed.md`.
 3. After owner fills the prompt → **Decided** ADR + `{FEATURE_SPEC_ROOT}/<slug>/YYYYMMDD-SPEC-amendment-NN.md`.
-4. **Archive the prompt** — add "do not edit"; never delete owner answers.
+4. **Archive the prompt** - add "do not edit"; never delete owner answers.
 
 ---
 
-## Phase 0 — Capture
+## Phase 0 - Capture
 
 ```
-{PLANS_ROOT}/foundation/YYYYMMDD-01-<slug>-initial-scope.md   — P0 mini-plan (greenfield creates; plan-foundation owns)
-.cursorrules                     — identity, core principles, protected files
-{PLANS_ROOT}/ASSUMPTIONS.md      — created at P0
+{PLANS_ROOT}/foundation/YYYYMMDD-01-<slug>-initial-scope.md   - P0 mini-plan (greenfield creates; plan-foundation owns)
+.cursorrules                     - identity, core principles, protected files
+{PLANS_ROOT}/ASSUMPTIONS.md      - created at P0
 {PLANS_ROOT}/RISK_REGISTRY.md
 {PLANS_ROOT}/UNKNOWNS.md
 ```
@@ -637,7 +637,7 @@ When a product choice blocks SPECs (UX mode, vertical, compliance wording):
 
 ---
 
-## Phase 1 — Exploration
+## Phase 1 - Exploration
 
 ## INTERACTION: p1-integrations
 
@@ -677,7 +677,7 @@ Mirror vendor artifacts under `.ai/docs/integration/<vendor>-<version>/` + `MANI
 .ai/docs/integration/MANIFEST.txt                       ← skip if no integration mirror
 ```
 
-Doc 01 sections: Audience, Assumption ledger, Scope, Risks; heading **Architecture directions (non-prescriptive — architecture foundation in doc 04)** per [Terminology](#terminology-required--prevents-confusion-with-plan-master). Doc 04: Bounded contexts, decisions register §13, foundation-ready gate §14 — title may say "plan" but role is **architecture foundation**, not `*-full-plan.md`.
+Doc 01 sections: Audience, Assumption ledger, Scope, Risks; heading **Architecture directions (non-prescriptive - architecture foundation in doc 04)** per [Terminology](#terminology-required--prevents-confusion-with-plan-master). Doc 04: Bounded contexts, decisions register §13, foundation-ready gate §14 - title may say "plan" but role is **architecture foundation**, not `*-full-plan.md`.
 
 ---
 
@@ -694,7 +694,7 @@ Doc 01 sections: Audience, Assumption ledger, Scope, Risks; heading **Architectu
 
 ---
 
-## Phase 2 — ADRs
+## Phase 2 - ADRs
 
 ## INTERACTION: p2-backend
 
@@ -772,7 +772,7 @@ ADR: Context → Decision → Consequences → Alternatives → References. Stat
 
 ---
 
-## Phase 3 — Specifications
+## Phase 3 - Specifications
 
 ```
 .ai/standards/YYYYMMDD-CONVENTIONS.md
@@ -800,7 +800,7 @@ SPEC sections: Purpose · In/Out scope · Domain language · Rules (R1…) · Da
 
 ---
 
-## Phase 4 — Cross-cutting
+## Phase 4 - Cross-cutting
 
 ```
 REPLACE:TECH_STACK_DOC
@@ -828,7 +828,7 @@ Optional: `{PLANS_ROOT}/operations/YYYYMMDD-cpa-shortlist.md`, `YYYYMMDD-regulat
 
 ---
 
-## Phase 5 — Infrastructure
+## Phase 5 - Infrastructure
 
 ## INTERACTION: p5-local-dev
 
@@ -851,7 +851,7 @@ Optional: `{PLANS_ROOT}/operations/YYYYMMDD-cpa-shortlist.md`, `YYYYMMDD-regulat
 {PLANS_ROOT}/operations/YYYYMMDD-sandbox-onboarding.md
 ```
 
-**Rule:** `docker-compose.yml`, `Dockerfile.*`, `.env.example` — create only after explicit owner approval.
+**Rule:** `docker-compose.yml`, `Dockerfile.*`, `.env.example` - create only after explicit owner approval.
 
 ---
 
@@ -882,7 +882,7 @@ Create the files per the proposal. Update HANDOFF and NEXT to reflect approval.
 
 ---
 
-## Phase 6 — Operations
+## Phase 6 - Operations
 
 ```
 README.md
@@ -901,11 +901,11 @@ README.md
 - [ ] NEXT.md single recommended next action
 - [ ] Cross-links valid; no secrets/PII/attribution markers
 - [ ] Registries current (`ASSUMPTIONS`, `RISK_REGISTRY`, `UNKNOWNS`)
-- [ ] [Plan-master readiness](#s4--plan-master-readiness) evaluated — record **plan-master-ready: yes | no** in HANDOFF
+- [ ] [Plan-master readiness](#s4--plan-master-readiness) evaluated - record **plan-master-ready: yes | no** in HANDOFF
 
 **Includes:** [Shared gate integrity](#shared-gate-integrity-every-gate)
 
-**Not at P6:** implementation-ready (requires Approved master plan — evaluate after plan-master).
+**Not at P6:** implementation-ready (requires Approved master plan - evaluate after plan-master).
 
 ---
 
@@ -920,7 +920,7 @@ README.md
 1. Set HANDOFF: foundation gate snapshot complete; **Plan-master-ready: \<date\>**.
 2. Invoke: `@plan-master greenfield` (or `continue` if `*-full-plan.md` exists).
 3. After master plan exists: user runs `@plan-master status` for **implementation-ready** (not plan-foundation).
-4. M1 skeleton (NEXT.md) may start when **plan-master-ready: yes** even if master plan is Draft — document waiver if skipping plan-master.
+4. M1 skeleton (NEXT.md) may start when **plan-master-ready: yes** even if master plan is Draft - document waiver if skipping plan-master.
 
 Foundation orchestration certifies **plan-master-ready**; **plan-master** authors the [master plan artifact](#master-plan-artifact).
 

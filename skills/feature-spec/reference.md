@@ -1,4 +1,4 @@
-# feature-spec — reference
+# feature-spec - reference
 
 Supplement to `skill.md`. Invocation examples, mode comparison, and edge cases.
 
@@ -27,7 +27,7 @@ Follow .ai/skills/feature-spec/skill.md - review - .work/features/<slug>/YYYYMMD
 ```
 
 ```
-Follow .ai/skills/feature-spec/skill.md — status — master-data. Read-only.
+Follow .ai/skills/feature-spec/skill.md - status - master-data. Read-only.
 ```
 
 ---
@@ -76,8 +76,8 @@ Amendment filenames:
 | Single reviewer on high-risk SPEC (threat model) | Flag in review; gate blocks approve unless ADR/owner waives |
 | Slug collision with another SPEC | Block create; suggest distinguishing slug (e.g. `oauth-login` vs `user-auth`) |
 | FEATURE_STANDARD path moved | Read `.ai/standards/` for latest `*FEATURE_STANDARD*` by date prefix |
-| No concept pack in repo | §15 required anyway; mark each MOD row `N/A — no pack` with reason |
-| §2 Out of scope empty | Review fails — must be explicit, not `TBD` |
+| No concept pack in repo | §15 required anyway; mark each MOD row `N/A - no pack` with reason |
+| §2 Out of scope empty | Review fails - must be explicit, not `TBD` |
 
 ---
 

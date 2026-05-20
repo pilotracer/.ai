@@ -9,7 +9,7 @@ Project-specific ADRs. Process: `.ai/skills/plan-foundation/skill.md` P2 · poin
 - **Filename:** `YYYYMMDD-NNN-short-slug.md` (3-digit zero-padded NNN)
 - **Status:** `Proposed | Decided | Deferred | Superseded by <ADR id>`
 - **Sections:** Context · Decision · Consequences · Alternatives · References
-- **Never edit** a `Decided` ADR — supersede with a new file
+- **Never edit** a `Decided` ADR - supersede with a new file
 - Foundation register in `*-04-foundation-architecture.md` §13 must agree; **ADRs win** on conflict
 
 ## Index

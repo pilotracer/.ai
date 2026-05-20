@@ -1,14 +1,14 @@
-# REPLACE:PROJECT_NAME — Foundation and architecture (proposal)
+# REPLACE:PROJECT_NAME - Foundation and architecture (proposal)
 
 **Doc:** foundation **04** · **Created:** YYYY-MM-DD  
-**Status:** proposal — owner approval before broad implementation  
+**Status:** proposal - owner approval before broad implementation  
 **Status gate:** foundation-complete when §14 checklist passes
 
 **References:**
 
-- Doc 01 — `*-01-*-initial-scope.md`
-- Doc 02 — `*-02-*` (if integrations)
-- Doc 03 — `*-03-*` (if adjacency)
+- Doc 01 - `*-01-*-initial-scope.md`
+- Doc 02 - `*-02-*` (if integrations)
+- Doc 03 - `*-03-*` (if adjacency)
 - `.cursorrules` · `REPLACE:TECH_STACK_DOC` · `.ai/standards/*`
 
 ---
@@ -74,7 +74,7 @@ Link `.ai/standards/*threat-model*` and `*data-classification*`.
 
 ## 7. Observability summary
 
-Link `{OBSERVABILITY_SPEC}` — metrics/traces/logs expectations.
+Link `{OBSERVABILITY_SPEC}` - metrics/traces/logs expectations.
 
 ---
 

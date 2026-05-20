@@ -1,11 +1,11 @@
 # Workflow guides
 
-> **Lost or unsure what to invoke?** Open [`.ai/START_HERE.md`](../../../START_HERE.md) — it answers "what do I do right now?" in ≤2 minutes. The matrix below is **reference**; START_HERE is the **decision tree**.
+> **Lost or unsure what to invoke?** Open [`.ai/START_HERE.md`](../../../START_HERE.md) - it answers "what do I do right now?" in ≤2 minutes. The matrix below is **reference**; START_HERE is the **decision tree**.
 
 This directory holds portable workflow documentation with two filename shapes:
 
-- **`YYYYMMDD-tutorial-<slug>.md`** — step-by-step material aimed at the **operator** (run this, then that).
-- **`YYYYMMDD-guide-<slug>.md`** — **reference** or internal-style docs (layers/template, cross-cutting NFR, methodology companions to skills).
+- **`YYYYMMDD-tutorial-<slug>.md`** - step-by-step material aimed at the **operator** (run this, then that).
+- **`YYYYMMDD-guide-<slug>.md`** - **reference** or internal-style docs (layers/template, cross-cutting NFR, methodology companions to skills).
 
 **Curriculum (recommended order) and extra narrative:** [20260518-guide-workflows-index.md](20260518-guide-workflows-index.md)
 
@@ -19,7 +19,7 @@ The **artifact matrix** below maps **planning** vs **implementation** (plus cros
 
 ## Planning and implementation artifact matrix
 
-### Legend — Status
+### Legend - Status
 
 | Status | Meaning |
 |--------|---------|
@@ -33,7 +33,7 @@ The **artifact matrix** below maps **planning** vs **implementation** (plus cros
 | **Application** | Product source, tests, and migrations. |
 | **Protected** | Per project rules: do not modify without explicit approval. |
 
-### Legend — Phase (primary)
+### Legend - Phase (primary)
 
 | Phase | When it matters |
 |--------|-----------------|
@@ -47,14 +47,14 @@ The **artifact matrix** below maps **planning** vs **implementation** (plus cros
 | Path | Phase | Status | Short description |
 |------|-------|--------|-------------------|
 | `.cursorrules` | Both | Binding | Global agent + engineering rules; workflow bootstrap and placeholder quick-map. |
-| `.ai/START_HERE.md` | Both | Context | **Operator decision tree** — answers "what do I invoke right now?"; recovery checklist; forgetfulness gate. First read when lost. |
+| `.ai/START_HERE.md` | Both | Context | **Operator decision tree** - answers "what do I invoke right now?"; recovery checklist; forgetfulness gate. First read when lost. |
 | `README.md` (repo root) | Both | Context | Human entry point; planning mode and stack pointers (`plan-foundation` identity read). |
 | `REPLACE:TECH_STACK_DOC` (e.g. `DOCS_TECH_STACK.md`) | Both | Binding | Pinned versions, stack topology, open ADR TODOs. |
 | `.ai/README.md` | Both | Context | Canonical map of `.ai/` trees (plans, standards, skills, features). |
 | `.work/context/HANDOFF.md` | Both | Living | Session open/close, repository state, pick-up, produced-artifact table. |
 | `.work/plans/NEXT.md` | Both | Living | Tactical backlog, **Recommended next**, **`## Current iteration`** sub-plan, Done history. |
 | `.work/plans/full/*-full-plan.md` | Planning | Planning | Master implementation plan (FR/NFR, milestones M1…, acceptance, validation gates). |
-| `.work/plans/foundation/YYYYMMDD-0*-*.md` | Planning | Planning | Foundation docs 01–04 (scope, integration, adjacency, architecture proposal — not the full plan). |
+| `.work/plans/foundation/YYYYMMDD-0*-*.md` | Planning | Planning | Foundation docs 01–04 (scope, integration, adjacency, architecture proposal - not the full plan). |
 | `.work/plans/ASSUMPTIONS.md` | Planning | Registry | Labeled assumptions (Confirmed / Inference / …). |
 | `.work/plans/RISK_REGISTRY.md` | Planning | Registry | Architectural, ops, security, compliance risks. |
 | `.work/plans/UNKNOWNS.md` | Planning | Registry | Open questions, owners, blockers. |
@@ -102,7 +102,7 @@ The **artifact matrix** below maps **planning** vs **implementation** (plus cros
 | `.ai/docs/guides/workflows/20260518-tutorial-*.md` | Both | Guide | Operator step-by-step tutorials (pattern): bootstrap, walk-throughs, NEXT/delivery, test requests. |
 | `.ai/docs/integration/MANIFEST.txt` | Implementation | Context | Vendor artifact inventory (project adds; see `docs/integration/README.md`). |
 | `.ai/docs/integration/**` | Implementation | Context | Cached vendor specs (project-owned; read on demand). |
-| `.work/plans/foundation/*-01-*-initial-scope.md` | Planning | Living | **P0 initial scope** mini-plan — `@plan-foundation` greenfield creates; canonical product-intent capture (not `{PROMPTS_ROOT}/initial.md`). |
+| `.work/plans/foundation/*-01-*-initial-scope.md` | Planning | Living | **P0 initial scope** mini-plan - `@plan-foundation` greenfield creates; canonical product-intent capture (not `{PROMPTS_ROOT}/initial.md`). |
 | `.work/prompts/*` (project-local) | Planning | Context | Questionnaires, archived decision prompts, optional **user scratch** (`initial.md`). Skills **do not** read `initial.md` unless the user explicitly names it. |
 | `REPLACE:APP_ROOT/**` | Implementation | Application | Application source and bounded contexts. |
 | `REPLACE:APP_ROOT/tests/**` or project test dir | Implementation | Application | Unit, contract, integration, e2e as adopted. |

@@ -4,6 +4,8 @@ Portable, tool-agnostic workflows. Each skill is a folder with `skill.md` (+ opt
 
 **Identifiers:** Folder name = stable skill id (YAML `name:` in `skill.md` must match). Cursor `@` mentions use that id (e.g. `@dev-stack`, `@code-implementation`).
 
+**Invocation punctuation:** Use ASCII hyphen `-` between verb and argument (`@code-implementation plan - M1`). Not em dash `—`. See [`SKILL_DEPENDENCIES.md`](SKILL_DEPENDENCIES.md).
+
 ---
 
 ## Naming protocol
@@ -39,13 +41,13 @@ Use for **new** skills and for any **rename** (update `.cursorrules`, this READM
 
 **Typical flow (greenfield):** `@project-bootstrap init` → `plan-foundation greenfield` → `certify plan-master-ready` → `plan-master greenfield` → `plan-master status` (implementation-ready) → `code-implementation plan` → `code-implementation start/continue/complete`.
 
-**Canonical verb vocabulary:** see [SKILL_DEPENDENCIES.md § Canonical command vocabulary](SKILL_DEPENDENCIES.md#canonical-command-vocabulary). Every skill uses `status` for read-only state, `init` for one-time setup, and so on — no skill invents bespoke verbs.
+**Canonical verb vocabulary:** see [SKILL_DEPENDENCIES.md § Canonical command vocabulary](SKILL_DEPENDENCIES.md#canonical-command-vocabulary). Every skill uses `status` for read-only state, `init` for one-time setup, and so on - no skill invents bespoke verbs.
 
-**Skill prerequisites (gates):** [SKILL_DEPENDENCIES.md](SKILL_DEPENDENCIES.md) — which modes **stop** if an upstream step was skipped (e.g. `@plan-master greenfield` before `@plan-foundation certify plan-master-ready`).
+**Skill prerequisites (gates):** [SKILL_DEPENDENCIES.md](SKILL_DEPENDENCIES.md) - which modes **stop** if an upstream step was skipped (e.g. `@plan-master greenfield` before `@plan-foundation certify plan-master-ready`).
 
 **Orientation:** `@process-router - <question>` when lost; `@session-control status` for repo snapshot.
 
-**Do not** ask plan-foundation for implementation-ready — use `plan-master status`.
+**Do not** ask plan-foundation for implementation-ready - use `plan-master status`.
 
 Registered in `.cursorrules` § Skills.
 

@@ -1,7 +1,7 @@
-# Tutorial — multiple iterations to finish the current sub-plan
+# Tutorial - multiple iterations to finish the current sub-plan
 
 **Doc type:** Delivery loop tutorial (portable).  
-**Skills:** `code-implementation` — `start`, `continue`, `task`, `complete`, `status` · `code-verify` — `milestone`, `uncommitted`, `last`.
+**Skills:** `code-implementation` - `start`, `continue`, `task`, `complete`, `status` · `code-verify` - `milestone`, `uncommitted`, `last`.
 
 ---
 
@@ -22,7 +22,7 @@ plan - M{N}
 ## 2. First entry (`start`)
 
 1. Valid `## Current iteration` exists ([checklist](20260518-tutorial-next-generate-new.md)).  
-2. `@code-implementation start` — mandatory reads (NEXT, SPECs, CONVENTIONS, FEATURE_STANDARD, HANDOFF).  
+2. `@code-implementation start` - mandatory reads (NEXT, SPECs, CONVENTIONS, FEATURE_STANDARD, HANDOFF).  
 3. First task → `in-progress`; implement; run **task gate** (tests + lint + type + secrets + protected files + scope).
 
 ---
@@ -57,7 +57,7 @@ Optional: `@code-verify uncommitted` before commit · `@code-verify last` after 
 
 ## 5. Finish milestone (`complete`)
 
-1. Run **CO2** `@code-verify milestone` if not run since last task — **pass** or **waived** in `{HANDOFF}`.  
+1. Run **CO2** `@code-verify milestone` if not run since last task - **pass** or **waived** in `{HANDOFF}`.  
 2. **CO1** final gates: manual validation steps + concept registry; skip duplicate pytest/lint/type if CO2 shared gates already passed on current tree.  
 3. `complete` updates: iteration status, **Done this iteration** table, **Recommended next**, `{HANDOFF}` produced artifacts.  
 4. Draft **commit message** for human (per `.cursorrules` if present).
@@ -66,7 +66,7 @@ Optional: `@code-verify uncommitted` before commit · `@code-verify last` after 
 
 ## 6. Next milestone (second “iteration” of the process)
 
-`@code-implementation plan - M{N+1}` — new sub-plan. Repeat loop.
+`@code-implementation plan - M{N+1}` - new sub-plan. Repeat loop.
 
 ---
 
@@ -75,10 +75,10 @@ Optional: `@code-verify uncommitted` before commit · `@code-verify last` after 
 If **L** tasks linger:
 
 - Split milestone in **plan-master revise** (preferred), **or**  
-- Add explicit **Owner blockers** and pause — do not invent scope cuts.
+- Add explicit **Owner blockers** and pause - do not invent scope cuts.
 
 ---
 
 ## 8. Session hygiene
 
-`@session-control start` before a long coding day; `close` after — keeps `{HANDOFF}` honest about blockers and waivers.
+`@session-control start` before a long coding day; `close` after - keeps `{HANDOFF}` honest about blockers and waivers.

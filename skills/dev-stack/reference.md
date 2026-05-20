@@ -1,4 +1,4 @@
-# dev-stack — reference
+# dev-stack - reference
 
 Supplement to `skill.md`. **Compose invocation template**, **safe env parsing**, **command menu**, **dangerous ops**, **CI**, **adaptation checklist**.
 
@@ -11,7 +11,7 @@ Supplement to `skill.md`. **Compose invocation template**, **safe env parsing**,
 | `.ai/skills/dev-stack/skill.md` | Canonical workflow + hard rules |
 | This `reference.md` | Templates and tables |
 | `tmp/SKILL.md` (if present) | Historical draft; prefer repo `skill.md` |
-| `tmp/*.skill` (if present) | **Not** plain-text skills — do not parse as markdown |
+| `tmp/*.skill` (if present) | **Not** plain-text skills - do not parse as markdown |
 
 ---
 
@@ -31,9 +31,9 @@ docker compose \
 Rules:
 
 - **`COMPOSE_ABS`**: absolute path to the primary compose file (resolve from `SCRIPT_DIR` / `REPO_ROOT`).
-- **`COMPOSE_PROJECT_NAME`**: from safe `.env` read — **the isolation key**; never default to Docker's directory basename alone if multiple clones share paths.
+- **`COMPOSE_PROJECT_NAME`**: from safe `.env` read - **the isolation key**; never default to Docker's directory basename alone if multiple clones share paths.
 - **`PROFILE`**: fixed default (e.g. `dev`) or second safe `.env` key.
-- **Never** use bare `docker stop`, `docker kill`, `docker rm`, `docker volume rm`, `docker network rm` for routine teardown — use `docker compose … down` / `down -v` scoped as above.
+- **Never** use bare `docker stop`, `docker kill`, `docker rm`, `docker volume rm`, `docker network rm` for routine teardown - use `docker compose … down` / `down -v` scoped as above.
 
 ---
 
@@ -48,7 +48,7 @@ Never `source .env`. Implement `read_dotenv_value(key)` that:
 5. Strips one matching pair of surrounding `'` or `"` from values.
 6. Emits with `printf '%s'` for safe capture: `value=$(read_dotenv_value KEY)`.
 
-Export variables needed by compose **after** parsing — do not execute values as shell code.
+Export variables needed by compose **after** parsing - do not execute values as shell code.
 
 ---
 
@@ -63,7 +63,7 @@ bin/start.sh
 ├── require_compose_file()
 ├── _compose_invoke()  → internal; all docker compose goes here
 ├── dc() / quiet_dc()
-├── stream_compose_ops() / wait_ack_if_menu() (TTY: prefer /dev/tty — see skill anti-patterns)
+├── stream_compose_ops() / wait_ack_if_menu() (TTY: prefer /dev/tty - see skill anti-patterns)
 ├── print_banner() / urls_hint() / health_summary_line() / render_menu_*()
 ├── validate_config() (dc config -q)
 ├── cmd_*() per command
@@ -120,7 +120,7 @@ Minimum menu items for a stack with Postgres + API (extend per project):
 | 15–16 | Dev | `pytest`, `ruff` | common in-container checks (adapt) |
 | 17–18 | Dev | `pull`, `build` | image pull / build only |
 | 19–21 | DB | `wait-pg`, `drop-schema`, `rebuild-schema` | see §Postgres pattern |
-| 22 | Danger | `nuke` | `down -v` — double confirm |
+| 22 | Danger | `nuke` | `down -v` - double confirm |
 
 ### Headless CLI (same functions)
 
@@ -143,14 +143,14 @@ Minimum menu items for a stack with Postgres + API (extend per project):
 | `pull` | 17 | `cmd_pull` | `compose pull` |
 | `build` | 18 | `cmd_build_only` | `build --pull` |
 | `wait-pg` | 19 | `cmd_wait_postgres` | pg_isready loop |
-| `drop-schema` | 20 | `cmd_drop_schema` | DROP SCHEMA — **DANGEROUS** |
+| `drop-schema` | 20 | `cmd_drop_schema` | DROP SCHEMA - **DANGEROUS** |
 | `rebuild-schema` | 21 | `cmd_rebuild_schema` | drop + restart api |
-| `nuke` | 22 | `cmd_nuke` | `down -v --remove-orphans` — **DANGEROUS** |
-| — | 0 | — | Exit menu |
+| `nuke` | 22 | `cmd_nuke` | `down -v --remove-orphans` - **DANGEROUS** |
+| - | 0 | - | Exit menu |
 
 ---
 
-## Postgres helpers (default — adapt service name)
+## Postgres helpers (default - adapt service name)
 
 ### Wait for DB
 
@@ -180,9 +180,9 @@ Adapt for non-Postgres or remove.
 
 ---
 
-## Dangerous commands — double confirmation
+## Dangerous commands - double confirmation
 
-Pattern (nuke volumes — adapt prompts):
+Pattern (nuke volumes - adapt prompts):
 
 ```bash
 read -r -p 'Type the project name to confirm: ' confirm
@@ -226,11 +226,11 @@ Ensure `start`, `stop`, `build`, `status` never block on `read` when `MENU_QUIET
 
 ---
 
-## `.env` variables (typical — extend per project)
+## `.env` variables (typical - extend per project)
 
 | Variable | Role |
 |----------|------|
-| `COMPOSE_PROJECT_NAME` | Docker Compose **project** name — isolation |
+| `COMPOSE_PROJECT_NAME` | Docker Compose **project** name - isolation |
 | `PUBLIC_HOST` | URL hints (default `localhost`) |
 | `*_HOST_PORT` | Published ports for hints |
 | `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | DB ops (if applicable) |

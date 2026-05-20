@@ -1,8 +1,8 @@
-# Tutorial — define the **NEXT sub-plan** (iteration block)
+# Tutorial - define the **NEXT sub-plan** (iteration block)
 
 **Doc type:** Tactical planning tutorial (portable).  
 **Synonym:** “Sub-plan” = **`## Current iteration`** in `{ITERATION_CARRIER}`.  
-**Skill:** `@code-implementation plan - M{N}`   *(legacy alias: `plan-iteration - M{N}` — both still work; file kept for stability)*.
+**Skill:** `@code-implementation plan - M{N}`   *(legacy alias: `plan-iteration - M{N}` - both still work; file kept for stability)*.
 
 ---
 
@@ -49,16 +49,16 @@ If you cannot run the skill:
 4. Build acceptance from milestone **Acceptance criteria** only.  
 5. Copy **Validation** commands from plan section **21** or milestone validation row.
 
-Manual path has high **id drift** risk — prefer the skill.
+Manual path has high **id drift** risk - prefer the skill.
 
 ---
 
 ## 5. Exit check
 
-Pass every item in [Generate new NEXT — valid block](20260518-tutorial-next-generate-new.md) section 3.
+Pass every item in [Generate new NEXT - valid block](20260518-tutorial-next-generate-new.md) section 3.
 
 ---
 
 ## 6. Then start implementation
 
-`@code-implementation start` — see [Multiple iterations](20260518-tutorial-implement-multiple-iterations.md).
+`@code-implementation start` - see [Multiple iterations](20260518-tutorial-implement-multiple-iterations.md).

@@ -1,8 +1,8 @@
-# REPLACE:PROJECT_NAME — Product adjacency (phased modules)
+# REPLACE:PROJECT_NAME - Product adjacency (phased modules)
 
 **Doc:** foundation **03** · **Created:** YYYY-MM-DD
 
-**Purpose:** Optional product lanes beside the **core v1** slice — phasing, integration seams, explicit out-of-scope.
+**Purpose:** Optional product lanes beside the **core v1** slice - phasing, integration seams, explicit out-of-scope.
 
 **Related:** doc 01 scope · doc 02 integrations (if any).
 
@@ -11,7 +11,7 @@
 ## 1. Principle
 
 - **Core v1** delivers REPLACE:CORE_V1_VALUE.
-- Adjacent modules share **master data** and **published ports** — no cross-import of infrastructure layers.
+- Adjacent modules share **master data** and **published ports** - no cross-import of infrastructure layers.
 
 ---
 

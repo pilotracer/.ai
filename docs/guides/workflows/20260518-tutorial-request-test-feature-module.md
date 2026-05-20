@@ -1,4 +1,4 @@
-# Tutorial — request tests for a **feature / module / bounded context**
+# Tutorial - request tests for a **feature / module / bounded context**
 
 **Doc type:** Scoped test request (portable).  
 **Prerequisite:** Feature SPEC exists under `{FEATURE_SPEC_ROOT}` with **§12 Test plan** (or your template’s test section).
@@ -21,8 +21,8 @@ Use your **CONVENTIONS** doc as source of truth for paths.
 
 ## 2. Use the SPEC as contract
 
-1. Open feature SPEC **§4 Behavioural rules** — list R1… to cover.  
-2. Open **§12 Test plan** — add rows: `Rule` | `Test type` | `Fixture` | `Owner` | `Status`.  
+1. Open feature SPEC **§4 Behavioural rules** - list R1… to cover.  
+2. Open **§12 Test plan** - add rows: `Rule` | `Test type` | `Fixture` | `Owner` | `Status`.  
 3. If SPEC is **Approved** and must not be edited in place → create **`SPEC-amendment-NN.md`** adding only test-plan rows.
 
 ---
@@ -30,7 +30,7 @@ Use your **CONVENTIONS** doc as source of truth for paths.
 ## 3. Request to engineering (template)
 
 ```markdown
-## Test coverage request — <Feature name>
+## Test coverage request - <Feature name>
 
 **Bounded context / module:** <e.g. billing, identity>
 **Priority:** P0 | P1
@@ -46,8 +46,8 @@ Use your **CONVENTIONS** doc as source of truth for paths.
 
 ## 4. Tie to `{ITERATION_CARRIER}`
 
-- If implementation is **in flight** — append sub-tasks `M{n}-T{x}a` “Add tests for R…” per `code-implementation` migration-sub-task pattern (adapt for tests-only).  
-- Else — schedule in next **`@code-implementation plan`** milestone.
+- If implementation is **in flight** - append sub-tasks `M{n}-T{x}a` “Add tests for R…” per `code-implementation` migration-sub-task pattern (adapt for tests-only).  
+- Else - schedule in next **`@code-implementation plan`** milestone.
 
 ---
 
@@ -59,4 +59,4 @@ During `@code-verify milestone`, **SPEC rules** row should become **pass** only 
 
 ## 6. Feature without SPEC yet
 
-**Stop.** Write minimal SPEC or proposal first — testing requests without behaviour contract create garbage tests.
+**Stop.** Write minimal SPEC or proposal first - testing requests without behaviour contract create garbage tests.

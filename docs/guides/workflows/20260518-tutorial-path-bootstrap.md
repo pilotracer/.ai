@@ -1,4 +1,4 @@
-# Path bootstrap — fill placeholders once per clone
+# Path bootstrap - fill placeholders once per clone
 
 **Doc type:** Operational checklist.  
 **Portability:** The **left column** is generic. The **right column** is an **example fill-in** for one sample layout (multi-service backend + `.ai/` governance). Replace the right column in **your** canonical map (often `{AGENT_RULES_FILE}`).
@@ -22,7 +22,7 @@ After filling, every human and agent reads **one** table instead of hunting path
 | `{ITERATION_CARRIER}` | Active iteration / backlog file | `.work/plans/NEXT.md` |
 | `{MASTER_PLAN}` | Approved roadmap (milestones, FR/NFR) | `.work/plans/full/*-full-plan.md` (pick latest Approved) |
 | `{HANDOFF}` | Session / pick-up file | `.work/context/HANDOFF.md` |
-| `{BOUNDARY_MAP}` | Module / package boundary contract | *(author per* [Boundary map how-to](20260518-guide-boundary-map-howto.md)*)* — e.g. extend your directory map |
+| `{BOUNDARY_MAP}` | Module / package boundary contract | *(author per* [Boundary map how-to](20260518-guide-boundary-map-howto.md)*)* - e.g. extend your directory map |
 | `{OBSERVABILITY_SPEC}` | Logging, metrics, trace fields | e.g. `.ai/standards/*observability*.md` if present |
 | `{AGENT_RULES_FILE}` | Global agent rules | `.cursorrules` (do not add `AGENTS.md` without owner approval) |
 

@@ -1,8 +1,8 @@
-# REPLACE:FEATURE_NAME — Feature SPEC
+# REPLACE:FEATURE_NAME - Feature SPEC
 
 **Status:** Draft  
 **Owner:** REPLACE:OWNER_ROLE  
-**ADRs referenced:** REPLACE:ADR_LIST or —  
+**ADRs referenced:** REPLACE:ADR_LIST or -  
 **Related plans:** REPLACE:PLAN_LINKS
 
 ---
@@ -70,7 +70,7 @@ Domain errors → HTTP problem details (api-style-guide).
 
 ## 9. Observability
 
-Metrics, traces, log events — link `{OBSERVABILITY_SPEC}`.
+Metrics, traces, log events - link `{OBSERVABILITY_SPEC}`.
 
 ---
 

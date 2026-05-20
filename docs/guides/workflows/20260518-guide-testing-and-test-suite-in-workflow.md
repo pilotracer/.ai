@@ -1,7 +1,7 @@
-# Testing and test suite — role in the workflow
+# Testing and test suite - role in the workflow
 
 **Doc type:** Reference (portable) + **verification** that tests are first-class.  
-**Conclusion (evidence):** Yes — **unit, suite, lint, and type** are mandatory in the **`code-implementation`** task gate and **complete** protocol; **`code-verify milestone`** matrix includes **FR coverage** and **test coverage** rows. Feature **SPECs** require a **Test plan** section.
+**Conclusion (evidence):** Yes - **unit, suite, lint, and type** are mandatory in the **`code-implementation`** task gate and **complete** protocol; **`code-verify milestone`** matrix includes **FR coverage** and **test coverage** rows. Feature **SPECs** require a **Test plan** section.
 
 ---
 
@@ -9,13 +9,13 @@
 
 | Location | What it enforces |
 |----------|------------------|
-| `code-implementation` — **Valid iteration block** | Validation steps must include ≥1 **runnable** test command. |
-| `code-implementation` — **Task gate** | Per-task: context `pytest` (or equivalent), **full suite** smoke, lint, typecheck, secrets, protected files, scope. |
-| `code-verify` — **Milestone matrix** | “Every FR linked to milestone has ≥1 test?”; “Happy path + key error paths have tests?” |
-| `code-implementation` — **Complete protocol** | CO2 `@code-verify milestone` first; CO1 re-runs suite only if CO2 shared gates did not already pass on current tree. |
+| `code-implementation` - **Valid iteration block** | Validation steps must include ≥1 **runnable** test command. |
+| `code-implementation` - **Task gate** | Per-task: context `pytest` (or equivalent), **full suite** smoke, lint, typecheck, secrets, protected files, scope. |
+| `code-verify` - **Milestone matrix** | “Every FR linked to milestone has ≥1 test?”; “Happy path + key error paths have tests?” |
+| `code-implementation` - **Complete protocol** | CO2 `@code-verify milestone` first; CO1 re-runs suite only if CO2 shared gates did not already pass on current tree. |
 | `plan-master` (traceability rule) | Goal → requirement → **task → validation/test** → acceptance (stated in skill frontmatter). |
 
-Paths in skills may show `docker compose exec … pytest` — **swap** for your stack; the **structure** remains.
+Paths in skills may show `docker compose exec … pytest` - **swap** for your stack; the **structure** remains.
 
 ---
 
@@ -33,7 +33,7 @@ Paths in skills may show `docker compose exec … pytest` — **swap** for your 
 
 - **Task gate** optimizes **fast inner loop** (context tests + quick full suite).  
 - **CI** (when configured) should run the same commands as validation steps.  
-- **Sandbox / e2e** may be `-m 'not sandbox'` excluded locally — still must be documented.
+- **Sandbox / e2e** may be `-m 'not sandbox'` excluded locally - still must be documented.
 
 ---
 

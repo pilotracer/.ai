@@ -1,4 +1,4 @@
-# project-bootstrap — reference
+# project-bootstrap - reference
 
 ## Invocation examples
 

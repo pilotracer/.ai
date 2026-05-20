@@ -1,7 +1,7 @@
-# Tutorial — fix `{ITERATION_CARRIER}` (NEXT-style file)
+# Tutorial - fix `{ITERATION_CARRIER}` (NEXT-style file)
 
 **Doc type:** Corrective tutorial (portable).  
-**Skill:** `code-implementation` **plan** (regenerate) or **manual** edit — see valid-block criteria in `{SKILLS_ROOT}/code-implementation/skill.md`. *(Legacy alias of `plan`: `plan-iteration`.)*  
+**Skill:** `code-implementation` **plan** (regenerate) or **manual** edit - see valid-block criteria in `{SKILLS_ROOT}/code-implementation/skill.md`. *(Legacy alias of `plan`: `plan-iteration`.)*  
 **Related:** [Fix plans + full plan drift](20260518-tutorial-fix-existing-plans.md) (broader), [Generate new NEXT](20260518-tutorial-next-generate-new.md) (structure).
 
 Use this doc when **`{ITERATION_CARRIER}` is wrong or stale** but you already have an Approved `{MASTER_PLAN}`.
@@ -22,7 +22,7 @@ Use this doc when **`{ITERATION_CARRIER}` is wrong or stale** but you already ha
 ## 2. Safe fix order (avoid losing history)
 
 1. **Copy** the entire current `{ITERATION_CARRIER}` file to a scratch note (outside git or in `tmp/` per repo hygiene).  
-2. Fix **`{MASTER_PLAN}` first** if task ids or FR links are wrong — [broader tutorial](20260518-tutorial-fix-existing-plans.md).  
+2. Fix **`{MASTER_PLAN}` first** if task ids or FR links are wrong - [broader tutorial](20260518-tutorial-fix-existing-plans.md).  
 3. Either:  
    - **A)** Run `@code-implementation plan - M{N}` with the **correct** milestone (agent regenerates `## Current iteration` per skill), or  
    - **B)** Manually edit only inside `## Current iteration …` through `### Done this iteration` (do not delete `## Done` history rows).
@@ -31,7 +31,7 @@ Use this doc when **`{ITERATION_CARRIER}` is wrong or stale** but you already ha
 
 ## 3. Section-by-section repair checklist
 
-### 3.1 Header (`## Current iteration — M…`)
+### 3.1 Header (`## Current iteration - M…`)
 
 | Field | Fix if |
 |-------|--------|

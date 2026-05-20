@@ -72,7 +72,7 @@ Or: `@project-bootstrap init`
 
 Full list also appears in `cursorrules.template` § Placeholder quick map.
 
-**Git / session-control:** `cursorrules.template` and `.ai/.cursorrules` (if present) must include the mandatory `@session-control close commit` rule under § Git — keep both files aligned when editing either one.
+**Git / session-control:** `cursorrules.template` and `.ai/.cursorrules` (if present) must include the mandatory `@session-control close commit` rule under § Git - keep both files aligned when editing either one.
 
 Also customize **standards** under `.ai/standards/20260517-*.md` and set:
 

@@ -13,7 +13,7 @@ A **boundary map** is a human- and machine-readable table that answers:
 - Who **owns** each unit?  
 - Which **imports or calls are allowed** vs **forbidden** across units?
 
-It is **not** a copy of your entire directory tree — only **edges** that must not be crossed without review.
+It is **not** a copy of your entire directory tree - only **edges** that must not be crossed without review.
 
 ---
 
@@ -22,7 +22,7 @@ It is **not** a copy of your entire directory tree — only **edges** that must 
 1. List **candidate boundaries** (packages, apps, services, or layers your team treats as separate ownership).  
 2. For each pair `(A → B)`, mark **allowed**, **forbidden**, or **allowed with adapter** (port/hexagon).  
 3. Add an **owner** (team or role) per boundary.  
-4. Link to **enforcement**: CI import rules, ArchUnit, `ruff`/`eslint` boundaries, or `skip — manual review only` if not automated yet.  
+4. Link to **enforcement**: CI import rules, ArchUnit, `ruff`/`eslint` boundaries, or `skip - manual review only` if not automated yet.  
 5. Version the map (`**Updated:**` date); append rows instead of silent deletes.
 
 ---
@@ -30,7 +30,7 @@ It is **not** a copy of your entire directory tree — only **edges** that must 
 ## 3. Template (copy into `{BOUNDARY_MAP}`)
 
 ```markdown
-# Module boundary map — <Project>
+# Module boundary map - <Project>
 
 **Updated:** <YYYY-MM-DD>  
 **Status:** Draft | Active  

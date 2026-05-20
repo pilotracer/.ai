@@ -19,12 +19,12 @@ Produce a **production-grade, implementation-ready** development plan: architect
 **Hard rules:**
 
 - **Never** write application code, migrations, or docker changes unless the user explicitly requests implementation in the same message.
-- **Never** fabricate APIs, framework capabilities, infrastructure, or compliance rules — label **Unverified** and ask.
+- **Never** fabricate APIs, framework capabilities, infrastructure, or compliance rules - label **Unverified** and ask.
 - **Never** silently skip major ambiguities; record in Unknowns registry and ask or block the gate.
-- **Never** duplicate foundation content — **reference** existing ADRs, SPECs, foundation docs under `{PLANS_ROOT}/foundation/`; extend only where gaps exist.
+- **Never** duplicate foundation content - **reference** existing ADRs, SPECs, foundation docs under `{PLANS_ROOT}/foundation/`; extend only where gaps exist.
 - **Never** edit files marked **archived** or **do not edit** in HANDOFF.
 - **Never** paste secrets from `.env`, `credentials/`, or tokens into plans or chat.
-- Every mode ends with a **Completion checklist** — each item `pass` | `fail` | `skip` with evidence.
+- Every mode ends with a **Completion checklist** - each item `pass` | `fail` | `skip` with evidence.
 - **Traceability:** no major requirement without a chain: Business goal → Requirement → Architecture component → Execution task → Validation/test → Acceptance criterion.
 
 ---
@@ -38,17 +38,17 @@ Produce a **production-grade, implementation-ready** development plan: architect
 | `session-control` | Session bookends | Optional on start/close of planning sessions |
 | Feature SPECs | Per-feature **what** | Referenced by execution tasks; not replaced by plan-master |
 
-**Shared registries** (maintained by plan-foundation; extended by plan-master — do not duplicate):
+**Shared registries** (maintained by plan-foundation; extended by plan-master - do not duplicate):
 
 - `{PLANS_ROOT}/ASSUMPTIONS.md`
 - `{PLANS_ROOT}/RISK_REGISTRY.md`
 - `{PLANS_ROOT}/UNKNOWNS.md`
 
-If **plan-master-ready** is **no**, stop — run `@plan-foundation certify` first. plan-master **greenfield** requires plan-foundation certification (P0–P6 + integrity on foundation artifacts).
+If **plan-master-ready** is **no**, stop - run `@plan-foundation certify` first. plan-master **greenfield** requires plan-foundation certification (P0–P6 + integrity on foundation artifacts).
 
-**implementation-ready** is certified by **this skill** (status mode) after the master plan is **Approved** — do not conflate with **plan-master-ready** (plan-foundation certifies that).
+**implementation-ready** is certified by **this skill** (status mode) after the master plan is **Approved** - do not conflate with **plan-master-ready** (plan-foundation certifies that).
 
-**Registry:** Full matrix — [`.ai/skills/SKILL_DEPENDENCIES.md`](../SKILL_DEPENDENCIES.md).
+**Registry:** Full matrix - [`.ai/skills/SKILL_DEPENDENCIES.md`](../SKILL_DEPENDENCIES.md).
 
 ---
 
@@ -56,13 +56,13 @@ If **plan-master-ready** is **no**, stop — run `@plan-foundation certify` firs
 
 Run **before** **greenfield**, **continue**, or **revise** (not before **status**, **show** *(alias: `task`)*, or **integrity** when plan-foundation invoked integrity on foundation artifacts only).
 
-### PG1 — Plan-master-ready
+### PG1 - Plan-master-ready
 
 1. Read `{HANDOFF}` § Repository state (or gate snapshot) for `Plan-master-ready: <date>` **or** run `@plan-foundation status` and read **Plan-master-ready:** line.
 2. If **no** and user did not supply complete structured YAML with `foundation_docs:` **and** explicit same-message confirmation that foundation was completed out-of-band → **stop** with the [blocked-report shape](#blocked-report-shape):
 
 ```markdown
-## @plan-master <command> — blocked (prerequisite)
+## @plan-master <command> - blocked (prerequisite)
 
 **Required:** `plan-master-ready: yes` (from `@plan-foundation certify`)
 **Detected:** `plan-master-ready: no`
@@ -71,21 +71,21 @@ Run **before** **greenfield**, **continue**, or **revise** (not before **status*
 
 3. If **yes** → proceed to the mode protocol.
 
-**Anti-pattern:** Drafting or extending `*-full-plan.md` when PG1 fails. Do not use "waivers in Assumptions" to bypass plan-master-ready — only HANDOFF-documented **plan-master-ready** date or certify pass unlocks mutating plan-master modes.
+**Anti-pattern:** Drafting or extending `*-full-plan.md` when PG1 fails. Do not use "waivers in Assumptions" to bypass plan-master-ready - only HANDOFF-documented **plan-master-ready** date or certify pass unlocks mutating plan-master modes.
 
 ### Blocked-report shape
 
 Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blocked-report-shape):
 
 ```markdown
-## @plan-master <command> — blocked (prerequisite)
+## @plan-master <command> - blocked (prerequisite)
 
 **Required:** <state or upstream step>
 **Detected:** <what's actually present>
 **Run first:** `<exact command to fix>`
 ```
 
-### PG2 — Mode-specific (after PG1 passes)
+### PG2 - Mode-specific (after PG1 passes)
 
 | Mode | Additional check |
 |------|------------------|
@@ -93,7 +93,7 @@ Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blo
 | **continue** | Latest `*-full-plan.md` exists (Draft or partial) |
 | **revise** | Latest `*-full-plan.md` exists |
 | **integrity** | Foundation artifacts and/or master plan exist for the requested scope |
-| **status** / **show** | — (read-only; PG1 not required) |
+| **status** / **show** | - (read-only; PG1 not required) |
 
 ---
 
@@ -106,30 +106,30 @@ Normalize the user message to **verb** + optional **modifiers** + optional **goa
 | `@plan-master` **status** | status | Read-only: plan exists? phase progress? integrity snapshot |
 | `plan-master` **continue** | continue | Resume next incomplete planning phase |
 | `plan-master` **greenfield** | greenfield | New plan from YAML/minimal input |
-| `plan-master` **integrity** | integrity | Phase 5 only — contradiction and fitness review |
+| `plan-master` **integrity** | integrity | Phase 5 only - contradiction and fitness review |
 | `plan-master` **revise** - \<reason\> | revise | Update existing plan; bump version note in plan header |
-| `plan-master greenfield` — startup \| enterprise \| ai-native \| ultra-scale | greenfield | Apply [Advanced mode](#advanced-modes) |
+| `plan-master greenfield` - startup \| enterprise \| ai-native \| ultra-scale | greenfield | Apply [Advanced mode](#advanced-modes) |
 | `plan-master` **show** M1-T3 | show | Read-only: full record for one task (description, files, FR/NFR, status) |
 | `plan-master` **show** M2 | show | Read-only: full task table for milestone M2 |
 
 **Aliases:**
 - `master plan`, `implementation roadmap`, `build roadmap`, `whole system plan` → **continue** if plan file exists, else **greenfield**.
-- **`task`** is the legacy alias of **`show`** — both work (`@plan-master task M1-T3` ≡ `@plan-master show M1-T3`).
+- **`task`** is the legacy alias of **`show`** - both work (`@plan-master task M1-T3` ≡ `@plan-master show M1-T3`).
 
 **Goal text:** anything after `-` (not mode keywords).
 
 ---
 
-## Step 0 — Pick a mode
+## Step 0 - Pick a mode
 
 | Mode | Action |
 |------|--------|
 | **status** | [Status protocol](#status-protocol) |
 | **continue** | [Continue protocol](#continue-protocol) |
 | **greenfield** | [Greenfield protocol](#greenfield-protocol) |
-| **integrity** | [Phase 5 — Verification](#phase-5--verification--integrity-validation) report only. Can be invoked standalone (`@plan-master integrity`) or from `plan-foundation` continue P3+/P6. |
+| **integrity** | [Phase 5 - Verification](#phase-5--verification--integrity-validation) report only. Can be invoked standalone (`@plan-master integrity`) or from `plan-foundation` continue P3+/P6. |
 | **revise** | Read existing plan → apply delta → re-run Phase 5 subset |
-| **show** *(alias: `task`)* | [Show protocol](#show-protocol) — read-only; show task record(s) by `M{N}-T{N}` or milestone |
+| **show** *(alias: `task`)* | [Show protocol](#show-protocol) - read-only; show task record(s) by `M{N}-T{N}` or milestone |
 
 Do not run greenfield questionnaires when the user asked for **status**, **integrity**, or **show** only.
 
@@ -182,7 +182,7 @@ Execute in order. At **each phase gate**, run [Continuous integrity rules](#cont
 
 ---
 
-### Phase 0 — Foundation discovery
+### Phase 0 - Foundation discovery
 
 **Objective:** Understand the project before proposing architecture.
 
@@ -192,7 +192,7 @@ Execute in order. At **each phase gate**, run [Continuous integrity rules](#cont
 |---|------|
 | 1 | `{HANDOFF}` |
 | 2 | `{ITERATION_CARRIER}` |
-| 3 | `{PLANS_ROOT}/foundation/*-01-*-initial-scope.md` — **read if present; skip if absent** (do **not** read `{PROMPTS_ROOT}/initial.md` unless user explicitly names it) |
+| 3 | `{PLANS_ROOT}/foundation/*-01-*-initial-scope.md` - **read if present; skip if absent** (do **not** read `{PROMPTS_ROOT}/initial.md` unless user explicitly names it) |
 | 4 | `{PLANS_ROOT}/foundation/YYYYMMDD-01-*-scope*.md` |
 | 5 | `{PLANS_ROOT}/foundation/YYYYMMDD-04-foundation-arch*.md` |
 | 6 | `REPLACE:TECH_STACK_DOC` (stack doc) |
@@ -221,7 +221,7 @@ Execute in order. At **each phase gate**, run [Continuous integrity rules](#cont
 
 ---
 
-### Phase 1 — High-level strategic plan
+### Phase 1 - High-level strategic plan
 
 **Objective:** Macro direction aligned with business goals.
 
@@ -245,7 +245,7 @@ Execute in order. At **each phase gate**, run [Continuous integrity rules](#cont
 
 ---
 
-### Phase 2 — Architecture design
+### Phase 2 - Architecture design
 
 **Objective:** Professional-grade architecture consistent with foundation architecture doc and ADRs.
 
@@ -262,11 +262,11 @@ Execute in order. At **each phase gate**, run [Continuous integrity rules](#cont
 
 **Must identify:** bottlenecks, SPOFs, scaling risks, maintenance risks, operational complexity.
 
-**Gate P2:** Architecture fitness check — aligned with directory map; no forbidden cross-context imports.
+**Gate P2:** Architecture fitness check - aligned with directory map; no forbidden cross-context imports.
 
 ---
 
-### Phase 3 — UX/UI planning
+### Phase 3 - UX/UI planning
 
 **Objective:** Implementation-oriented UX guidance.
 
@@ -283,7 +283,7 @@ Execute in order. At **each phase gate**, run [Continuous integrity rules](#cont
 
 ---
 
-### Phase 4 — Incremental execution planning
+### Phase 4 - Incremental execution planning
 
 **Objective:** Convert architecture into executable phases/milestones.
 
@@ -308,7 +308,7 @@ Execute in order. At **each phase gate**, run [Continuous integrity rules](#cont
 Every task in the master plan uses the globally unique ID **`M{N}-T{N}`** (e.g. `M1-T3`). This ID is the stable reference for developer queries, PM tracking, traceability rows, and `code-implementation` execution.
 
 ```markdown
-### Tasks — M{N}: {milestone name}
+### Tasks - M{N}: {milestone name}
 
 | ID | Description | Files | FR/NFR | Complexity | Status |
 |----|-------------|-------|--------|------------|--------|
@@ -332,7 +332,7 @@ Every task in the master plan uses the globally unique ID **`M{N}-T{N}`** (e.g. 
 
 ---
 
-### Phase 5 — Verification and integrity validation
+### Phase 5 - Verification and integrity validation
 
 **Objective:** Detect flaws before implementation at scale.
 
@@ -355,7 +355,7 @@ Every task in the master plan uses the globally unique ID **`M{N}-T{N}`** (e.g. 
 
 ---
 
-### Phase 6 — AI-agent execution optimization
+### Phase 6 - AI-agent execution optimization
 
 **Objective:** Make the plan safe for autonomous/semi-autonomous agents.
 
@@ -410,7 +410,7 @@ Plus appendices: **Decision log**, **Traceability matrix**, **Registries** (assu
 **Header metadata (required):**
 
 ```markdown
-# <Project> — Full implementation plan
+# <Project> - Full implementation plan
 
 **Status:** Draft | Under review | Approved | Superseded
 **Version:** 1.0
@@ -487,22 +487,22 @@ Answer **implementation-ready: yes** only when **all** are true:
 4. Global acceptance criteria and validation gates (plan §20–21) reviewed.
 5. No owner blockers in HANDOFF/NEXT that gate **broad** multi-milestone execution (project may document M1-only waivers).
 
-If master plan **missing** → **implementation-ready: no** — run **greenfield**. If **Draft** → **no** until Approved.
+If master plan **missing** → **implementation-ready: no** - run **greenfield**. If **Draft** → **no** until Approved.
 
 **Not the same as:** M1 platform skeleton when foundation certified plan-master-ready and NEXT recommends it.
 
 ### Status report format
 
 ```markdown
-## Plan-master status — <Project>
+## Plan-master status - <Project>
 
 **As of:** <date> · **Mode:** status (read-only)
 
 ### Summary
-- **Plan-master-ready (foundation):** yes | no — from HANDOFF; if no, stop
+- **Plan-master-ready (foundation):** yes | no - from HANDOFF; if no, stop
 - **Plan artifact:** <path or none>
 - **Plan status:** Draft | Approved | …
-- **Implementation-ready:** yes | no — **scored here only**
+- **Implementation-ready:** yes | no - **scored here only**
 - **Integrity (last run):** pass | fail | not run
 - **Recommended next:** <approve plan | continue plan | begin M1 per roadmap>
 
@@ -609,9 +609,9 @@ Read-only. No writes to plan or HANDOFF.
 5. Output:
 
 ```markdown
-## plan-master show — {M{N}-T{N} | M{N} all tasks}
+## plan-master show - {M{N}-T{N} | M{N} all tasks}
 
-**Plan:** {path} · **Milestone:** M{N} — {name}
+**Plan:** {path} · **Milestone:** M{N} - {name}
 
 | ID | Description | Files | FR/NFR | Complexity | Status |
 |----|-------------|-------|--------|------------|--------|

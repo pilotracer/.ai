@@ -1,4 +1,4 @@
-# db-migration — reference
+# db-migration - reference
 
 Supplement to `skill.md`. Invocation examples, SQL templates, and edge cases.
 
@@ -46,7 +46,7 @@ Follow .ai/skills/db-migration/skill.md - verify.
 | Read-only | no | no | no | no | yes | no |
 | Update config files | yes | no | no | no | no | no |
 | Remove Alembic | yes | no | no | no | no | no |
-| Check idempotency | — | yes (static) | yes (static) | yes (re-run) | spot-check | yes (full) |
+| Check idempotency | - | yes (static) | yes (static) | yes (re-run) | spot-check | yes (full) |
 | Output report | yes | yes | yes | yes | yes | yes |
 
 ---
@@ -214,12 +214,12 @@ async def run_migrations(engine: AsyncEngine) -> None:
 
 | Situation | Behavior |
 |-----------|----------|
-| Gap in numbering (001, 003 — no 002) | Runner executes 001 then 003. Acceptable if 002 was intentionally removed or merged. |
-| Script was run manually before the runner existed | Script is idempotent — re-running is harmless. |
+| Gap in numbering (001, 003 - no 002) | Runner executes 001 then 003. Acceptable if 002 was intentionally removed or merged. |
+| Script was run manually before the runner existed | Script is idempotent - re-running is harmless. |
 | Script fails on second run (not truly idempotent) | Verify mode catches this. Fix the script; never skip. |
 | New script added between environments | Runner picks it up on next restart. No version conflict because no version table. |
 | Production schema drifts from scripts | The scripts are the source of truth. Fix the script to match reality or fix reality to match the script. |
-| Need to roll back a change | Scripts don't support rollback. Write a new script that reverses the change (e.g., `DROP COLUMN IF EXISTS` — with caution). |
+| Need to roll back a change | Scripts don't support rollback. Write a new script that reverses the change (e.g., `DROP COLUMN IF EXISTS` - with caution). |
 | Multi-tenant schema-per-tenant | Runner iterates tenants: `for tenant in tenants: SET search_path TO tenant_{slug}; execute scripts;` |
 | Concurrent startups (multiple pods) | Use an advisory lock: `SELECT pg_try_advisory_lock(12345)` at the start of the runner. Only one pod runs migrations. |
 
@@ -230,9 +230,9 @@ async def run_migrations(engine: AsyncEngine) -> None:
 | Prompt | Problem | Use instead |
 |--------|---------|-------------|
 | `@db-migration create - drop users table` | Destructive; not idempotent-safe | Write a script that soft-deprecates (rename, add `active=false`) or use `DROP TABLE IF EXISTS` with extreme caution |
-| `@db-migration run - only script 003` | Skips ordering contract | Run all scripts — they're idempotent, so re-running is safe |
+| `@db-migration run - only script 003` | Skips ordering contract | Run all scripts - they're idempotent, so re-running is safe |
 | `@db-migration create` without describing what | Ambiguous | Describe the change: `create - add items table with cabys_code` |
-| `alembic upgrade head` | Wrong tool | Use `@db-migration run` — Alembic has been removed from this project |
+| `alembic upgrade head` | Wrong tool | Use `@db-migration run` - Alembic has been removed from this project |
 
 ---
 
@@ -243,7 +243,7 @@ async def run_migrations(engine: AsyncEngine) -> None:
 ├── skill.md          ← canonical workflow
 └── reference.md      ← this file
 
-(Project migrations — not in .ai/)
+(Project migrations - not in .ai/)
 REPLACE:MIGRATIONS_DIR/
 ├── 001_init.sql
 ├── 002_*.sql
@@ -256,7 +256,7 @@ REPLACE:MIGRATIONS_DIR/
 
 Moved from `skill.md` § I5 to keep the protocol lean. Adapt to the framework in your stack doc.
 
-### FastAPI ≥ 0.93 (lifespan — preferred)
+### FastAPI ≥ 0.93 (lifespan - preferred)
 
 ```python
 from contextlib import asynccontextmanager
@@ -272,7 +272,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 ```
 
-### FastAPI < 0.93 (deprecated `on_event` — avoid on new projects)
+### FastAPI < 0.93 (deprecated `on_event` - avoid on new projects)
 
 ```python
 @app.on_event("startup")

@@ -11,7 +11,7 @@ description: >-
 
 One-time (or reset) setup for repositories using Agent OS. **Does not** replace `plan-foundation greenfield` (foundation docs 01–04) or `plan-master greenfield` (master plan).
 
-**Downstream (after init):** See [`.ai/skills/SKILL_DEPENDENCIES.md`](../SKILL_DEPENDENCIES.md) — `plan-foundation` → certify → `plan-master` → `code-implementation`.
+**Downstream (after init):** See [`.ai/skills/SKILL_DEPENDENCIES.md`](../SKILL_DEPENDENCIES.md) - `plan-foundation` → certify → `plan-master` → `code-implementation`.
 
 **Canonical path:** `.ai/skills/project-bootstrap/skill.md`  
 **Templates:** `.ai/templates/` · **Shell:** `.ai/templates/bootstrap.sh`
@@ -32,26 +32,26 @@ One-time (or reset) setup for repositories using Agent OS. **Does not** replace 
 
 ## Init protocol
 
-### B0 — Brownfield detection (mandatory before any write)
+### B0 - Brownfield detection (mandatory before any write)
 
 Before copying anything, inventory existing artifacts and decide what to do:
 
 | Path | If exists |
 |------|-----------|
-| `.cursorrules` (at repo root) | Mark as **existing — protected** |
-| `.work/context/HANDOFF.md` | Mark as **existing — populated** |
-| `.work/plans/NEXT.md` | Mark as **existing — populated** |
-| `.work/plans/ASSUMPTIONS.md`, `RISK_REGISTRY.md`, `UNKNOWNS.md` | Mark as **existing — populated** |
-| `REPLACE:TECH_STACK_DOC` (stack doc) | Mark as **existing — protected** |
-| `.work/features/`, `.work/plans/foundation/`, `.work/plans/full/` (any contents) | Mark as **existing — populated** |
+| `.cursorrules` (at repo root) | Mark as **existing - protected** |
+| `.work/context/HANDOFF.md` | Mark as **existing - populated** |
+| `.work/plans/NEXT.md` | Mark as **existing - populated** |
+| `.work/plans/ASSUMPTIONS.md`, `RISK_REGISTRY.md`, `UNKNOWNS.md` | Mark as **existing - populated** |
+| `REPLACE:TECH_STACK_DOC` (stack doc) | Mark as **existing - protected** |
+| `.work/features/`, `.work/plans/foundation/`, `.work/plans/full/` (any contents) | Mark as **existing - populated** |
 
 If **any** of the above are marked:
 
-1. **Stop** — do not write.
+1. **Stop** - do not write.
 2. Emit the brownfield summary:
 
 ```markdown
-## @project-bootstrap init — brownfield detected
+## @project-bootstrap init - brownfield detected
 
 The repository is already partially bootstrapped. Choose how to proceed:
 
@@ -60,27 +60,27 @@ The repository is already partially bootstrapped. Choose how to proceed:
 | {list every detected file or folder}    | … | overwrite / keep / abort |
 
 ### Choose one (reply in the same message)
-- **`overwrite-all`** — replace every existing file with the template (destroys current content)
-- **`overwrite-missing`** — copy only files that are missing; never touch existing
-- **`keep`** — run `@project-bootstrap status` instead (read-only) and exit init
-- **`abort`** — exit silently
+- **`overwrite-all`** - replace every existing file with the template (destroys current content)
+- **`overwrite-missing`** - copy only files that are missing; never touch existing
+- **`keep`** - run `@project-bootstrap status` instead (read-only) and exit init
+- **`abort`** - exit silently
 ```
 
 3. On **`overwrite-missing`** (default safest): proceed to step B1 below, copying only files that don't exist.
 4. On **`overwrite-all`**: require an extra `confirm-overwrite-all` token in the same message; otherwise treat as `abort`.
 5. On **`keep`** / **`abort`**: exit; do not write.
 
-### B1 — Copy templates (only after B0 resolved)
+### B1 - Copy templates (only after B0 resolved)
 
-1. **Confirm repo root** — directory containing `.ai/` (or this tree when `.ai` is the git root).
+1. **Confirm repo root** - directory containing `.ai/` (or this tree when `.ai` is the git root).
 2. **Run** (preferred):
    ```bash
    bash .ai/templates/bootstrap.sh
    ```
-   Or copy manually from `.ai/templates/work/*.template` → `.work/` (strip `.template` suffix). Honor the B0 choice — `overwrite-missing` skips existing paths; `overwrite-all` replaces them.
-3. **`.cursorrules`** — if created from template, list every line containing `REPLACE:` and stop until user fills them (or use `status` output).
-4. **Standards** — remind user to customize `.ai/standards/20260517-*.md` and point `.cursorrules` `REPLACE:*_FILE` tokens at dated filenames.
-5. **Integration** — if external APIs: add `.ai/docs/integration/MANIFEST.txt` from `MANIFEST.template.txt`.
+   Or copy manually from `.ai/templates/work/*.template` → `.work/` (strip `.template` suffix). Honor the B0 choice - `overwrite-missing` skips existing paths; `overwrite-all` replaces them.
+3. **`.cursorrules`** - if created from template, list every line containing `REPLACE:` and stop until user fills them (or use `status` output).
+4. **Standards** - remind user to customize `.ai/standards/20260517-*.md` and point `.cursorrules` `REPLACE:*_FILE` tokens at dated filenames.
+5. **Integration** - if external APIs: add `.ai/docs/integration/MANIFEST.txt` from `MANIFEST.template.txt`.
 6. **Next commands** (report in output):
    ```
    @plan-foundation greenfield
@@ -129,4 +129,4 @@ Report:
 
 - **Never overwrite** existing `.work/` or `.cursorrules` without explicit user permission.
 - **Never commit** secrets; templates contain no credentials.
-- **Do not** mark foundation or implementation-ready — other skills own those gates.
+- **Do not** mark foundation or implementation-ready - other skills own those gates.

@@ -1,9 +1,9 @@
-# End-to-end workflow — concepts, feature-centric delivery, skills, and agents
+# End-to-end workflow - concepts, feature-centric delivery, skills, and agents
 
 **Doc type:** Workflow guide (portable template).  
 **Use:** Define how **feature work**, **architecture/NFR concepts**, **orchestration skills**, and **tooling agents** fit together in a repository. Copy to another project and fill the placeholders below first.
 
-**Sibling guides:** [Workflow guides — artifact matrix](README.md) · [Workflows index — curriculum + principles](20260518-guide-workflows-index.md) (path bootstrap, tutorials, reference guides).
+**Sibling guides:** [Workflow guides - artifact matrix](README.md) · [Workflows index - curriculum + principles](20260518-guide-workflows-index.md) (path bootstrap, tutorials, reference guides).
 
 ---
 
@@ -35,10 +35,10 @@ For a **copy-paste table** plus invocation sentence, use [Path bootstrap](202605
 
 This guide describes a **project-agnostic** way to combine:
 
-- **Feature-centric delivery** — what the product/domain requires.  
-- **Concept packs** — reusable NFR/architecture procedures (coupling, latency, cost, ops load, modularity, AI blast radius, etc.).  
-- **Skills** — repeatable orchestration (who reads/writes which canonical files, completion gates).  
-- **Agents** — executors that follow a **single primary contract** (one skill or one prompt + links).
+- **Feature-centric delivery** - what the product/domain requires.  
+- **Concept packs** - reusable NFR/architecture procedures (coupling, latency, cost, ops load, modularity, AI blast radius, etc.).  
+- **Skills** - repeatable orchestration (who reads/writes which canonical files, completion gates).  
+- **Agents** - executors that follow a **single primary contract** (one skill or one prompt + links).
 
 It deliberately does **not** require a specific stack, monorepo layout, or vendor tool.
 
@@ -70,7 +70,7 @@ It deliberately does **not** require a specific stack, monorepo layout, or vendo
 
 **C. Implementation iteration**  
 - A **skill** (under `{SKILLS_ROOT}`) defines the iteration: load spec → tasks → per-task gates (tests/lint/type as **your** repo defines).  
-- For AI-heavy or high-blast-radius tasks, run the **AI/coupling** concept prompts from the pack and attach results to the PR or `{ITERATION_CARRIER}` — keep procedures in **concepts** until you **promote** stable checks into the skill body.
+- For AI-heavy or high-blast-radius tasks, run the **AI/coupling** concept prompts from the pack and attach results to the PR or `{ITERATION_CARRIER}` - keep procedures in **concepts** until you **promote** stable checks into the skill body.
 
 **D. Verification / merge**  
 - Skill **`@code-verify milestone`** (or equivalent): implementation vs feature spec **plus** rerun applicable concept procedures from the registry.  
@@ -101,7 +101,7 @@ Do **not** leave placeholders only inside this guide. After you decide paths:
 
 1. Complete [Path bootstrap](20260518-tutorial-path-bootstrap.md).  
 2. Paste the filled table + invocation contract into `{AGENT_RULES_FILE}` (and optionally one line in `{SESSION_HANDOFF_FILE}` Fresh start).  
-3. Follow [Tutorial — full workflow](20260518-tutorial-full-workflow.md) once as a dry run.
+3. Follow [Tutorial - full workflow](20260518-tutorial-full-workflow.md) once as a dry run.
 
 The **workflow** in sections 2–4 stays stable; only the **registry** changes per project.
 

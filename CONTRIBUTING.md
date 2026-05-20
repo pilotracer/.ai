@@ -1,6 +1,6 @@
 # Contributing to Agent OS
 
-Thanks for considering a contribution. Agent OS is a **portable process framework** — almost everything is Markdown.
+Thanks for considering a contribution. Agent OS is a **portable process framework** - almost everything is Markdown.
 
 ## Scope of contributions
 
@@ -28,7 +28,7 @@ CI runs the same checks on push/PR (`.github/workflows/framework-verify.yml`).
 ## Quick checklist before opening a PR
 
 1. **Read** [`.cursorrules`](.cursorrules) § Core Principles (truth-first, evidence-first, completion gate).
-2. **Run** `bash scripts/framework-verify.sh` — all checks must pass.
+2. **Run** `bash scripts/framework-verify.sh` - all checks must pass.
 3. **Follow naming protocol** for new skills: `{domain}-{role}` kebab-case ([`skills/README.md`](skills/README.md) § Naming protocol).
 4. **Update cross-links** when renaming: `.cursorrules`, `skills/README.md`, `skills/SKILL_DEPENDENCIES.md`, `process-router/reference.md`, README "Skills at a glance".
 5. **Verify links:** no references to deleted paths (e.g. removed `docs/integration/*` vendor artifacts).
@@ -39,8 +39,8 @@ CI runs the same checks on push/PR (`.github/workflows/framework-verify.yml`).
 
 ```text
 skills/<skill-id>/
-├── skill.md       # required — YAML frontmatter + protocol
-└── reference.md   # optional — extended examples
+├── skill.md       # required - YAML frontmatter + protocol
+└── reference.md   # optional - extended examples
 ```
 
 Register the skill in:

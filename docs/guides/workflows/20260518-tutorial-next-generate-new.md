@@ -1,8 +1,8 @@
-# Tutorial — generate a new `{ITERATION_CARRIER}` (or first `## Current iteration`)
+# Tutorial - generate a new `{ITERATION_CARRIER}` (or first `## Current iteration`)
 
 **Doc type:** Authoring tutorial (portable).  
 **Prerequisites:** Approved `{MASTER_PLAN}` (or documented waiver in `{HANDOFF}`).  
-**Skill:** `@code-implementation plan - M{N}` (preferred) — reads milestone from plan and writes the block into `{ITERATION_CARRIER}`.   *(Legacy alias: `plan-iteration - M{N}`.)*
+**Skill:** `@code-implementation plan - M{N}` (preferred) - reads milestone from plan and writes the block into `{ITERATION_CARRIER}`.   *(Legacy alias: `plan-iteration - M{N}`.)*
 
 ---
 
@@ -11,7 +11,7 @@
 `{ITERATION_CARRIER}` (often `NEXT.md`) is **not** the full roadmap. It holds:
 
 - **Backlog / Done / Recommended next** (tactical queue).  
-- **Exactly one** active `## Current iteration — M{N}: …` block — the **sub-plan** for the current milestone.
+- **Exactly one** active `## Current iteration - M{N}: …` block - the **sub-plan** for the current milestone.
 
 The **master plan** owns M1…Mn **definitions**; the carrier owns **now**.
 
@@ -26,7 +26,7 @@ The **master plan** owns M1…Mn **definitions**; the carrier owns **now**.
    - `## Recommended next` (one row: run plan-foundation / plan-master / `@code-implementation plan` as appropriate).  
 2. Do **not** write `## Current iteration` by hand until the master plan exists and is Approved.  
 3. Run **`@code-implementation plan - M1`** (or first milestone).  
-4. Skill inserts the iteration block **after** `## Recommended next` (per `code-implementation` skill — confirm order in your skill if forked).
+4. Skill inserts the iteration block **after** `## Recommended next` (per `code-implementation` skill - confirm order in your skill if forked).
 
 ---
 
@@ -39,13 +39,13 @@ An iteration block is **valid** when **all** are true (mirror of `code-implement
 3. At least one **task row** with at least one **file path** (or `TBD` + owner blocker).  
 4. **Acceptance criteria** with at least one item.  
 5. **Validation steps** include at least one **runnable** test command (adapt to your stack: Docker, `npm test`, etc.).  
-6. **Concept / NFR registry** subsection present (or explicit `N/A — no pack` if your process allows).
+6. **Concept / NFR registry** subsection present (or explicit `N/A - no pack` if your process allows).
 
 ---
 
 ## 4. After `plan` (legacy `plan-iteration`) completes
 
-1. Read the generated block as a human — fix typos only; do not renumber task ids.  
+1. Read the generated block as a human - fix typos only; do not renumber task ids.  
 2. Set first task to `pending`, others `pending`, none `done` yet.  
 3. Update `## Recommended next` top row to **`@code-implementation start`** (or your verb).  
 4. Commit or session-close per team habit.

@@ -26,7 +26,7 @@ Gates, artifacts, and readiness states: [`README.md`](../../README.md) · [`skil
 
 ## Lite path (existing repo, fast start)
 
-**Goal:** `.cursorrules` + `.work/` session files + daily bookends — **without** waiting for foundation 01–04 or an approved master plan.
+**Goal:** `.cursorrules` + `.work/` session files + daily bookends - **without** waiting for foundation 01–04 or an approved master plan.
 
 | Step | Action |
 |------|--------|
@@ -57,7 +57,7 @@ Gates, artifacts, and readiness states: [`README.md`](../../README.md) · [`skil
 - You need FR/NFR traceability and milestone **M1…M9** from a single approved plan
 - `@code-implementation` blocks repeatedly on **implementation-ready**
 
-Run `@plan-foundation greenfield` then `@plan-master greenfield` when ready; keep existing `.work/` files — skills merge/update rather than replace blindly.
+Run `@plan-foundation greenfield` then `@plan-master greenfield` when ready; keep existing `.work/` files - skills merge/update rather than replace blindly.
 
 ---
 

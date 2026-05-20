@@ -11,7 +11,7 @@ description: >-
 
 # code-implementation
 
-Execute implementation iterations derived from an **Approved master plan** (`{PLANS_ROOT}/full/YYYYMMDD-full-plan.md`). Each iteration is scoped by a `## Current iteration` block in `NEXT.md` — validated before the first line of code, gated per task on tests/lint, and cross-verified before completion.
+Execute implementation iterations derived from an **Approved master plan** (`{PLANS_ROOT}/full/YYYYMMDD-full-plan.md`). Each iteration is scoped by a `## Current iteration` block in `NEXT.md` - validated before the first line of code, gated per task on tests/lint, and cross-verified before completion.
 
 **Tool-agnostic** (Cursor, Claude Code, opencode, Codex). **Requires:** `implementation-ready: yes` from `@plan-master status`, or an explicit HANDOFF waiver noting which milestones may proceed early.
 
@@ -29,12 +29,12 @@ Execute implementation iterations derived from an **Approved master plan** (`{PL
 - **Scope discipline.** Do not modify any file not declared in the task's file list. Undo and document any accidental out-of-scope change.
 - **Schema changes go through `db-migration`.** Stop the task, create the migration script, resume. No inline DDL in application code.
 - **Verification commands** come from `{AGENT_RULES_FILE}` § Docker (or § local/CI from `REPLACE:TECH_STACK_DOC` when not containerized). Never hardcode another project's service name, workdir, or toolchain.
-- **Protected files** per `{AGENT_RULES_FILE}` §Protected Files — require explicit user permission before modification. Stop and ask.
+- **Protected files** per `{AGENT_RULES_FILE}` §Protected Files - require explicit user permission before modification. Stop and ask.
 - **No secrets in code, tests, or comments.** Use `.env` variables or KMS references.
 - **Completion Gate is non-negotiable.** Per `.cursorrules`: code changed → checks run → output reviewed → residual risks listed. Cannot be skipped.
 - **AI-assisted default:** Cursor/agent sessions are **AI-assisted: yes** for MOD-06 unless the human explicitly declares **`human-only`** in the same message. Agents must not skip MOD-06 by self-classifying.
 - **MOD-06 before complete:** `@concept-run - MOD-06` (or documented output path) is **required** before `@code-implementation complete` when any task in the iteration touched application source or tests (per DIRECTORY_MAP).
-- **Every mode ends with a Completion checklist** — each item `pass` | `fail` | `skip` with evidence.
+- **Every mode ends with a Completion checklist** - each item `pass` | `fail` | `skip` with evidence.
 
 ---
 
@@ -49,21 +49,21 @@ Normalize the user message to **verb** + optional **target**.
 | `code-implementation` **start** | start | Load iteration block, read SPECs/CONVENTIONS, begin first task |
 | `code-implementation` **continue** | continue | Resume: find first incomplete task, implement, gate, advance |
 | `code-implementation` **complete** | complete | Finalize iteration: CO2 `@code-verify milestone` + CO1 gates + update HANDOFF/NEXT |
-| `code-implementation` **verify** [uncommitted \| last] | — | **Legacy** — use `@code-verify` (see `code-verify` skill) |
+| `code-implementation` **verify** [uncommitted \| last] | - | **Legacy** - use `@code-verify` (see `code-verify` skill) |
 | `code-implementation` **task** T3 | task | Execute a single task by shorthand ID (active iteration context) |
 | `code-implementation` **task** M1-T3 | task | Execute a single task by globally unique ID; gate immediately |
 
-**Aliases:** `impl`, `code`, `implement` → map to **continue** if iteration block exists, else **start**. **`plan-iteration`** is the legacy alias of **`plan`** — both work.
+**Aliases:** `impl`, `code`, `implement` → map to **continue** if iteration block exists, else **start**. **`plan-iteration`** is the legacy alias of **`plan`** - both work.
 
 **Ambiguous:** if `NEXT.md` has an iteration block but status is unknown → run abbreviated **status** and ask once.
 
 ---
 
-## Step 0 — Pick a mode
+## Step 0 - Pick a mode
 
 | Mode | Condition | Action |
 |------|-----------|--------|
-| **status** | progress/matrix/snapshot requested | [Status protocol](#status-protocol) — read-only |
+| **status** | progress/matrix/snapshot requested | [Status protocol](#status-protocol) - read-only |
 | **plan** *(alias: `plan-iteration`)* | iteration block missing or invalid; user names a milestone | [Plan protocol](#plan-protocol) |
 | **start** | valid iteration block exists; no task started | [Start protocol](#start-protocol) |
 | **continue** | iteration in-progress; tasks pending or one in-progress | [Continue protocol](#continue-protocol) |
@@ -81,14 +81,14 @@ Do not run `plan` when the user asked for **status** only. For any **verify** re
 The `## Current iteration` section is owned by this skill. `session-control` and `plan-foundation` manage other sections; do not delete or rewrite theirs.
 
 ```markdown
-## Current iteration — M{N}: {milestone name}
+## Current iteration - M{N}: {milestone name}
 
 **Milestone ref:** M{N} · `{PLANS_ROOT}/full/YYYYMMDD-full-plan.md §19`
 **Status:** planning | in-progress | blocked | complete
 **Started:** YYYY-MM-DD · **Target:** YYYY-MM-DD (optional)
 
 ### In scope
-- {explicit list — derived from milestone §Scope in plan-master}
+- {explicit list - derived from milestone §Scope in plan-master}
 
 ### Out of scope (explicit)
 - {anything callers might assume is in scope but is not}
@@ -104,13 +104,13 @@ The `## Current iteration` section is owned by this skill. `session-control` and
 - [ ] …
 
 ### Validation steps
-- [ ] Tests: `{AGENT_RULES_FILE}` § Docker — `REPLACE:TEST_COMMAND` (containerized or local per project)
+- [ ] Tests: `{AGENT_RULES_FILE}` § Docker - `REPLACE:TEST_COMMAND` (containerized or local per project)
 - [ ] Lint: `REPLACE:LINT_COMMAND`
 - [ ] Type: `REPLACE:TYPECHECK_COMMAND` (strictness per CONVENTIONS)
 - [ ] Manual: …
 
 ### Owner blockers
-- {none | list — each with owner and blocks (task ID or ADR)}
+- {none | list - each with owner and blocks (task ID or ADR)}
 
 ### Cross-LLM verification
 - Triggered: no | yes · Date: … · Result: pass | fail | pending · Notes: …
@@ -137,7 +137,7 @@ An iteration block is **valid** when all of the following are true:
 3. At least one task row with at least one declared file path.
 4. Acceptance criteria section present with at least one item.
 5. Validation steps include at least one runnable test command from `{AGENT_RULES_FILE}`.
-6. **`### Concept / NFR registry (this iteration)`** subsection is present with one row per architecture concept id **or** explicit `N/A` for each id with reason (if the repository has no concept pack, one row: `N/A — no pack`).
+6. **`### Concept / NFR registry (this iteration)`** subsection is present with one row per architecture concept id **or** explicit `N/A` for each id with reason (if the repository has no concept pack, one row: `N/A - no pack`).
 
 If any criterion fails → iteration block is **invalid** → run **plan** before **start**.
 
@@ -149,9 +149,9 @@ If any criterion fails → iteration block is **invalid** → run **plan** befor
 
 Generates or validates the `## Current iteration` block in `NEXT.md` from the next incomplete milestone in the approved plan-master.
 
-### PI1 — Verify prerequisites
+### PI1 - Verify prerequisites
 
-1. Read `{HANDOFF}` — note owner blockers, waivers, M1-only authorizations.
+1. Read `{HANDOFF}` - note owner blockers, waivers, M1-only authorizations.
 2. Read `{PLANS_ROOT}/full/YYYYMMDD-full-plan.md` (latest by date prefix). Confirm **Status: Approved** (or owner waiver recorded in HANDOFF for early M{N} start).
 3. If no plan file → **stop** with the [blocked-report shape](#blocked-report-shape):
    - **Required:** Approved `*-full-plan.md`
@@ -161,50 +161,50 @@ Generates or validates the `## Current iteration` block in `NEXT.md` from the ne
    - **Required:** plan `Status: Approved` **or** HANDOFF waiver for `M{N}`
    - **Detected:** plan is `Status: Draft`; no HANDOFF waiver for `M{N}`
    - **Run first:** `@plan-master status` → approve plan, or document HANDOFF waiver
-5. Read `{ITERATION_CARRIER}` — find `## Done this iteration` and `## Recommended next` to determine which milestone is next.
+5. Read `{ITERATION_CARRIER}` - find `## Done this iteration` and `## Recommended next` to determine which milestone is next.
 
-**Note:** **implementation-ready** is checked at [ST0](#st0--implementation-gate) (**start** / **continue**), not at this step — you may build the iteration block once the plan is **Approved** (or milestone-waived per steps 2–4).
+**Note:** **implementation-ready** is checked at [ST0](#st0--implementation-gate) (**start** / **continue**), not at this step - you may build the iteration block once the plan is **Approved** (or milestone-waived per steps 2–4).
 
 ### Blocked-report shape
 
 Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blocked-report-shape), every prerequisite stop in this skill emits:
 
 ```markdown
-## @code-implementation <command> — blocked (prerequisite)
+## @code-implementation <command> - blocked (prerequisite)
 
 **Required:** <state or upstream step>
 **Detected:** <what's actually present>
 **Run first:** `<exact command to fix>`
 ```
 
-### PI2 — Select target milestone
+### PI2 - Select target milestone
 
 1. Identify the first incomplete milestone (M1…) in plan-master §19.
 2. If user specified `plan - M{N}` (or legacy `plan-iteration - M{N}`), use that milestone directly; verify it exists in the plan.
 3. Check dependencies: if the milestone declares prior milestones as dependencies, confirm they are done (or explicitly waived in HANDOFF).
 
-### PI3 — Derive tasks
+### PI3 - Derive tasks
 
-Copy the task rows from the plan-master §19 milestone verbatim into the iteration block. **Preserve the `M{N}-T{N}` IDs exactly as defined in the plan** — do not renumber or rename them. If the plan-master uses shorthand IDs, expand them to the full `M{N}-T{N}` form now.
+Copy the task rows from the plan-master §19 milestone verbatim into the iteration block. **Preserve the `M{N}-T{N}` IDs exactly as defined in the plan** - do not renumber or rename them. If the plan-master uses shorthand IDs, expand them to the full `M{N}-T{N}` form now.
 
 For each task:
 
-- Map to at least one file path (create or modify). If unknown, mark `TBD — owner needed` and add to Owner blockers.
+- Map to at least one file path (create or modify). If unknown, mark `TBD - owner needed` and add to Owner blockers.
 - Link to FR or NFR from plan-master §3–4.
 - Read the relevant SPEC(s) under `{FEATURE_SPEC_ROOT}/` for the bounded context. If a rule (R1…) is ambiguous → add to Owner blockers; do not invent a resolution.
 - Estimate complexity: S / M / L. Flag L tasks as candidates for splitting.
 - Detect schema changes: if any task requires DDL → add a migration sub-task (`db-migration create`) as T{N}a before the implementation task.
 
-### PI4 — Write iteration block
+### PI4 - Write iteration block
 
-Write the `## Current iteration` section into `NEXT.md` — insert after `## Recommended next`. Do not delete or overwrite other sections.
+Write the `## Current iteration` section into `NEXT.md` - insert after `## Recommended next`. Do not delete or overwrite other sections.
 
-Include a **`### Concept / NFR registry (this iteration)`** subsection (table or explicit `N/A — no pack`). Rows must align with the **feature SPEC §15** (or equivalent) for the bounded contexts touched, or state why the iteration is **platform-only** with per-MOD `N/A` reasons.
+Include a **`### Concept / NFR registry (this iteration)`** subsection (table or explicit `N/A - no pack`). Rows must align with the **feature SPEC §15** (or equivalent) for the bounded contexts touched, or state why the iteration is **platform-only** with per-MOD `N/A` reasons.
 
-### PI5 — Plan report
+### PI5 - Plan report
 
 ```markdown
-## code-implementation plan — M{N}: {name}
+## code-implementation plan - M{N}: {name}
 
 **Milestone:** M{N} · {task count} tasks · **Source:** {plan-master path}
 **Prerequisites:** pass | fail | waived
@@ -215,7 +215,7 @@ Include a **`### Concept / NFR registry (this iteration)`** subsection (table or
 | T1 | … | … | S/M/L | FR-{N} |
 
 ### Ambiguities / blockers
-{list or none — each with: description, blocks task, recommended owner action}
+{list or none - each with: description, blocks task, recommended owner action}
 
 ### Completion checklist
 | # | Check | Result | Evidence |
@@ -234,7 +234,7 @@ Include a **`### Concept / NFR registry (this iteration)`** subsection (table or
 
 ## Start protocol
 
-### ST0 — Implementation gate
+### ST0 - Implementation gate
 
 Before ST1 (and before first line of application code):
 
@@ -247,9 +247,9 @@ Before ST1 (and before first line of application code):
    - **Run first:** `@plan-master status` → approve plan, or document HANDOFF waiver
 5. If **yes** → proceed to ST1.
 
-**Anti-pattern:** **start** or **continue** when only **plan-master-ready** is set — that unlocks planning and M1 *prep*, not broad implementation unless HANDOFF says so.
+**Anti-pattern:** **start** or **continue** when only **plan-master-ready** is set - that unlocks planning and M1 *prep*, not broad implementation unless HANDOFF says so.
 
-### ST1 — Mandatory reads
+### ST1 - Mandatory reads
 
 | # | File | Pass criteria |
 |---|------|---------------|
@@ -262,7 +262,7 @@ Before ST1 (and before first line of application code):
 
 If any mandatory read **fails** → stop. Fix before implementing.
 
-### ST2 — Environment snapshot
+### ST2 - Environment snapshot
 
 ```bash
 git status -sb
@@ -272,24 +272,24 @@ docker compose ps 2>/dev/null || true
 
 Record: branch, clean/dirty, running services.
 
-### ST3 — Assumption ledger
+### ST3 - Assumption ledger
 
 Before the first task, state the 3–5 most consequential assumptions for this iteration. Label each:
 
-- **Confirmed** — cite SPEC rule, ADR, or **file path + quoted snippet** (or test command + exit code). Prose alone is not sufficient.
-- **Inference** — likely but not proven; note partial evidence.
-- **Unverified** — must check; append to `{PLANS_ROOT}/UNKNOWNS.md`.
+- **Confirmed** - cite SPEC rule, ADR, or **file path + quoted snippet** (or test command + exit code). Prose alone is not sufficient.
+- **Inference** - likely but not proven; note partial evidence.
+- **Unverified** - must check; append to `{PLANS_ROOT}/UNKNOWNS.md`.
 
 Do not collapse Inference into Confirmed. A **Confirmed** label without a cite is treated as **Inference** in review.
 
-### ST4 — Select first task
+### ST4 - Select first task
 
 Pick T1 (or first pending task). Mark it `in-progress` in the task table. Announce the task, its file list, and which SPEC rules (R1…) govern it.
 
-### ST5 — Start report
+### ST5 - Start report
 
 ```markdown
-## code-implementation start — M{N}: {name}
+## code-implementation start - M{N}: {name}
 
 **Date:** {ISO date} · **Branch:** {branch} · **Tree:** clean | dirty
 
@@ -318,15 +318,15 @@ All mandatory checks (1–5, 7–8) are **pass**. If any **fail**, fix before pr
 
 ## Continue protocol
 
-1. Run [ST0 — Implementation gate](#st0--implementation-gate) (abbreviated if start ran in the same session with no plan/HANDOFF change).
+1. Run [ST0 - Implementation gate](#st0--implementation-gate) (abbreviated if start ran in the same session with no plan/HANDOFF change).
 2. **Unblock check:** Read `{PLANS_ROOT}/UNKNOWNS.md` and `{HANDOFF}`. Scan the iteration block for any task with status `blocked`:
    a. For each `blocked` task: find the blocker entry in `### Owner blockers` and/or `UNKNOWNS.md` (entries with `blocks: T{N}`).
    b. Check if the condition has changed: ADR decided, owner action completed, dependency landed, or HANDOFF lists the blocker as resolved.
-   c. If resolved → flip task status from `blocked` to `pending`; annotate `unblocked YYYY-MM-DD — <reason>`. If the corresponding UNKNOWNS row is resolved, update its `Status` to `Resolved` with date.
+   c. If resolved → flip task status from `blocked` to `pending`; annotate `unblocked YYYY-MM-DD - <reason>`. If the corresponding UNKNOWNS row is resolved, update its `Status` to `Resolved` with date.
    d. If unchanged → leave as `blocked`. If all tasks are `blocked` with no changes → do not advance; recommend `@session-control close` with blocker list.
 3. Read `NEXT.md §Current iteration`. Find the first task with status `in-progress` or `pending`.
 4. If `in-progress`: resume that task with file evidence (read the file before editing).
-5. If all tasks `pending`: treat as a fresh start — run ST0–ST5 abbreviated.
+5. If all tasks `pending`: treat as a fresh start - run ST0–ST5 abbreviated.
 6. Per task loop:
    a. Read every file to be modified **before** making any change.
    b. Implement per CONVENTIONS, FEATURE_STANDARD, and the SPEC rules (R1…) that govern this context.
@@ -343,23 +343,23 @@ All mandatory checks (1–5, 7–8) are **pass**. If any **fail**, fix before pr
 
 ## Task gate
 
-Run after every task implementation before marking `done`. All checks must pass. **Mechanical only** — no master-plan reads. For pre-commit or post-push audits with a verdict report, use `@code-verify` (**uncommitted** / **last** / **milestone**).
+Run after every task implementation before marking `done`. All checks must pass. **Mechanical only** - no master-plan reads. For pre-commit or post-push audits with a verdict report, use `@code-verify` (**uncommitted** / **last** / **milestone**).
 
 | Check | Command | Pass criteria |
 |-------|---------|---------------|
-| Unit tests (scoped) | `{AGENT_RULES_FILE}` § Docker — scoped `REPLACE:TEST_COMMAND` | Exit 0 |
-| Full suite (smoke) | Same section — full `REPLACE:TEST_COMMAND` | Exit 0 |
+| Unit tests (scoped) | `{AGENT_RULES_FILE}` § Docker - scoped `REPLACE:TEST_COMMAND` | Exit 0 |
+| Full suite (smoke) | Same section - full `REPLACE:TEST_COMMAND` | Exit 0 |
 | Lint | `REPLACE:LINT_COMMAND` (via compose exec when containerized) | Exit 0 |
 | Type check | `REPLACE:TYPECHECK_COMMAND` | Exit 0 per CONVENTIONS or documented baseline exceptions |
-| No secrets in diff | `git diff --unified=0` reviewed | Same rules as `code-verify` S1 — no keys, tokens, passwords, PEM material |
+| No secrets in diff | `git diff --unified=0` reviewed | Same rules as `code-verify` S1 - no keys, tokens, passwords, PEM material |
 | Protected files | `git diff --name-only` reviewed | No `.cursorrules` §Protected Files paths unless user explicitly approved |
 | Scope discipline | `git diff --name-only` | All paths in declared task file list |
 | MOD-06 (AI-assisted) | `@concept-run - MOD-06` when iteration touched code | Output attached to PR, task `Notes`, or iteration registry; **required** before **complete** (see CO1) |
 
-**Also verify (manual — no single exit code):**
+**Also verify (manual - no single exit code):**
 
-- **Residual risks / deferred sub-work:** Before marking a task `done`, any follow-up work, untested edge cases, or known limitations discovered during implementation must be captured in the task's `Notes` column or appended to `{PLANS_ROOT}/UNKNOWNS.md` with a new U* row. Do not let deferred sub-work exist only in the agent report — promote it to a tracked artifact.  
-- **Observability:** If the task touches HTTP handlers, jobs, logging, or outbound calls: confirm fields and correlation/trace behavior match the feature SPEC §9 and `{OBSERVABILITY_SPEC}` (once customized for the project); otherwise note `n/a — no observability surfaces touched`.  
+- **Residual risks / deferred sub-work:** Before marking a task `done`, any follow-up work, untested edge cases, or known limitations discovered during implementation must be captured in the task's `Notes` column or appended to `{PLANS_ROOT}/UNKNOWNS.md` with a new U* row. Do not let deferred sub-work exist only in the agent report - promote it to a tracked artifact.  
+- **Observability:** If the task touches HTTP handlers, jobs, logging, or outbound calls: confirm fields and correlation/trace behavior match the feature SPEC §9 and `{OBSERVABILITY_SPEC}` (once customized for the project); otherwise note `n/a - no observability surfaces touched`.  
 - **Concept / MOD prompts:** Cursor/agent sessions are **AI-assisted: yes** by default (see `.ai/concepts/README.md` § Trigger table). Run MOD-06 per task or batch before **complete**; attach output skeleton to PR or iteration `Notes`. For multi-package edits, attach coupling-audit (MOD-01) when boundaries crossed. Rows in `### Concept / NFR registry` with `Applies=yes` must not remain `pending` before **complete** (CO1).
 
 **On any gate failure:** report exact output. Diagnose root cause. Fix. Re-run. Do not mark task `done` or proceed to the next task until all checks pass.
@@ -378,7 +378,7 @@ Read-only. No file writes.
 4. Output:
 
 ```markdown
-## code-implementation status — M{N}: {name}
+## code-implementation status - M{N}: {name}
 
 **Status:** {iteration status} · **Date:** {ISO date}
 **Branch:** {branch} · **Tree:** clean | dirty
@@ -421,7 +421,7 @@ All verify modes moved to **`code-verify`** (`.ai/skills/code-verify/skill.md`):
 |------|------|
 | `@code-verify milestone` | Before **complete**, ≥80% tasks, or full iteration audit |
 | `@code-verify uncommitted` | Dirty tree, pre-commit |
-| `@code-verify last` | After commit or push — audits whichever event was **last** |
+| `@code-verify last` | After commit or push - audits whichever event was **last** |
 
 Legacy `@code-implementation verify` → run **`@code-verify milestone`**.
 
@@ -429,43 +429,43 @@ Legacy `@code-implementation verify` → run **`@code-verify milestone`**.
 
 ## Complete protocol
 
-**Execution order:** **CO2 → CO1 → CO3 → CO4 → CO5 → CO6** (milestone verify before final gates — avoids duplicate full-suite runs).
+**Execution order:** **CO2 → CO1 → CO3 → CO4 → CO5 → CO6** (milestone verify before final gates - avoids duplicate full-suite runs).
 
-### CO2 — Verify (mandatory before complete)
+### CO2 - Verify (mandatory before complete)
 
 Run **`@code-verify milestone`** if not run since the last task was completed. Verdict must be **pass** or **pass with gaps** (waivers documented in HANDOFF). **fail** blocks completion.
 
-### CO1 — Full iteration gate
+### CO1 - Full iteration gate
 
 Run remaining iteration validation steps (manual checks and any steps not covered by CO2 shared Docker gates).
 
-**Skip duplicate suite:** If CO2 shared gates (`REPLACE:TEST_COMMAND`, `REPLACE:LINT_COMMAND`, `REPLACE:TYPECHECK_COMMAND` per `{AGENT_RULES_FILE}`) already **passed** on the **current working tree** (no file changes since the milestone verify report), skip re-running them — record **skip — covered by CO2**. Otherwise run all three from `{AGENT_RULES_FILE}` § Docker (or local equivalents from `REPLACE:TECH_STACK_DOC`).
+**Skip duplicate suite:** If CO2 shared gates (`REPLACE:TEST_COMMAND`, `REPLACE:LINT_COMMAND`, `REPLACE:TYPECHECK_COMMAND` per `{AGENT_RULES_FILE}`) already **passed** on the **current working tree** (no file changes since the milestone verify report), skip re-running them - record **skip - covered by CO2**. Otherwise run all three from `{AGENT_RULES_FILE}` § Docker (or local equivalents from `REPLACE:TECH_STACK_DOC`).
 
 All **manual** validation steps in the iteration block (e.g. `curl /health`) must still pass. Failures must be fixed or waived with a documented owner line in HANDOFF.
 
-**Concept/NFR registry gate:** Before completing a milestone, inspect `NEXT.md` `### Concept / NFR registry (this iteration)`. Any row with `Applies=yes` and `Status=pending` must be resolved — either run `@concept-run` for that MOD id, or document a `gap — <reason>` waiver with owner. CO1 fails if unresolved applicable concept rows remain.
+**Concept/NFR registry gate:** Before completing a milestone, inspect `NEXT.md` `### Concept / NFR registry (this iteration)`. Any row with `Applies=yes` and `Status=pending` must be resolved - either run `@concept-run` for that MOD id, or document a `gap - <reason>` waiver with owner. CO1 fails if unresolved applicable concept rows remain.
 
-**MOD-06 gate (mandatory when code changed):** If any task in the iteration modified application source or tests, CO1 **fails** unless MOD-06 output is attached (PR body, task `Notes`, or iteration registry with `Status=done` and evidence path). **`human-only`** opt-out requires explicit human declaration in the same message — agents cannot grant it retroactively.
+**MOD-06 gate (mandatory when code changed):** If any task in the iteration modified application source or tests, CO1 **fails** unless MOD-06 output is attached (PR body, task `Notes`, or iteration registry with `Status=done` and evidence path). **`human-only`** opt-out requires explicit human declaration in the same message - agents cannot grant it retroactively.
 
-### CO3 — Documentation updates
+### CO3 - Documentation updates
 
 If the iteration surfaced documentation gaps:
 
 - **SPEC amendment** → create `{FEATURE_SPEC_ROOT}/<context>/YYYYMMDD-SPEC-amendment-NN.md`. Do not edit a merged SPEC.
 - **Full Plan gap** → note in HANDOFF; recommend `@plan-master revise - <reason>`.
-- **Foundation gap** → note in HANDOFF; recommend `@plan-foundation continue` (rare — only for structural omissions).
+- **Foundation gap** → note in HANDOFF; recommend `@plan-foundation continue` (rare - only for structural omissions).
 - **New assumptions / risks / unknowns surfaced** → append to `{PLANS_ROOT}/ASSUMPTIONS.md`, `RISK_REGISTRY.md`, `UNKNOWNS.md` respectively.
 
 Do not edit archived decision prompts.
 
-### CO4 — NEXT.md update
+### CO4 - NEXT.md update
 
 1. Set iteration block `**Status:** complete`.
 2. Move all task rows to `### Done this iteration` with completion dates.
 3. Set `## Recommended next` to the next milestone: `@code-implementation plan - M{N+1}` or the first task of M{N+1} if already scoped.
-4. Clear the `## Current iteration` body or replace with a one-line reference: `M{N} complete — see Done section.`
+4. Clear the `## Current iteration` body or replace with a one-line reference: `M{N} complete - see Done section.`
 
-### CO5 — HANDOFF update
+### CO5 - HANDOFF update
 
 Append to `## What this cycle produced`:
 - Row per new file created.
@@ -473,10 +473,10 @@ Append to `## What this cycle produced`:
 
 Refresh `## Repository state` with current truth: which milestones are done, what is next, any owner actions pending.
 
-### CO6 — Close report
+### CO6 - Close report
 
 ```markdown
-## code-implementation complete — M{N}: {name}
+## code-implementation complete - M{N}: {name}
 
 **Date:** {ISO date} · **Branch:** {branch}
 
@@ -484,8 +484,8 @@ Refresh `## Repository state` with current truth: which milestones are done, wha
 | # | Check | Result | Evidence |
 |---|-------|--------|----------|
 | 1 | All tasks done | pass/fail | T{list} |
-| 2 | Full test suite pass (or skip — covered by CO2) | pass/fail/skip | exit 0 |
-| 3 | Lint/type-check pass (or skip — covered by CO2) | pass/fail/skip | |
+| 2 | Full test suite pass (or skip - covered by CO2) | pass/fail/skip | exit 0 |
+| 3 | Lint/type-check pass (or skip - covered by CO2) | pass/fail/skip | |
 | 4 | Verify pass (CO2; or gaps waived) | pass/fail/waived | verdict |
 | 5 | No secrets in diff | pass/fail | |
 | 6 | Scope discipline enforced | pass/fail | git diff |
@@ -494,14 +494,14 @@ Refresh `## Repository state` with current truth: which milestones are done, wha
 | 9 | NEXT.md updated | pass/fail | |
 | 10 | HANDOFF updated | pass/fail | |
 
-### Commit message (draft — always present)
+### Commit message (draft - always present)
 {per .cursorrules format}
 
 ### Follow-ups before next iteration
 {ordered list}
 
 ### Next
-{from NEXT.md — Recommended next}
+{from NEXT.md - Recommended next}
 ```
 
 ---
@@ -525,7 +525,7 @@ When a task cannot proceed mid-implementation:
 |-------|-------------|
 | `session-control` | Run `@session-control start` before `code-implementation start`; run `@session-control close [commit]` after `code-implementation complete` |
 | `plan-master` | Source of milestones; use `@plan-master status` to confirm implementation-ready; `@plan-master revise` if plan gaps surface |
-| `code-verify` | **milestone** (CO2) before **complete**; **uncommitted** / **last** optional pre-commit / post-push cadence; task gate runs inline checks — does not delegate to verify |
+| `code-verify` | **milestone** (CO2) before **complete**; **uncommitted** / **last** optional pre-commit / post-push cadence; task gate runs inline checks - does not delegate to verify |
 | `plan-foundation` | Rarely invoked during implementation; only when **milestone** verify surfaces a structural foundation gap |
 | `db-migration` | Mandatory for any schema change; stop task, run `@db-migration create`, resume after migration script exists |
 | **Concept pack** | Run applicable `prompt.md` during **`@code-verify milestone`**; **MOD-06 required** before **complete** when code changed; attach outputs to PR or `NEXT.md` |

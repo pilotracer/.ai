@@ -1,8 +1,8 @@
-# plan-foundation — reference
+# plan-foundation - reference
 
 Supplement to `skill.md`. **How to invoke**, **verify**, and **certify plan-master-ready**.
 
-**Anti-drift reminder:** `{PLANS_ROOT}/foundation/` (docs 01–04) = **foundation inputs**. `*-full-plan.md` = **master plan** (plan-master skill only). Never call doc 04 "the full plan" — say **architecture foundation** or **foundation doc 04**. Doc 01 heading: `Architecture directions (non-prescriptive — architecture foundation in doc 04)`. See [Terminology](skill.md#terminology-required--prevents-confusion-with-plan-master).
+**Anti-drift reminder:** `{PLANS_ROOT}/foundation/` (docs 01–04) = **foundation inputs**. `*-full-plan.md` = **master plan** (plan-master skill only). Never call doc 04 "the full plan" - say **architecture foundation** or **foundation doc 04**. Doc 01 heading: `Architecture directions (non-prescriptive - architecture foundation in doc 04)`. See [Terminology](skill.md#terminology-required--prevents-confusion-with-plan-master).
 
 ---
 
@@ -26,20 +26,20 @@ P0–P6 → foundation-complete → plan-master-ready → plan-master → Approv
 | Goal | Prompt (Cursor) | Mode |
 |------|-----------------|------|
 | Snapshot (foundation only) | `@plan-foundation` status | status |
-| Ready for master plan? | `@plan-foundation` status — plan-master-ready? | status |
+| Ready for master plan? | `@plan-foundation` status - plan-master-ready? | status |
 | Certify for plan-master | `@plan-foundation` certify plan-master-ready | certify |
 | Resume incomplete gate | `@plan-foundation` continue | continue |
-| New project from scratch | `@plan-foundation` greenfield — \<idea\> | greenfield |
-| Ready to code? (broad) | `@plan-master` status — implementation-ready? | **plan-master** (not plan-foundation) |
+| New project from scratch | `@plan-foundation` greenfield - \<idea\> | greenfield |
+| Ready to code? (broad) | `@plan-master` status - implementation-ready? | **plan-master** (not plan-foundation) |
 
 **Explicit file path (any agent):**
 
 ```
-Read .ai/skills/plan-foundation/skill.md — run status mode. Read-only.
+Read .ai/skills/plan-foundation/skill.md - run status mode. Read-only.
 ```
 
 ```
-Read .ai/skills/plan-foundation/skill.md — run certify mode. Update HANDOFF if plan-master-ready passes.
+Read .ai/skills/plan-foundation/skill.md - run certify mode. Update HANDOFF if plan-master-ready passes.
 ```
 
 ### Claude Code / opencode / Codex
@@ -59,7 +59,7 @@ Run plan-master integrity on foundation artifacts, then evaluate S4 criteria.
 
 ## Verification playbook
 
-### Step 1 — Foundation status (always start here)
+### Step 1 - Foundation status (always start here)
 
 ```
 @plan-foundation status
@@ -77,7 +77,7 @@ Run plan-master integrity on foundation artifacts, then evaluate S4 criteria.
 
 ---
 
-### Step 2 — Semantic integrity (before plan-master-ready)
+### Step 2 - Semantic integrity (before plan-master-ready)
 
 When foundation-complete is **yes** but plan-master-ready is **not evaluated** or **no**:
 
@@ -98,7 +98,7 @@ Or inline during certify:
 
 ---
 
-### Step 3 — Certify plan-master-ready
+### Step 3 - Certify plan-master-ready
 
 ```
 @plan-foundation certify plan-master-ready
@@ -115,7 +115,7 @@ Or inline during certify:
 
 ---
 
-### Step 4 — Master implementation plan (plan-master skill)
+### Step 4 - Master implementation plan (plan-master skill)
 
 After **plan-master-ready: yes**:
 
@@ -136,7 +136,7 @@ or
 
 ---
 
-### Step 5 — Implementation-ready check (plan-master skill — not plan-foundation)
+### Step 5 - Implementation-ready check (plan-master skill - not plan-foundation)
 
 After master plan exists:
 
@@ -150,7 +150,7 @@ After master plan exists:
 
 ---
 
-## Example — post-foundation sequence
+## Example - post-foundation sequence
 
 | Check | Typical next step |
 |-------|-------------------|
@@ -200,7 +200,7 @@ Create at **P0** (empty) or use seeded files in mature repos.
 ### ASSUMPTIONS.md
 
 ```markdown
-# ASSUMPTIONS — planning registry
+# ASSUMPTIONS - planning registry
 **Updated:** YYYY-MM-DD
 
 | ID | Assumption | Label | Source | Notes |
@@ -214,14 +214,14 @@ Create at **P0** (empty) or use seeded files in mature repos.
 ### RISK_REGISTRY.md
 
 ```markdown
-# RISK_REGISTRY — planning registry
+# RISK_REGISTRY - planning registry
 | ID | Risk | Category | Likelihood | Impact | Mitigation | Status | Owner |
 ```
 
 ### UNKNOWNS.md
 
 ```markdown
-# UNKNOWNS — planning registry
+# UNKNOWNS - planning registry
 | ID | Question / blocker | Blocks | Owner | Status |
 ```
 
@@ -229,39 +229,39 @@ Create at **P0** (empty) or use seeded files in mature repos.
 
 ## P0 initial scope (product-intent capture)
 
-**Owner skill:** `@plan-foundation` **greenfield** (Phase 0 — Capture). There is **no** `code-foundation` skill.
+**Owner skill:** `@plan-foundation` **greenfield** (Phase 0 - Capture). There is **no** `code-foundation` skill.
 
 **Canonical path:** `{PLANS_ROOT}/foundation/YYYYMMDD-01-<project-slug>-initial-scope.md` (foundation doc 01).
 
-**Not the seed:** `{PROMPTS_ROOT}/initial.md` — user-owned scratch; skills **must not** read or create unless the user explicitly names that path.
+**Not the seed:** `{PROMPTS_ROOT}/initial.md` - user-owned scratch; skills **must not** read or create unless the user explicitly names that path.
 
 ### Greenfield creates (minimum)
 
 ```markdown
-# <Project Name> — Initial exploration and scope
+# <Project Name> - Initial exploration and scope
 
 ## Audience and document purpose
 …
 
 ## Assumption ledger
 
-### Founder intent (verbatim — P0 capture)
+### Founder intent (verbatim - P0 capture)
 <paste raw product idea from user>
 
 ### Confirmed facts (repository evidence)
 …
 
-## Architecture directions (non-prescriptive — architecture foundation in doc 04)
+## Architecture directions (non-prescriptive - architecture foundation in doc 04)
 …
 ```
 
-P1 expands doc 01; P1 also produces docs 02–04. Doc 01 is the **mini/preliminary plan** — not a prompt file.
+P1 expands doc 01; P1 also produces docs 02–04. Doc 01 is the **mini/preliminary plan** - not a prompt file.
 
 ---
 
 ## Glob patterns (artifact detection only)
 
-Use for **foundation-complete** artifact presence — **not** for plan-master-ready (requires semantic checks).
+Use for **foundation-complete** artifact presence - **not** for plan-master-ready (requires semantic checks).
 
 | Phase | Glob | Min count |
 |-------|------|-----------|

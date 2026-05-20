@@ -13,7 +13,7 @@ description: >
 
 # dev-stack
 
-Generate or update a **single-file** POSIX shell script (`bin/start.sh` preferred) that gives developers a **safe, isolated** control plane for **one** Docker Compose project — without affecting other stacks on the host. **Project-agnostic:** adapt compose paths, service names, profiles, and DB tooling to the target repo.
+Generate or update a **single-file** POSIX shell script (`bin/start.sh` preferred) that gives developers a **safe, isolated** control plane for **one** Docker Compose project - without affecting other stacks on the host. **Project-agnostic:** adapt compose paths, service names, profiles, and DB tooling to the target repo.
 
 **Tool-agnostic** (Cursor, Claude Code, opencode, Codex). **Pairs with:** project `docker-compose*.yml`, `.env.example`, local `.env` (never committed).
 
@@ -22,10 +22,10 @@ Generate or update a **single-file** POSIX shell script (`bin/start.sh` preferre
 **Hard rules:**
 
 - **Never `source .env`.** Parse key=value safely (see `reference.md` §Safe env parsing).
-- **Stack isolation is mandatory.** Every `docker compose` call uses the full scoping pattern in `reference.md` §Compose invocation — no bare `docker stop` / `docker rm` / wildcard volume nukes for "cleanup".
-- **Dangerous operations** (`down -v`, drop schema, flush caches) require **double confirmation** with project/database identity — pattern in `reference.md` §Dangerous commands.
-- **Dual mode:** interactive **full menu** when invoked with no args or `dev`; headless subcommands (`start`, `stop`, …) for CI; `MENU_QUIET=1` for non-interactive, capture-on-failure logging — see `reference.md` §CI.
-- **Menu UX:** categorized sections, live stack summary (running/total, health probes), optional terminal colors, `r` refresh, `?` help — see `reference.md` §Interactive menu.
+- **Stack isolation is mandatory.** Every `docker compose` call uses the full scoping pattern in `reference.md` §Compose invocation - no bare `docker stop` / `docker rm` / wildcard volume nukes for "cleanup".
+- **Dangerous operations** (`down -v`, drop schema, flush caches) require **double confirmation** with project/database identity - pattern in `reference.md` §Dangerous commands.
+- **Dual mode:** interactive **full menu** when invoked with no args or `dev`; headless subcommands (`start`, `stop`, …) for CI; `MENU_QUIET=1` for non-interactive, capture-on-failure logging - see `reference.md` §CI.
+- **Menu UX:** categorized sections, live stack summary (running/total, health probes), optional terminal colors, `r` refresh, `?` help - see `reference.md` §Interactive menu.
 - **`set -euo pipefail`** at top; in interactive menu loops, scope `set +e` / `set -e` around compose calls so failures return to the menu instead of exiting the shell.
 - **Respect protected files** where the repo marks them (e.g. this project's `.cursorrules` §Protected Files): do not change `docker-compose*.yml`, `Dockerfile.*`, or `.env*` **unless the user explicitly permits** those edits in the same message. The skill may still **generate** `bin/start.sh` without touching compose.
 
@@ -37,20 +37,20 @@ Normalize the user message to **verb** + optional **target path**.
 
 | User says | Verb | Action |
 |-----------|------|--------|
-| `@dev-stack` **status** | status | [Status protocol](#status-protocol) — read-only: report whether `bin/start.sh` exists, is executable, and matches the current skill contract |
+| `@dev-stack` **status** | status | [Status protocol](#status-protocol) - read-only: report whether `bin/start.sh` exists, is executable, and matches the current skill contract |
 | `@dev-stack` **init** | init | Generate fresh `bin/start.sh` (see [Generation protocol](#generation-protocol)) |
-| `@dev-stack` **update** \| **rewrite** | init | Same as `init` — overwrite existing file after isolation audit |
+| `@dev-stack` **update** \| **rewrite** | init | Same as `init` - overwrite existing file after isolation audit |
 | `@dev-stack` (no verb) | init | Default to generate / update |
 
 **Aliases:** `update`, `rewrite`, `scaffold`, `generate` → **init**.
 
 ---
 
-## Step 0 — Pick a mode
+## Step 0 - Pick a mode
 
 | Mode | Condition | Action |
 |------|-----------|--------|
-| **status** | user asks "is start.sh ready?", "do we have it?", "what version?" | [Status protocol](#status-protocol) — read-only |
+| **status** | user asks "is start.sh ready?", "do we have it?", "what version?" | [Status protocol](#status-protocol) - read-only |
 | **init** | user asks to create, update, or rewrite the script | [Generation protocol](#generation-protocol) |
 
 ---
@@ -86,7 +86,7 @@ Read-only. No file writes.
 ```
 
 If `bin/start.sh` is missing → recommend `@dev-stack init`.
-If syntax / scoping / guard missing → recommend `@dev-stack init` (will regenerate; confirm before overwrite — see Brownfield below).
+If syntax / scoping / guard missing → recommend `@dev-stack init` (will regenerate; confirm before overwrite - see Brownfield below).
 
 ---
 
@@ -113,18 +113,18 @@ If they only want the **skill** or "how to": output the **script body** in a fen
 
 ## Generation protocol
 
-### S1 — Discover the stack (ask or read)
+### S1 - Discover the stack (ask or read)
 
 Minimum inputs (record gaps as **Unverified** until filled):
 
-1. Compose file path(s) — default `docker-compose.yml` at repo root.
-2. **`COMPOSE_PROJECT_NAME`** (or equivalent) — must be stable and unique per clone; recommend reading from `.env` with a documented default.
-3. **Compose profile** — e.g. `dev`, `local` (omit `--profile` only if the project truly uses no profiles).
+1. Compose file path(s) - default `docker-compose.yml` at repo root.
+2. **`COMPOSE_PROJECT_NAME`** (or equivalent) - must be stable and unique per clone; recommend reading from `.env` with a documented default.
+3. **Compose profile** - e.g. `dev`, `local` (omit `--profile` only if the project truly uses no profiles).
 4. Service names for DB/Redis waits and one-off `exec` targets.
 5. DB engine (Postgres, MySQL, none) and how schema is applied (migrations CLI, raw SQL, none).
-6. URL/port hints — which env vars expose host ports (project-specific).
+6. URL/port hints - which env vars expose host ports (project-specific).
 
-### S2 — Scaffold from the contract
+### S2 - Scaffold from the contract
 
 Implement the **anatomy** and **command set** in `reference.md`. Adapt:
 
@@ -132,7 +132,7 @@ Implement the **anatomy** and **command set** in `reference.md`. Adapt:
 - `urls_hint` to actual env vars.
 - DB commands: include, omit, or rename per stack.
 
-### S3 — Isolation audit (mandatory before delivery)
+### S3 - Isolation audit (mandatory before delivery)
 
 Confirm in the generated script:
 
@@ -140,7 +140,7 @@ Confirm in the generated script:
 - [ ] No `source .env` or `eval` on env content.
 - [ ] Destructive paths use double confirmation + `print_banner` (or equivalent) showing **which** project.
 
-### S4 — Completion checklist
+### S4 - Completion checklist
 
 | # | Check | Result |
 |---|--------|--------|
@@ -165,4 +165,4 @@ Confirm in the generated script:
 
 ## Source note
 
-Plain-text authoring for this skill lives in **`skill.md` + `reference.md`**. If a collaborator provides a `*.skill` binary blob, do not treat it as canonical — extract requirements in chat or replace with this markdown skill.
+Plain-text authoring for this skill lives in **`skill.md` + `reference.md`**. If a collaborator provides a `*.skill` binary blob, do not treat it as canonical - extract requirements in chat or replace with this markdown skill.

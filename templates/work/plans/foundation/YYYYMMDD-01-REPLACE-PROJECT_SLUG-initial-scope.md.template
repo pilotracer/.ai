@@ -1,4 +1,4 @@
-# REPLACE:PROJECT_NAME — Initial exploration and scope
+# REPLACE:PROJECT_NAME - Initial exploration and scope
 
 **Doc:** foundation **01** (P0 product intent) · **Created:** YYYY-MM-DD
 
@@ -7,13 +7,13 @@
 | Layer | Audience | What they need |
 |-------|----------|----------------|
 | **Development** | Engineers | Boundaries, invariants, compliance hooks, test strategy, explicit unknowns |
-| **Shipped product** | End users | UX and help — **out of scope here**; capture personas in separate doc if UI is in scope |
+| **Shipped product** | End users | UX and help - **out of scope here**; capture personas in separate doc if UI is in scope |
 
 ---
 
 ## Assumption ledger
 
-### Founder intent (verbatim — P0 capture)
+### Founder intent (verbatim - P0 capture)
 
 > REPLACE:FOUNDER_INTENT_VERBATIM
 
@@ -59,7 +59,7 @@
 
 ## How `.cursorrules` applies
 
-Map global rules to this project. List any **project overrides** in HANDOFF or an ADR — do not fork Core Principles 1–7.
+Map global rules to this project. List any **project overrides** in HANDOFF or an ADR - do not fork Core Principles 1–7.
 
 ---
 

@@ -2,7 +2,7 @@
 name: process-router
 description: >-
   Read-only router for process questions. Maps a question to the right skill
-  verb, workflow guide, standard, or concept prompt — without duplicating their
+  verb, workflow guide, standard, or concept prompt - without duplicating their
   content. Use when lost, asking how something works, or wanting the next
   command for planning, implementation, tests, migrations, SPECs, or concepts.
   Not a catch-all Q&A encyclopedia.
@@ -10,7 +10,7 @@ description: >-
 
 # process-router
 
-**Read-only orientation.** Routes operators to canonical sources. **Never** writes HANDOFF, NEXT, code, or SPECs. **Never** embeds normative text from skills/standards — link and quote one line max.
+**Read-only orientation.** Routes operators to canonical sources. **Never** writes HANDOFF, NEXT, code, or SPECs. **Never** embeds normative text from skills/standards - link and quote one line max.
 
 **Pairs with:** `.ai/START_HERE.md` (decision tree), `.ai/docs/guides/workflows/`, registered skills.
 
@@ -21,7 +21,7 @@ description: >-
 - **Default:** no file writes. Only `route` / `ask` / `help` modes.
 - **Source of truth order:** `skill.md` > standard > guide > this router. If router conflicts, follow the skill.
 - **Evidence:** cite path + section when recommending a command.
-- **Escalate:** if the question needs execution (create SPEC, run migration, start iteration), name the target skill and stop — do not impersonate it.
+- **Escalate:** if the question needs execution (create SPEC, run migration, start iteration), name the target skill and stop - do not impersonate it.
 
 ---
 
@@ -32,13 +32,13 @@ description: >-
 | `@process-router` **route** - \<question\> | route | [Route protocol](#route-protocol) |
 | `@process-router` **ask** - \<question\> | route | alias |
 | `@process-router` **help** | help | List modes + 5 example questions |
-| `@process-router` — \<question\> (no verb) | route | Treat whole message as question |
+| `@process-router` - \<question\> (no verb) | route | Treat whole message as question |
 
 **Aliases:** `ask`, `where`, `how` → route.
 
 ---
 
-## Step 0 — Pick a mode
+## Step 0 - Pick a mode
 
 | Mode | Action |
 |------|--------|
@@ -72,12 +72,12 @@ description: >-
 ## Route report format
 
 ```markdown
-## process-router — <short topic>
+## process-router - <short topic>
 
 **Question:** <paraphrase one line>
 
 ### Answer (<3 sentences)
-<Plain-language direction — no wall of pasted rules>
+<Plain-language direction - no wall of pasted rules>
 
 ### Run next
 `<exact @skill verb or read order>`
@@ -111,7 +111,7 @@ Output:
 - Answering with long pasted excerpts from standards (link instead).
 - Running `code-implementation start`, writing SPECs, or updating HANDOFF from this skill.
 - Inventing skills or paths not in `reference.md` or `.ai/skills/README.md`.
-- Replacing `@session-control status` / `@code-implementation status` when user only needs a one-line snapshot — suggest those first for status questions.
+- Replacing `@session-control status` / `@code-implementation status` when user only needs a one-line snapshot - suggest those first for status questions.
 
 ---
 

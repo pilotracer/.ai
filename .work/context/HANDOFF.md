@@ -1,16 +1,16 @@
-# HANDOFF — session boundary
+# HANDOFF - session boundary
 
 > **This is a template file.** In your adopter repo it is rewritten by **`@session-control start`** / **`@session-control close`** every session. In this framework repo it stays as a demo skeleton so pointer links resolve.
 
 ## Session status
 
-**Open:** —
+**Open:** -
 
 **Updated:** YYYY-MM-DD
 
-**Closed:** —
+**Closed:** -
 
-**Repository state:** Greenfield / planning / implementation — describe briefly.
+**Repository state:** Greenfield / planning / implementation - describe briefly.
 
 **Recommended pick-up file:** `.work/plans/NEXT.md`
 
@@ -18,7 +18,7 @@
 
 ---
 
-## Fresh start — what the next session should do first
+## Fresh start - what the next session should do first
 
 1. Run **`@session-control start`** (or follow the manual list in `session-control` skill).
 2. Read **`.cursorrules`**.
@@ -47,11 +47,11 @@ End with **`@session-control close`** (add `commit` / `commit push` only when re
 
 | # | Action | Blocks | Owner |
 |---|--------|--------|-------|
-| — | (none) | | |
+| - | (none) | | |
 
 ---
 
-## What this cycle produced (audit history — skim last session only)
+## What this cycle produced (audit history - skim last session only)
 
 | Date | Session | Artifacts |
 |------|---------|-----------|
@@ -63,12 +63,12 @@ End with **`@session-control close`** (add `commit` / `commit push` only when re
 
 | ID | Summary | Blocks |
 |----|---------|--------|
-| — | | |
+| - | | |
 
 ---
 
 ## Cross-LLM verification
 
 - **Triggered:** no
-- **Result:** —
-- **Notes:** —
+- **Result:** -
+- **Notes:** -

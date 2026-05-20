@@ -1,4 +1,4 @@
-# NEXT — planning backlog
+# NEXT - planning backlog
 
 **Updated:** YYYY-MM-DD
 
@@ -16,7 +16,7 @@
 
 | # | Item | Notes |
 |---|------|-------|
-| — | (none) | |
+| - | (none) | |
 
 ---
 
@@ -32,10 +32,10 @@
 
 ## Current iteration
 
-*(No active iteration — run `@code-implementation plan - M1` after master plan is **Approved** and `implementation-ready: yes`.)*
+*(No active iteration - run `@code-implementation plan - M1` after master plan is **Approved** and `implementation-ready: yes`.)*
 
 ```markdown
-## Current iteration — M{N}: <milestone name>
+## Current iteration - M{N}: <milestone name>
 
 **Milestone ref:** M{N} · `{MASTER_PLAN}` §<task section>
 **Status:** planning | in-progress | complete

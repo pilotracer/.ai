@@ -1,4 +1,4 @@
-# Local development stack — proposal
+# Local development stack - proposal
 
 **Status:** Draft · **Created:** YYYY-MM-DD  
 **Requires:** owner approval before creating `docker-compose.yml`, `Dockerfile.*`, `.env.example` (`.cursorrules` §Protected Files)

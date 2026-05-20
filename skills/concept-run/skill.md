@@ -18,10 +18,10 @@ Execute **concept pack** procedures under `.ai/concepts/<name>/prompt.md`. Regis
 **Hard rules:**
 
 - **Evidence tags** on every quantitative claim: `measured` | `estimated` | `assumption` | `unknown`.
-- **Run the prompt procedure** — do not summarize from memory.
+- **Run the prompt procedure** - do not summarize from memory.
 - **Output shape** must match each `prompt.md` § Output section.
-- **Default when unsure:** MOD-01 (coupling-audit) — lightest prompt.
-- **MOD-06 required** for every `@code-implementation` session that touches code — **AI-assisted: yes** by default in Cursor/agent sessions; only explicit **`human-only`** (same message) opts out.
+- **Default when unsure:** MOD-01 (coupling-audit) - lightest prompt.
+- **MOD-06 required** for every `@code-implementation` session that touches code - **AI-assisted: yes** by default in Cursor/agent sessions; only explicit **`human-only`** (same message) opts out.
 
 ---
 
@@ -35,11 +35,11 @@ Execute **concept pack** procedures under `.ai/concepts/<name>/prompt.md`. Regis
 | `@concept-run` - MOD-0N | run | alias |
 | `@concept-run` **run-all** - pending | run-all | All iteration rows with Applies=yes, Status=pending |
 
-**Ids:** MOD-01 … MOD-06 — map to folders in `.ai/concepts/README.md` § Concept index.
+**Ids:** MOD-01 … MOD-06 - map to folders in `.ai/concepts/README.md` § Concept index.
 
 ---
 
-## Step 0 — Pick a mode
+## Step 0 - Pick a mode
 
 | Mode | Action |
 |------|--------|
@@ -76,11 +76,11 @@ Execute **concept pack** procedures under `.ai/concepts/<name>/prompt.md`. Regis
    - PR description, or
    - `NEXT.md` task `Notes` column, or
    - SPEC §9 / ADR appendix (as row specifies).
-6. Update iteration registry `Status` → `done YYYY-MM-DD` or `gap — <reason>` when run from an iteration context.
+6. Update iteration registry `Status` → `done YYYY-MM-DD` or `gap - <reason>` when run from an iteration context.
 7. Output run report:
 
 ```markdown
-## concept-run — MOD-0N (<name>)
+## concept-run - MOD-0N (<name>)
 
 **Trigger:** <why this prompt applied>
 **Evidence tags used:** …
@@ -92,7 +92,7 @@ Execute **concept pack** procedures under `.ai/concepts/<name>/prompt.md`. Regis
 <path: PR | NEXT task | SPEC §…>
 
 ### Recommendation
-proceed | conditions | block — per prompt Recommendation section
+proceed | conditions | block - per prompt Recommendation section
 ```
 
 ---

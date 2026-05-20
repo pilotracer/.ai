@@ -1,4 +1,4 @@
-# Tutorial — fix existing plans (`NEXT` + full plan)
+# Tutorial - fix existing plans (`NEXT` + full plan)
 
 **Doc type:** Corrective maintenance tutorial (portable).  
 **NEXT-only repair:** [Fix NEXT tutorial](20260518-tutorial-next-fix.md).  
@@ -24,14 +24,14 @@
 
 Open your full plan and check:
 
-1. **Header metadata** — Status (Approved / Draft), version, last revised date.  
-2. **Section numbers** — Example layout: **§19** = incremental roadmap, **§20** = global acceptance, **§21** = validation gates. Your plan may differ; **record the section ids** in `{HANDOFF}` so agents stop guessing.  
-3. **Milestone table** — Every milestone has: objective, dependencies, size (or equivalent).  
-4. **Per-milestone tasks** — Each row: stable **task id** (e.g. `M1-T3`), description, FR/NFR trace, file paths, validation.  
-5. **FR/NFR drift** — Each milestone task references FR/NFR ids that **exist** in sections 3–4 (or your plan’s equivalent). Fix broken references.  
-6. **NFR observability** — If NFR9 (or equivalent) names logging/tracing, milestone **M1**-class tasks should mention it where platform logging is built.
+1. **Header metadata** - Status (Approved / Draft), version, last revised date.  
+2. **Section numbers** - Example layout: **§19** = incremental roadmap, **§20** = global acceptance, **§21** = validation gates. Your plan may differ; **record the section ids** in `{HANDOFF}` so agents stop guessing.  
+3. **Milestone table** - Every milestone has: objective, dependencies, size (or equivalent).  
+4. **Per-milestone tasks** - Each row: stable **task id** (e.g. `M1-T3`), description, FR/NFR trace, file paths, validation.  
+5. **FR/NFR drift** - Each milestone task references FR/NFR ids that **exist** in sections 3–4 (or your plan’s equivalent). Fix broken references.  
+6. **NFR observability** - If NFR9 (or equivalent) names logging/tracing, milestone **M1**-class tasks should mention it where platform logging is built.
 
-**Fix pattern:** append a dated revision note at top; **do not** silently rewrite historical text — add “**Correction YYYY-MM-DD:** …” if your governance requires audit trail.
+**Fix pattern:** append a dated revision note at top; **do not** silently rewrite historical text - add “**Correction YYYY-MM-DD:** …” if your governance requires audit trail.
 
 ### Optional improvement (example project)
 
@@ -48,7 +48,7 @@ For the **active** `## Current iteration` block:
 | **Milestone ref** | Points to `{MASTER_PLAN}` + correct section (here: §19 `M{N}`). |
 | **Task ids** | Match master plan ids **exactly** (`M1-T1`, not renumbered `T1` only, unless your skill explicitly allows shorthand **inside** the block only). |
 | **Files** | Every task lists at least one path or `TBD` + owner blocker. |
-| **FR/NFR** | Each task row has trace or honest `—` with reason. |
+| **FR/NFR** | Each task row has trace or honest `-` with reason. |
 | **Acceptance** | Checklist is **for this milestone only**; not a dump of entire plan section 20. |
 | **Validation** | At least one command block is **copy-paste runnable** in your environment (here: Docker-based). |
 | **Concept / NFR registry** | Subsection exists; rows for each concept id your repo uses, or `N/A` with reason. |
@@ -71,7 +71,7 @@ For the **active** `## Current iteration` block:
 
 1. Open [Observability in workflow](20260518-guide-observability-traceability-in-workflow.md).  
 2. For each milestone that touches HTTP, jobs, or logging: ensure **M1-style** platform tasks exist **before** domain milestones emit user traffic (e.g. health, observability, tenant middleware in M1).  
-3. In `{ITERATION_CARRIER}` acceptance bullets, add one line: “Structured log line includes …” only if SPEC/plan already define fields (avoid inventing names here — pull from `{OBSERVABILITY_SPEC}`).
+3. In `{ITERATION_CARRIER}` acceptance bullets, add one line: “Structured log line includes …” only if SPEC/plan already define fields (avoid inventing names here - pull from `{OBSERVABILITY_SPEC}`).
 
 ---
 

@@ -4,25 +4,28 @@ All notable changes to Agent OS are documented here. Format inspired by [Keep a 
 
 ## [Unreleased]
 
+### Changed
+- **Invocation punctuation:** Skills, workflows, and command examples use ASCII hyphen `-` (not em dash `—`) between verb and argument (e.g. `@code-implementation plan - M1`). Documented in `SKILL_DEPENDENCIES.md` and `skills/README.md`.
+
 ### Added
-- **Framework CI** — `.github/workflows/framework-verify.yml` runs `scripts/framework-verify.sh` and `scripts/smoke-consumer.sh` on push/PR.
-- **`scripts/framework-verify.sh`** — self-hosted layout, consumer bootstrap smoke, stale integration path grep, template `REPLACE:` check, markdown relative link scan.
-- **`scripts/smoke-consumer.sh`** — local consumer adoption smoke with next-step hints.
-- **`docs/adoption/minimal-adoption.md`** — lite vs full adoption paths.
-- **README / START_HERE / templates/README** — path convention table (nested `.ai/` vs self-hosted git root).
+- **Framework CI** - `.github/workflows/framework-verify.yml` runs `scripts/framework-verify.sh` and `scripts/smoke-consumer.sh` on push/PR.
+- **`scripts/framework-verify.sh`** - self-hosted layout, consumer bootstrap smoke, stale integration path grep, template `REPLACE:` check, markdown relative link scan.
+- **`scripts/smoke-consumer.sh`** - local consumer adoption smoke with next-step hints.
+- **`docs/adoption/minimal-adoption.md`** - lite vs full adoption paths.
+- **README / START_HERE / templates/README** - path convention table (nested `.ai/` vs self-hosted git root).
 - `README.md` discoverability: hook rewrite, badges, comparison table, "Skills at a glance".
 - `LICENSE` (MIT).
 - `CONTRIBUTING.md` and this `CHANGELOG.md`.
-- "Template — your repo's HANDOFF.md will be filled by `@session-control`" notes on demo `.work/` artifacts so visitors don't mistake them for real project content.
-- **`SKILL_DEPENDENCIES.md § Canonical command vocabulary`** — single source of truth for the verbs every skill uses (`status`, `init`, `start`, `continue`, `plan`, `complete`, `verify`, `create`, …).
-- **`SKILL_DEPENDENCIES.md § Blocked report shape`** — uniform "blocked (prerequisite)" report that every skill emits when a gate stops execution.
+- "Template - your repo's HANDOFF.md will be filled by `@session-control`" notes on demo `.work/` artifacts so visitors don't mistake them for real project content.
+- **`SKILL_DEPENDENCIES.md § Canonical command vocabulary`** - single source of truth for the verbs every skill uses (`status`, `init`, `start`, `continue`, `plan`, `complete`, `verify`, `create`, …).
+- **`SKILL_DEPENDENCIES.md § Blocked report shape`** - uniform "blocked (prerequisite)" report that every skill emits when a gate stops execution.
 - **`dev-stack`** gains `status` and `init` modes plus a brownfield gate that refuses to silently overwrite an existing `bin/start.sh`.
 
 ### Changed
-- **`code-implementation`** mode renamed: **`plan-iteration` → `plan`** (legacy `plan-iteration` kept as alias — both invocations work). Updated across `code-implementation/skill.md`, `reference.md`, `README.md`, `START_HERE.md`, `SKILL_DEPENDENCIES.md`, `process-router/reference.md`, demo `.work/plans/NEXT.md`, `templates/work/plans/NEXT.md.template`, `concepts/README.md`, and 8 workflow guides under `docs/guides/workflows/`.
+- **`code-implementation`** mode renamed: **`plan-iteration` → `plan`** (legacy `plan-iteration` kept as alias - both invocations work). Updated across `code-implementation/skill.md`, `reference.md`, `README.md`, `START_HERE.md`, `SKILL_DEPENDENCIES.md`, `process-router/reference.md`, demo `.work/plans/NEXT.md`, `templates/work/plans/NEXT.md.template`, `concepts/README.md`, and 8 workflow guides under `docs/guides/workflows/`.
 - **`plan-master`** mode renamed: **`task` → `show`** (legacy `task` kept as alias). Updated in `plan-master/skill.md`, `reference.md`, `code-implementation/reference.md`.
 - **`process-router`** parse-invocation table promotes the explicit **`route`** token so `@process-router route - <question>` is documented alongside the no-verb fallback.
-- **Unified "blocked (prerequisite)" report shape** now used by `plan-foundation` (GF0/CF0), `plan-master` (PG1), `code-implementation` (PI1/ST0), `code-verify` (M0), `feature-spec` (CR0), `db-migration` (mutating gate). Every gate emits the same `Required / Detected / Run first` block — operators learn the format once.
+- **Unified "blocked (prerequisite)" report shape** now used by `plan-foundation` (GF0/CF0), `plan-master` (PG1), `code-implementation` (PI1/ST0), `code-verify` (M0), `feature-spec` (CR0), `db-migration` (mutating gate). Every gate emits the same `Required / Detected / Run first` block - operators learn the format once.
 - **`db-migration`** I5 long FastAPI lifespan code blocks moved from `skill.md` to `reference.md § Application startup wiring`; `skill.md` now lists the framework variants by name and links.
 
 ### Added (gates and brownfield)
@@ -36,7 +39,7 @@ All notable changes to Agent OS are documented here. Format inspired by [Keep a 
 - **`dev-stack`** `status` mode for `bin/start.sh` health-check; `init` adds a brownfield gate that refuses to overwrite an existing customized script silently.
 
 ### Removed
-- *(none yet — bloat trim was kept conservative: long FastAPI code from `db-migration/skill.md` moved to `reference.md`; plan-foundation/plan-master phase content was left in place because it is unique operator guidance, not duplicated boilerplate.)*
+- *(none yet - bloat trim was kept conservative: long FastAPI code from `db-migration/skill.md` moved to `reference.md`; plan-foundation/plan-master phase content was left in place because it is unique operator guidance, not duplicated boilerplate.)*
 
 ## [0.1.0] - 2026-05-19
 
@@ -45,7 +48,7 @@ First public-ready cut of Agent OS as a portable framework.
 ### Added
 - **`project-bootstrap`** skill plus `templates/bootstrap.sh` + `templates/work/` skeleton (one-command adoption into any repo).
 - **`skills/SKILL_DEPENDENCIES.md`** registry: explicit prerequisite gates between skills (foundation → certify → master plan → status → implementation).
-- **Prerequisite-gate enforcement** in `plan-foundation`, `plan-master`, `code-implementation`, `session-control` — agents now **stop** with a redirect if an upstream step was skipped.
+- **Prerequisite-gate enforcement** in `plan-foundation`, `plan-master`, `code-implementation`, `session-control` - agents now **stop** with a redirect if an upstream step was skipped.
 - **README bird's-eye flow** (`@project-bootstrap init` → … → `@code-implementation continue`) and "Skills at a glance" table covering all 11 skills.
 - **Standards templates** (`20260517-CONVENTIONS`, `FEATURE_STANDARD`, `DIRECTORY_MAP`, `observability-spec`, `api-style-guide`, `threat-model`, `data-classification`) generalized with `REPLACE:` tokens.
 - **Demo `.work/` skeleton** at repo root so pointer links resolve when Agent OS is the git root.
@@ -55,7 +58,7 @@ First public-ready cut of Agent OS as a portable framework.
 - Workflow guides under `docs/guides/workflows/` generalized; vendor specifics removed.
 
 ### Removed
-- All project-specific integration artifacts under `docs/integration/` (Costa Rica Hacienda, OIDC, XAdES bundles) — replaced with agnostic `MANIFEST.template.txt` + `README.md`.
+- All project-specific integration artifacts under `docs/integration/` (Costa Rica Hacienda, OIDC, XAdES bundles) - replaced with agnostic `MANIFEST.template.txt` + `README.md`.
 
 [Unreleased]: https://github.com/PiloTracer/.ai/compare/v0.1.0...HEAD
 [0.1.0]: https://github.com/PiloTracer/.ai/releases/tag/v0.1.0

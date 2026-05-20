@@ -21,7 +21,7 @@ Define in `{OBSERVABILITY_SPEC}` (or your feature SPEC section 9) at least:
 |---------|-------------|
 | **Log shape** | Structured fields (JSON or equivalent); stable `event` names. |
 | **Correlation** | Incoming request ID propagated to outbound calls and queue payloads. |
-| **Tenant / actor** | Internal IDs only in logs (no raw PII or secrets — align with security policy). |
+| **Tenant / actor** | Internal IDs only in logs (no raw PII or secrets - align with security policy). |
 | **Traces** | Which entrypoints create spans; which downstream calls must be child spans. |
 | **Metrics** | Counters/histograms for critical user journeys (namespaced). |
 
@@ -34,7 +34,7 @@ Define in `{OBSERVABILITY_SPEC}` (or your feature SPEC section 9) at least:
 | **Spec** | Feature SPEC §Observability | List events, fields, SLOs (or links). |
 | **Plan** | Master plan NFR rows | Reference observability NFR ids. |
 | **Implement** | Code + tests | Assert log/trace fields in unit/integration tests where cheap. |
-| **Verify** | Check matrix | Row: observability — pass if SPEC fields exist in code paths touched; **skip** only if task truly did not touch instrumented surfaces (document `n/a`). |
+| **Verify** | Check matrix | Row: observability - pass if SPEC fields exist in code paths touched; **skip** only if task truly did not touch instrumented surfaces (document `n/a`). |
 | **Run** | Dashboards / alerts | Owned by platform; out of scope for this guide. |
 
 ---
@@ -44,11 +44,11 @@ Define in `{OBSERVABILITY_SPEC}` (or your feature SPEC section 9) at least:
 When agents generate code:
 
 - Require **explicit** log field names in the PR description (copy from SPEC).  
-- Forbid dumping raw payloads — align with security / privacy standard.  
+- Forbid dumping raw payloads - align with security / privacy standard.  
 - If `{OBSERVABILITY_SPEC}` is missing, default verify row = **gap** with recommendation to draft spec before GA.
 
 ---
 
 ## 5. Evidence tags for SLOs
 
-Numeric SLOs in plans must carry `measured` (from load test or prod metrics), `estimated`, or `assumption` — never presented as measured without a source.
+Numeric SLOs in plans must carry `measured` (from load test or prod metrics), `estimated`, or `assumption` - never presented as measured without a source.

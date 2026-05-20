@@ -1,4 +1,4 @@
-# process-router — operator guide
+# process-router - operator guide
 
 **Skill location:** [`.ai/skills/process-router/skill.md`](skills/process-router/skill.md) · **Routing table:** [`reference.md`](skills/process-router/reference.md)
 
@@ -8,7 +8,7 @@
 
 ## What it is
 
-`process-router` is a **read-only signpost** — not a worker skill.
+`process-router` is a **read-only signpost** - not a worker skill.
 
 It answers: *"Which skill, guide, or standard should I open for this question?"* and gives you the exact `@` command to run next. It does **not** write files, implement code, create SPECs, or run checklists.
 
@@ -29,7 +29,7 @@ You invoke THAT skill to do the work
 | Writes HANDOFF / NEXT | No | Yes (when closing / completing) |
 | Runs tests or gates | No | Yes |
 | Creates SPECs or migrations | No | Yes (feature-spec, db-migration) |
-| Pastes long rule text | No — links only | Reads and applies standards |
+| Pastes long rule text | No - links only | Reads and applies standards |
 
 For a **one-paragraph repo snapshot** ("where am I right now?"):
 
@@ -52,7 +52,7 @@ Use `@process-router` for *how-to* questions; use the line above for *where am I
 @process-router help
 ```
 
-The verb is optional — `@process-router - <question>` is enough. Aliases: `ask`, `where`, `how`.
+The verb is optional - `@process-router - <question>` is enough. Aliases: `ask`, `where`, `how`.
 
 ---
 
@@ -101,7 +101,7 @@ Full registry: [`.ai/skills/README.md`](skills/README.md)
 
 ## `.ai/` vs `.work/`
 
-- **`.ai/`** — agnostic skills, standards, concepts, guides (including this doc and `process-router` skill).
-- **`.work/`** — project plans, SPECs, ADRs, prompts, HANDOFF (see [`.work/README.md`](.work/README.md) at repo root).
+- **`.ai/`** - agnostic skills, standards, concepts, guides (including this doc and `process-router` skill).
+- **`.work/`** - project plans, SPECs, ADRs, prompts, HANDOFF (see [`.work/README.md`](.work/README.md) at repo root).
 
 The router links to both layers but never duplicates their content.

@@ -2,7 +2,7 @@
 name: db-migration
 description: >-
   Create, run, and verify idempotent SQL migration scripts. No version table,
-  no migration-chain conflicts — scripts are numbered, executed in order on
+  no migration-chain conflicts - scripts are numbered, executed in order on
   every startup, and safe to re-run. Use when the user asks to create a migration,
   add a table/column/trigger/insert, run migrations, or check migration status.
   Replaces Alembic-style versioned migrations.
@@ -10,7 +10,7 @@ description: >-
 
 # db-migration
 
-Manage database schema and data with **idempotent numbered SQL scripts** — no version table, no migration chain, no conflicts when environments diverge.
+Manage database schema and data with **idempotent numbered SQL scripts** - no version table, no migration chain, no conflicts when environments diverge.
 
 **Tool-agnostic** (Cursor, Claude Code, opencode, Codex). **DB-agnostic** at the concept level; implementation targets PostgreSQL 16+.
 
@@ -50,16 +50,16 @@ Normalize the user message to **verb** + optional **target**.
 
 ---
 
-## Step 0 — Pick a mode
+## Step 0 - Pick a mode
 
 | Mode | Action |
 |------|--------|
-| **init** | [Init protocol](#init-protocol) — bootstrap the migration system into the project: create directory, runner, initial scripts, wire into startup, remove Alembic if present |
-| **create** | [Create protocol](#create-protocol) — write a new numbered migration script |
-| **add** | [Add protocol](#add-protocol) — append DDL to an existing script or create one |
-| **run** | [Run protocol](#run-protocol) — execute scripts against the database |
-| **status** | [Status protocol](#status-protocol) — list scripts, check order, validate idempotency |
-| **verify** | [Verify protocol](#verify-protocol) — run twice, confirm safe re-execution |
+| **init** | [Init protocol](#init-protocol) - bootstrap the migration system into the project: create directory, runner, initial scripts, wire into startup, remove Alembic if present |
+| **create** | [Create protocol](#create-protocol) - write a new numbered migration script |
+| **add** | [Add protocol](#add-protocol) - append DDL to an existing script or create one |
+| **run** | [Run protocol](#run-protocol) - execute scripts against the database |
+| **status** | [Status protocol](#status-protocol) - list scripts, check order, validate idempotency |
+| **verify** | [Verify protocol](#verify-protocol) - run twice, confirm safe re-execution |
 
 ---
 
@@ -83,7 +83,7 @@ This prevents silent failures where `create` writes a script into a non-existent
 Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blocked-report-shape):
 
 ```markdown
-## @db-migration <command> — blocked (prerequisite)
+## @db-migration <command> - blocked (prerequisite)
 
 **Required:** <state or upstream step>
 **Detected:** <what's actually present>
@@ -98,24 +98,24 @@ Bootstraps the entire idempotent SQL migration system into a project. This mode 
 
 **Triggers:** `@db-migration init`, `@db-migration implement`, `@db-migration setup`, `@db-migration bootstrap`
 
-### IB0 — Brownfield detection (mandatory before any write)
+### IB0 - Brownfield detection (mandatory before any write)
 
 Before touching the migration system, inventory existing artifacts:
 
 | Path | If exists |
 |------|-----------|
-| `REPLACE:MIGRATIONS_DIR/001_init.sql` | Mark as **existing — baseline** |
-| `REPLACE:MIGRATIONS_DIR/` (with `*.sql` files) | Mark as **existing — populated** |
-| `REPLACE:MIGRATION_RUNNER_PATH` | Mark as **existing — runner installed** |
-| `alembic.ini` or `REPLACE:APP_ROOT/alembic/` | Mark as **existing — Alembic present (will be removed)** |
+| `REPLACE:MIGRATIONS_DIR/001_init.sql` | Mark as **existing - baseline** |
+| `REPLACE:MIGRATIONS_DIR/` (with `*.sql` files) | Mark as **existing - populated** |
+| `REPLACE:MIGRATION_RUNNER_PATH` | Mark as **existing - runner installed** |
+| `alembic.ini` or `REPLACE:APP_ROOT/alembic/` | Mark as **existing - Alembic present (will be removed)** |
 
 If **any** of the first three are present:
 
-1. **Stop** — do not write.
+1. **Stop** - do not write.
 2. Emit the brownfield summary:
 
 ```markdown
-## @db-migration init — brownfield detected
+## @db-migration init - brownfield detected
 
 The migration system is already initialized. Choose how to proceed:
 
@@ -124,10 +124,10 @@ The migration system is already initialized. Choose how to proceed:
 | {list every detected file} | … | keep / overwrite / abort |
 
 ### Choose one (reply in the same message)
-- **`keep`** — run `@db-migration status` instead (read-only) and exit init
-- **`overwrite-runner`** — replace `migration_runner.py` only (preserves your `*.sql` files)
-- **`overwrite-all`** — replace runner + all `001`–`005` baseline files (destroys current content; **append-only scripts beyond `005_` are preserved**)
-- **`abort`** — exit silently
+- **`keep`** - run `@db-migration status` instead (read-only) and exit init
+- **`overwrite-runner`** - replace `migration_runner.py` only (preserves your `*.sql` files)
+- **`overwrite-all`** - replace runner + all `001`–`005` baseline files (destroys current content; **append-only scripts beyond `005_` are preserved**)
+- **`abort`** - exit silently
 ```
 
 3. On **`overwrite-all`**: require an extra `confirm-overwrite-all` token in the same message; otherwise treat as `abort`.
@@ -136,7 +136,7 @@ The migration system is already initialized. Choose how to proceed:
 
 **Anti-pattern:** silently overwriting a curated `001_init.sql` that already contains project-specific extensions and base tables. The brownfield gate exists to prevent exactly this.
 
-### I0 — Detect the database dialect
+### I0 - Detect the database dialect
 
 1. Read `REPLACE:TECH_STACK_DOC` (stack document from `.cursorrules`). Look for the primary database.
 2. If PostgreSQL → use **plpgsql**. All `DO $$ … END $$` blocks, `CREATE OR REPLACE FUNCTION`, `SERIAL`/`BIGSERIAL` types, `TIMESTAMPTZ`, `UUID`, `IF NOT EXISTS` (PG 9.6+ syntax).
@@ -145,7 +145,7 @@ The migration system is already initialized. Choose how to proceed:
 5. If not specified → default to **PostgreSQL / plpgsql**.
 6. Record the detected dialect in the `001_init.sql` header comment.
 
-### I1 — Remove Alembic (if present)
+### I1 - Remove Alembic (if present)
 
 1. Delete `REPLACE:APP_ROOT/alembic/` (or equivalent) directory and all contents.
 2. Delete `alembic.ini` from project root (if present).
@@ -153,23 +153,23 @@ The migration system is already initialized. Choose how to proceed:
 4. Remove any `alembic upgrade head` commands from `Dockerfile.*`, `docker-compose.yml`, entrypoint scripts, CI configs.
 5. Search the entire codebase for remaining `alembic` references and remove/update them.
 
-### I2 — Create directory structure
+### I2 - Create directory structure
 
 ```
 REPLACE:MIGRATIONS_DIR/
 ├── 001_init.sql
-├── 002_schema_changes.sql       ← empty ledger — ALTER TABLE changes go here
-├── 003_triggers.sql             ← empty — CREATE OR REPLACE FUNCTION/TRIGGER
-├── 004_inserts.sql              ← empty — idempotent INSERTs go here
-└── 005_constraints.sql          ← empty — ADD CONSTRAINT IF NOT EXISTS
+├── 002_schema_changes.sql       ← empty ledger - ALTER TABLE changes go here
+├── 003_triggers.sql             ← empty - CREATE OR REPLACE FUNCTION/TRIGGER
+├── 004_inserts.sql              ← empty - idempotent INSERTs go here
+└── 005_constraints.sql          ← empty - ADD CONSTRAINT IF NOT EXISTS
 ```
 
-### I3 — Write `001_init.sql`
+### I3 - Write `001_init.sql`
 
 Header comment documenting the database dialect. Contents:
 
 ```sql
--- 001: Initial schema setup — PostgreSQL / plpgsql (idempotent)
+-- 001: Initial schema setup - PostgreSQL / plpgsql (idempotent)
 -- Dialect detected from: `REPLACE:TECH_STACK_DOC` (stack document from `.cursorrules`) → PostgreSQL 16
 -- Every statement is safe to re-run.
 
@@ -181,7 +181,7 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 -- Tenant schemas are created at provisioning time by provision_tenant.py
 ```
 
-### I4 — Write `migration_runner.py`
+### I4 - Write `migration_runner.py`
 
 Create `REPLACE:MIGRATION_RUNNER_PATH` using the reference implementation from `reference.md`. Adapt paths to the project's actual layout:
 - `WORKDIR` → resolved from `pyproject.toml` or `Dockerfile` WORKDIR directive
@@ -189,7 +189,7 @@ Create `REPLACE:MIGRATION_RUNNER_PATH` using the reference implementation from `
 - Use `asyncpg` or `psycopg` (async) per the project's SQLAlchemy configuration
 - The runner is called on application startup before the HTTP server starts
 
-### I5 — Wire into application startup
+### I5 - Wire into application startup
 
 Update the application entrypoint (e.g. `REPLACE:APP_ENTRYPOINT`). Use the framework's startup hook to call `run_migrations(get_engine())` **before** the HTTP server accepts traffic.
 
@@ -197,22 +197,22 @@ Update the application entrypoint (e.g. `REPLACE:APP_ENTRYPOINT`). Use the frame
 
 For schema-per-tenant: iterate tenants first, run migrations per schema.
 
-### I6 — Update Docker entrypoint
+### I6 - Update Docker entrypoint
 
-Remove any `alembic upgrade head` or `sleep && alembic` lines. The migration runner is called from application code on startup — no separate init container needed (unless the project's architecture requires it).
+Remove any `alembic upgrade head` or `sleep && alembic` lines. The migration runner is called from application code on startup - no separate init container needed (unless the project's architecture requires it).
 
-### I7 — Update project configuration
+### I7 - Update project configuration
 
-1. **`pyproject.toml`:** Remove `alembic` dependency. No replacement needed (runner uses SQLAlchemy's `text()` execution — already a dependency).
+1. **`pyproject.toml`:** Remove `alembic` dependency. No replacement needed (runner uses SQLAlchemy's `text()` execution - already a dependency).
 2. **`REPLACE:TECH_STACK_DOC`:** Replace Alembic row with idempotent SQL scripts.
 3. **`CONVENTIONS`:** Ensure §17 (Migration strategy) references this skill.
 4. **`.cursorrules`:** Update Schema Changes Ledger section to point to `migrations/`.
 5. **`DIRECTORY_MAP`:** Update to show `REPLACE:MIGRATIONS_DIR/` instead of `alembic/`.
 
-### I8 — Init report (mandatory output)
+### I8 - Init report (mandatory output)
 
 ```markdown
-## db-migration init — <Project>
+## db-migration init - <Project>
 
 **Database:** PostgreSQL (plpgsql) · **Directory:** `REPLACE:MIGRATIONS_DIR/`
 
@@ -235,7 +235,7 @@ Remove any `alembic upgrade head` or `sleep && alembic` lines. The migration run
 | 14 | `DIRECTORY_MAP` updated | pass |
 
 ### Remaining manual steps
-- Review `001_init.sql` — add any project-specific extensions, base tables, or default schemas.
+- Review `001_init.sql` - add any project-specific extensions, base tables, or default schemas.
 - Test: `docker compose up` → check logs for `migration.runner.complete`.
 - Run `@db-migration verify` to confirm idempotency.
 ```
@@ -244,7 +244,7 @@ Remove any `alembic upgrade head` or `sleep && alembic` lines. The migration run
 
 ## Create protocol
 
-### C1 — Determine next script number
+### C1 - Determine next script number
 
 Scan `migrations/` (or the project's configured migrations directory). Find the highest numeric prefix. The new script gets that number + 1.
 
@@ -256,7 +256,7 @@ migrations/
 └── 004_  ← next script goes here
 ```
 
-### C2 — Classify the change
+### C2 - Classify the change
 
 | Change type | Script pattern | Naming |
 |-------------|---------------|--------|
@@ -267,7 +267,7 @@ migrations/
 | Constraints/indexes | `ALTER TABLE … ADD CONSTRAINT IF NOT EXISTS` | `{NNN}_constraints.sql` (append) or new numbered |
 | Schema change (add column) | `ALTER TABLE … ADD COLUMN IF NOT EXISTS` | Append to latest `schema_changes` script or new numbered |
 
-### C3 — Apply idempotency pattern
+### C3 - Apply idempotency pattern
 
 | Operation | Idempotent form |
 |-----------|----------------|
@@ -287,18 +287,18 @@ migrations/
 | Add RLS policy | `DROP POLICY IF EXISTS {name} ON {t}; CREATE POLICY {name} ON {t} …` |
 | Add enum value | `ALTER TYPE {name} ADD VALUE IF NOT EXISTS '{value}'` (PG 9.6+) or `DO $$ BEGIN … EXCEPTION WHEN duplicate_object THEN … END $$` |
 
-### C4 — Write the script
+### C4 - Write the script
 
 - Header comment: `-- {NNN}: {description} (idempotent)`
 - Single transaction per script (PostgreSQL wraps DDL in implicit transactions; for multi-statement scripts, wrap in explicit `BEGIN … COMMIT` if atomicity is needed).
 - One blank line between statements.
 - Trailing newline.
 
-### C5 — Register in DIRECTORY_MAP
+### C5 - Register in DIRECTORY_MAP
 
 If this script introduces a new directory or a new bounded-context module, update `{BOUNDARY_MAP}` / `.ai/standards/*DIRECTORY_MAP*` (path from `.cursorrules`).
 
-### C6 — Output checklist
+### C6 - Output checklist
 
 | # | Check | Result |
 |---|-------|--------|
@@ -323,15 +323,15 @@ For small changes to **existing** structures (e.g., adding one column to an exis
 
 ## Run protocol
 
-### R1 — Locate the runner
+### R1 - Locate the runner
 
 Find `REPLACE:MIGRATION_RUNNER_PATH` (or equivalent). If it doesn't exist, draft one before running scripts.
 
-### R2 — Dry-run (optional but recommended)
+### R2 - Dry-run (optional but recommended)
 
 For production/staging: run the migration runner in dry-run mode per `.cursorrules` (e.g. `docker compose exec REPLACE:SERVICE_API … --dry-run`).
 
-### R3 — Execute
+### R3 - Execute
 
 ```bash
 docker compose exec REPLACE:SERVICE_API bash -c "cd REPLACE:APP_WORKDIR && REPLACE:MIGRATION_RUN_CMD"
@@ -343,11 +343,11 @@ The runner:
 3. Logs: `{"event": "migration.run", "script": "003_identity_users.sql", "duration_ms": 45, "result": "ok"}`.
 4. Stops on first error. Container exits with code 1.
 
-### R4 — Verify idempotency
+### R4 - Verify idempotency
 
-Run the runner a **second time**. All scripts should produce zero errors (they're idempotent). If any script fails on re-run, it's not truly idempotent — fix it.
+Run the runner a **second time**. All scripts should produce zero errors (they're idempotent). If any script fails on re-run, it's not truly idempotent - fix it.
 
-### R5 — Output checklist
+### R5 - Output checklist
 
 | # | Check | Result |
 |---|-------|--------|
@@ -401,7 +401,7 @@ Confirms every script is truly idempotent:
 2. Run all scripts: `docker compose exec REPLACE:SERVICE_API bash -c "cd REPLACE:APP_WORKDIR && REPLACE:MIGRATION_RUN_CMD"`.
 3. Run all scripts a second time.
 4. Assert: zero errors on second run.
-5. Compare schema (`pg_dump --schema-only`) before and after second run — must be identical.
+5. Compare schema (`pg_dump --schema-only`) before and after second run - must be identical.
 
 Failures produce a report listing the script name and the error message. The script must be fixed before merging.
 
@@ -440,8 +440,8 @@ For schema-per-tenant (PostgreSQL with multiple schemas), the runner iterates te
 - Embedding environment-specific values (use placeholders or environment variables).
 - Putting secrets (passwords, keys, tokens) in migration scripts.
 - Running scripts manually instead of through the runner (bypasses logging and error handling).
-- Treating the script list as a version chain (there is no version — scripts are a ledger, not a linked list).
-- Assuming scripts only run once (they run on every startup — idempotency is the contract).
+- Treating the script list as a version chain (there is no version - scripts are a ledger, not a linked list).
+- Assuming scripts only run once (they run on every startup - idempotency is the contract).
 
 ---
 

@@ -1,4 +1,4 @@
-# process-router — routing index
+# process-router - routing index
 
 Update this table when registering a new skill or guide. Keep **Run next** commands copy-pasteable.
 

@@ -1,4 +1,4 @@
-# plan-master — reference
+# plan-master - reference
 
 Supplement to `skill.md`. Invocation examples and edge cases.
 
@@ -13,7 +13,7 @@ Supplement to `skill.md`. Invocation examples and edge cases.
 | New plan | `@plan-master` **greenfield** |
 | Integrity only | `plan-master` **integrity** |
 | Revise | `plan-master` **revise** - add integration sandbox milestone |
-| With mode | `plan-master greenfield` — **enterprise** |
+| With mode | `plan-master greenfield` - **enterprise** |
 | Look up a task | `plan-master` **show** M1-T3   *(alias: `task M1-T3`)* |
 | All tasks for a milestone | `plan-master` **show** M4   *(alias: `task M4`)* |
 
@@ -29,8 +29,8 @@ Read .ai/skills/plan-master/skill.md and run integrity mode.
 ### Claude Code / opencode / Codex
 
 ```
-Follow .ai/skills/plan-master/skill.md — status. Read-only.
-Follow .ai/skills/plan-master/skill.md — continue. Update `{PLANS_ROOT}/full/YYYYMMDD-full-plan.md`.
+Follow .ai/skills/plan-master/skill.md - status. Read-only.
+Follow .ai/skills/plan-master/skill.md - continue. Update `{PLANS_ROOT}/full/YYYYMMDD-full-plan.md`.
 ```
 
 ---
@@ -63,7 +63,7 @@ When planning, **prefer cite over rewrite**:
 | Threats / data | threat-model, data-classification standards |
 | Local infra | compose files, ops proposals under `{PLANS_ROOT}/operations/` |
 
-Derive milestone order from foundation + SPECs in Phase 5 integrity — do not copy a generic list without repo evidence.
+Derive milestone order from foundation + SPECs in Phase 5 integrity - do not copy a generic list without repo evidence.
 
 ---
 
@@ -134,7 +134,7 @@ Run `plan-foundation status` before `plan-master greenfield` on mature repos.
 | Situation | Behavior |
 |-----------|----------|
 | No `*-full-plan.md` | **continue** → suggest **greenfield** |
-| Foundation not ready (plan-master-ready: no) | **Stop** — do not draft plan; run `@plan-foundation certify` first (see skill § Prerequisite gate) |
+| Foundation not ready (plan-master-ready: no) | **Stop** - do not draft plan; run `@plan-foundation certify` first (see skill § Prerequisite gate) |
 | Plan contradicts ADR | **fail** P5; do not Approve until ADR amended |
 | User wants code in same message | Stop plan mode; switch to implementation with SPEC refs |
 | Huge traceability matrix | Split to `*-full-plan-trace.md` |

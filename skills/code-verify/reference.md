@@ -1,4 +1,4 @@
-# code-verify — reference
+# code-verify - reference
 
 Supplement to `skill.md`.
 
@@ -13,7 +13,7 @@ Supplement to `skill.md`.
 @code-verify last               # last commit OR last push (whichever was later)
 ```
 
-Legacy (still valid — agents should route here):
+Legacy (still valid - agents should route here):
 
 ```
 @code-implementation verify
@@ -66,7 +66,7 @@ Tests always run in Docker against the **current** checkout unless you add an op
 
 | Milestone scope | Behavior when no second model | Block complete? |
 |-----------------|--------------------------------|-----------------|
-| Early milestones (platform, fixtures, domain stubs per master plan) | `skipped — single-model session` | No |
+| Early milestones (platform, fixtures, domain stubs per master plan) | `skipped - single-model session` | No |
 | **Milestones touching high-risk modules** (threat model / `.cursorrules`) | **fail** unless owner records a **human architect review** in `{HANDOFF}` (name + date) | **Yes** until waiver recorded |
 
 Waivers do not carry forward to the next high-risk milestone.

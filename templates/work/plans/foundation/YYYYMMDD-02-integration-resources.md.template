@@ -1,4 +1,4 @@
-# REPLACE:PROJECT_NAME — Integration resources (developer catalog)
+# REPLACE:PROJECT_NAME - Integration resources (developer catalog)
 
 **Doc:** foundation **02** · **Created:** YYYY-MM-DD
 
@@ -14,7 +14,7 @@
 |----------|--------|---------|
 | P0 | Vendor official docs / OpenAPI / XSD | Contract truth |
 | P1 | Legal / regulatory primary sources | Compliance interpretation (with advisor) |
-| P2 | Community posts | Hints only — never override P0 |
+| P2 | Community posts | Hints only - never override P0 |
 
 **Offline mirror:** `.ai/docs/integration/` + `MANIFEST.txt` (one URL per line: `canonical_url<TAB>relative_path`).
 
@@ -34,7 +34,7 @@ If no external integrations: state **n/a** and skip mirror setup.
 
 | System | Mechanism | Secrets storage |
 |--------|-----------|-----------------|
-| REPLACE:VENDOR_A | REPLACE:AUTH_MECHANISM | KMS / vault — never in repo |
+| REPLACE:VENDOR_A | REPLACE:AUTH_MECHANISM | KMS / vault - never in repo |
 
 ---
 
