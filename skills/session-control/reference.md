@@ -13,7 +13,8 @@ Supplement to `skill.md`. Invocation examples, HANDOFF templates, and edge cases
 | Open | `@session-control` **start** |
 | Open + goal | `session-control` **start** - bootstrap platform skeleton |
 | Close | `@session-control` **close** |
-| Close + commit | `session-control` **close** **commit** |
+| Close + commit (all safe dirty files) | `session-control` **close** **commit** |
+| Close + commit (HANDOFF/NEXT only) | `session-control` **close** **commit** **scoped** |
 | Close + commit + push | `session-control` **close** **commit** **push** |
 | Load check | `@session-control` **status** |
 
@@ -51,6 +52,8 @@ Follow .ai/skills/session-control/skill.md — close commit push.
 
 Default `close` never runs `git commit` or `git push`. User runs git manually from the drafted message if they want.
 
+**`close commit` default scope:** stage all **safe** dirty paths from `git status --porcelain` (typically `git add .ai/ .work/` plus app dirs touched), **not** HANDOFF/NEXT only. Agent **must** run shell `git add` + `git commit` and show SHA + post-commit `git status -sb`. See `skill.md` § C4b.
+
 ### Natural language triggers
 
 | Phrase | Maps to |
@@ -83,7 +86,7 @@ Expect: HANDOFF/NEXT updated; **Commit message** section with draft text; checkl
 session-control close commit
 ```
 
-Expect: same as close + `git commit` with HEREDOC; report shows **Commit message (used):** exact text and commit SHA.
+Expect: HANDOFF/NEXT updated; agent runs `git add` for **full safe scope** + `git commit`; report shows SHA and `git status -sb` (clean or explicit leftovers). **Fail** if only bookend files were committed while other safe `.ai/` / `.work/` / code changes remain unstaged.
 
 **Close with commit and push:**
 
@@ -149,7 +152,8 @@ Treat the next chat as a **new session**: do not assume unwritten goals from pri
 | When | Allowed |
 |------|---------|
 | `close` | audit only |
-| `close commit` | `git add` + `git commit` (HEREDOC) |
+| `close commit` | `git status --porcelain` → stage safe paths (default: `.ai/`, `.work/`, app dirs) → `git commit` → `git status -sb` |
+| `close commit scoped` | `git add` HANDOFF + NEXT (+ session-listed paths only) |
 | `close commit push` | above + `git push` |
 
 Never on default `close`: commit or push.
@@ -232,6 +236,8 @@ Do not invent project history.
 | Prompt | Problem | Use instead |
 |--------|---------|-------------|
 | `close` expecting auto-commit | Default is draft only | `close commit` |
+| `close commit` but tree still dirty | Agent staged HANDOFF-only or skipped shell git | Re-run close; agent must follow C4b default scope |
+| `close commit` for bookend files only | Default commits full safe tree | `close commit scoped` |
 | `close push` without `commit` | Skill maps to commit+push | `close commit push` |
 | `start` without reading files | Skill requires evidence | Full start protocol |
 | `delete HANDOFF and recreate` | Loses history | Append + update sections |

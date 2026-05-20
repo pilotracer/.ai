@@ -339,7 +339,8 @@ Leave a clean handoff for your future self (or the next agent).
 | Invoke | What happens |
 |--------|----------------|
 | **`@session-control close`** | Updates `HANDOFF` + `NEXT`, lists follow-ups, and **always** shows a draft commit message — **no git** unless you add `commit`. |
-| **`@session-control close commit`** | Same as close, then stages and commits with that message (refuses if secrets are in the diff). |
+| **`@session-control close commit`** | Updates HANDOFF/NEXT, then **runs `git add` + `git commit` in the shell** for all safe dirty paths (not HANDOFF-only). Shows commit SHA. |
+| **`@session-control close commit scoped`** | Commits only HANDOFF + NEXT (+ paths named in the report). |
 | **`@session-control close commit push`** | Commit + push current branch. |
 
 ```text
@@ -408,7 +409,7 @@ Skill prerequisite gates: [`skills/SKILL_DEPENDENCIES.md`](skills/SKILL_DEPENDEN
 | [`concepts/`](concepts/README.md) | MOD-01…06 architecture prompts |
 | [`docs/guides/workflows/`](docs/guides/workflows/README.md) | Tutorials + artifact matrix |
 | [`docs/integration/`](docs/integration/) | Vendor mirror layout + `MANIFEST` template (project adds artifacts) |
-| [`templates/`](templates/README.md) | **`cursorrules.template`** — copy to repo root as `.cursorrules` |
+| [`templates/`](templates/README.md) | **`cursorrules.template`** — copy to repo root as `.cursorrules`; **`.ai/.cursorrules`** mirrors the template when present (keep in sync) |
 | `plans/`, `features/`, … | **Pointers only** → `.work/` |
 
 ---

@@ -4,7 +4,8 @@ description: >-
   Open or close an AI working session with verified context load, HANDOFF and NEXT
   updates, and optional git commit/push. Use when the user says session-control start,
   session-control close, @session-control start, close commit, or close commit push.
-  Never commits unless the close invocation includes commit.
+  Never commits unless the close invocation includes commit. On close commit, MUST run
+  git add + git commit in the shell for all safe dirty paths (not HANDOFF-only).
 ---
 
 # session-control
@@ -20,6 +21,7 @@ Bookend AI work sessions so the next chat (or human) can resume without guessing
 **Hard rules:**
 
 - **Default close:** never `git commit` or `git push`. Only when close invocation includes **`commit`** and/or **`push`** (see [Parse invocation](#parse-invocation)).
+- **`close commit` / `close commit push`:** **MUST** run `git add` + `git commit` in the shell (see [C4b](#c4b--git-actions-modifiers-only)). A dirty tree after close with only a draft message is **fail**.
 - **Always** show the commit message — drafted, used for commit, or `none — working tree clean`.
 - Never edit files marked **archived** or **do not edit** in HANDOFF.
 - Never paste secrets from `.env`, `credentials/`, or tokens into chat or HANDOFF.
@@ -38,14 +40,17 @@ Normalize the user message to **verb** + optional **modifiers**. The word `sessi
 | `session-control` **start** - \<goal\> | start | — |
 | `@session-control` **close** | close | draft message only |
 | `session-control` **close** | close | draft message only |
-| `session-control` **close** **commit** | close | commit (HEREDOC message) |
+| `session-control` **close** **commit** | close | commit all **safe** dirty paths (default scope — [C4b](#c4b--git-actions-modifiers-only)) |
+| `session-control` **close** **commit** **scoped** | close | commit only HANDOFF + NEXT + paths listed in close report |
 | `session-control` **close** **commit** **push** | close | commit then push |
 | `session-control` **close** **push** | close | treat as **commit push** (`push` requires commit) |
 | `@session-control` **status** | status | — |
 
 **Aliases (same verb):** `begin`, `open` → start; `end`, `handoff` → close.
 
-**Goal text:** anything after `-` or on a new line after `start` (not the words `commit`/`push`).
+**Goal text:** anything after `-` or on a new line after `start` (not the words `commit`/`push`/`scoped`).
+
+**Commit scope:** default is **full safe tree** (what humans expect from `git add` of their session work). Use **`commit scoped`** only when the user wants bookend files only.
 
 ---
 
@@ -267,18 +272,45 @@ Valid types: `feat`, `fix`, `refactor`, `docs`, `chore`, `style`, `test`.
 | Modifier | Action |
 |----------|--------|
 | *(none)* | Message only. User runs `git commit` themselves. |
-| `commit` | Only if C1 secrets **pass**. After C5/C6: `git add` relevant files → `git commit` (HEREDOC, C4 message) → record exit code. |
+| `commit` | Only if C1 secrets **pass**. After C5/C6: stage per **default scope** → `git commit` (HEREDOC) → verify tree → record SHA. |
+| `commit scoped` | After C5/C6: stage only `{HANDOFF}`, `{ITERATION_CARRIER}`, and paths explicitly tied to this session in the close report. |
 | `commit push` | After successful commit: `git push` (current branch). Warn before force-push. |
+
+**Hard rule — agents MUST execute git:** Typing `@session-control close commit` does not commit by itself. The agent **MUST** run shell commands below. Checklist item 6 is **fail** if the tree still has unstaged safe changes and no commit SHA was produced.
+
+**Default commit scope** (when modifier is `commit` or `commit push`, not `scoped`):
+
+1. Run `git status --porcelain` (from C1).
+2. Build the stage list = every path with status `M`, `A`, `D`, `R`, `C`, or `??` (untracked) **except** paths matching:
+   - Secrets scan patterns (C1) — never add
+   - `tmp/`, `.obfuscation/output/` — never add unless user explicitly named them for commit
+   - Protected files per `{AGENT_RULES_FILE}` §Protected Files — **do not add**; list in close report as follow-up
+3. Stage by top-level area when many files share a prefix (typical):
+   ```bash
+   git add .ai/ .work/ apis/ dashboard/ bin/ DOCS_TECH_STACK.md README.md
+   ```
+   Or stage explicit paths from step 2 if the diff is small.
+4. **Do not** default to HANDOFF + NEXT only — that is **`commit scoped`**, not default `commit`.
+5. If the only remaining dirty paths are excluded (protected / secrets), commit what was staged and report exclusions.
 
 **Commit command shape:**
 
 ```bash
-git add <paths>
+git add <paths-from-scope>
 git commit -m "$(cat <<'EOF'
 <exact message from C4>
 EOF
 )"
+git status -sb
+git log -1 --oneline
 ```
+
+**Post-commit verification (mandatory):**
+
+| Check | pass when |
+|-------|-----------|
+| Commit created | `git log -1` shows new SHA |
+| Staging complete | No remaining `M`/`D`/`??` in safe paths from step 2, **or** report lists each leftover path and why (protected, secrets, intentional WIP) |
 
 **On commit failure:** report hook output; do not claim close complete for git step; HANDOFF/NEXT updates still stand if already written.
 
@@ -328,7 +360,8 @@ If the repo uses plan-foundation conventions, run **status** (read-only) and att
 | 3 | Verification honest | pass/fail | |
 | 4 | Follow-ups listed | pass | |
 | 5 | Commit message shown | pass | always |
-| 6 | Git commit (if requested) | pass/fail/skip | modifier `commit` |
+| 6 | Git commit (if requested) | pass/fail/skip | modifier `commit`; SHA + `git status` evidence |
+| 6b | Full safe tree staged (default `commit`) | pass/fail/skip | not `scoped`; leftover safe paths listed |
 | 7 | Git push (if requested) | pass/fail/skip | modifier `push` |
 | 8 | HANDOFF updated | pass/fail | |
 | 9 | NEXT updated | pass/fail | |
@@ -364,7 +397,8 @@ If the repo uses plan-foundation conventions, run **status** (read-only) and att
 | **Close** | Large uncommitted diff → suggest commit split |
 | **Close** | User says "close without updating HANDOFF" → only allowed if they confirm; mark checklist item `skip` with reason |
 | **Close** | Protected files changed → flag for explicit owner review — see `{AGENT_RULES_FILE}` §Protected Files |
-| **Close** | `close commit` / `close commit push` → run C4b after HANDOFF/NEXT; always echo message used |
+| **Close** | `close commit` / `close commit push` → run C4b in shell after HANDOFF/NEXT; stage **default scope**; always echo SHA + post-commit `git status -sb` |
+| **Close** | User expected commit but tree still dirty | **fail** item 6/6b; list unstaged paths; do not claim "close commit" succeeded |
 | **Close** | `push` without network → report failure; do not claim pushed |
 
 ---
@@ -374,6 +408,8 @@ If the repo uses plan-foundation conventions, run **status** (read-only) and att
 - Claiming "context loaded" without reading HANDOFF and NEXT
 - Closing session without updating HANDOFF and NEXT
 - Committing on plain `close` (without `commit` modifier)
+- **`close commit` with only HANDOFF/NEXT staged** while other safe paths remain dirty (use `commit scoped` if intentional)
+- **Reporting close commit done without running `git commit`** or without a new SHA
 - Omitting the commit message block from the close report
 - Putting secrets or PII in HANDOFF
 - Editing archived decision prompts during close "cleanup"

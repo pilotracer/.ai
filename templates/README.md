@@ -25,7 +25,8 @@ Or: `@project-bootstrap init`
 
 | Output | Source template |
 |--------|-----------------|
-| `.cursorrules` | `cursorrules.template` |
+| `.cursorrules` (repo root) | `cursorrules.template` |
+| `.ai/.cursorrules` (optional mirror) | Keep in sync with `cursorrules.template` when Agent OS ships an in-tree copy |
 | `DOCS_TECH_STACK.md` | `DOCS_TECH_STACK.md.template` |
 | `.work/README.md` | `work/README.md.template` |
 | `.work/context/HANDOFF.md` | `work/context/HANDOFF.md.template` |
@@ -70,6 +71,8 @@ Or: `@project-bootstrap init`
 | `REPLACE:FRONTEND_CONFIG_PATHS` | Protected frontend configs |
 
 Full list also appears in `cursorrules.template` § Placeholder quick map.
+
+**Git / session-control:** `cursorrules.template` and `.ai/.cursorrules` (if present) must include the mandatory `@session-control close commit` rule under § Git — keep both files aligned when editing either one.
 
 Also customize **standards** under `.ai/standards/20260517-*.md` and set:
 
