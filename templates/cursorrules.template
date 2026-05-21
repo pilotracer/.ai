@@ -111,6 +111,8 @@ Portable process docs: **`.ai/docs/guides/workflows/README.md`** (artifact matri
 | `REPLACE:LINT_COMMAND` | Lint invocation (e.g. `ruff check .`) |
 | `REPLACE:TYPECHECK_COMMAND` | Type-check invocation (e.g. `pyright .` or `tsc --noEmit`) |
 | `REPLACE:DEV_STACK_SCRIPT` | Host script for compose control (e.g. `bin/start.sh`) |
+| `REPLACE:SERVICE_FRONTEND` | Optional compose service for UI (e.g. `dashboard`, `web`) |
+| `REPLACE:FRONTEND_WORKDIR` | In-container path to frontend app (e.g. `/app`) |
 
 **P0 product intent (canonical):** `{PLANS_ROOT}/foundation/*-01-*-initial-scope.md` — created by `@plan-foundation greenfield`. `{PROMPTS_ROOT}/initial.md` is **user scratch only**; skills must not read or create it unless the user explicitly names that path.
 
@@ -249,8 +251,28 @@ Numbered SQL under **`REPLACE:MIGRATIONS_DIR`** is the default schema path. Proc
 ## Docker / Dev Environment
 
 ### Run Tooling in Containers (when the project uses Docker)
-- NEVER run bare `npm`, `yarn`, `next`, `python`, `pytest`, or type-checkers on the host if the project standard is containerized.
-- All test/lint/type commands MUST run inside the documented compose service.
+- NEVER run bare `npm`, `yarn`, `next`, `python`, `pytest`, `pip install`, or type-checkers on the **host** when the project uses Compose for that service.
+- All test/lint/type/build commands for app code MUST run inside the documented compose service.
+
+### Host hygiene (container-first dependencies)
+
+**Anti-pattern:** Installing project or service dependencies on the host (e.g. `npm install` at repo root to "fix" a Next.js build). That bloats and dirties the host — containers exist to isolate toolchain and `node_modules`/venvs.
+
+**Goal:** Keep the host free of service dependency trees and build artifacts. Install and run inside the container that owns the service.
+
+| Action | Where |
+|--------|--------|
+| `npm` / `yarn` / `pnpm install`, `pip install`, `go mod`, etc. for a **service** | Inside that service's compose container (bind-mount app source in `docker-compose` first) |
+| Tests, lint, type-check, app builds | Same — `docker compose exec <service> …` (see examples below) |
+| Rare host command | Only if `REPLACE:TECH_STACK_DOC` documents a non-container local workflow **or** the user explicitly approves a one-off host command **in the same message** |
+
+**Example (frontend):** Map the app directory in compose, then:
+
+```bash
+docker compose exec REPLACE:SERVICE_FRONTEND bash -c "cd REPLACE:FRONTEND_WORKDIR && npm ci"
+```
+
+Do **not** run `npm install` on the host for containerized frontends.
 
 ### Container Reference (customize)
 

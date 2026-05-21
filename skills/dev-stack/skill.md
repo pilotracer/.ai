@@ -28,6 +28,7 @@ Generate or update a **single-file** POSIX shell script (`bin/start.sh` preferre
 - **Menu UX:** categorized sections, live stack summary (running/total, health probes), optional terminal colors, `r` refresh, `?` help - see `reference.md` §Interactive menu.
 - **`set -euo pipefail`** at top; in interactive menu loops, scope `set +e` / `set -e` around compose calls so failures return to the menu instead of exiting the shell.
 - **Respect protected files** where the repo marks them (e.g. this project's `.cursorrules` §Protected Files): do not change `docker-compose*.yml`, `Dockerfile.*`, or `.env*` **unless the user explicitly permits** those edits in the same message. The skill may still **generate** `bin/start.sh` without touching compose.
+- **Host hygiene:** Do not document or script host-side `npm`/`yarn`/`pip install` for stack services. Package installs belong **inside** compose services (`.cursorrules` § Host hygiene); `start.sh` may offer `exec` into a service for installs when appropriate.
 
 ---
 

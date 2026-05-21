@@ -30,6 +30,7 @@ Execute implementation iterations derived from an **Approved master plan** (`{PL
 - **Scope discipline.** Do not modify any file not declared in the task's file list. Undo and document any accidental out-of-scope change.
 - **Schema changes go through `db-migration`.** Stop the task, create the migration script, resume. No inline DDL in application code. Follow `.cursorrules` § **Migration policy** (startup runner, verify, human approval for exceptions/test DML).
 - **Verification commands** come from `{AGENT_RULES_FILE}` § Docker (or § local/CI from `REPLACE:TECH_STACK_DOC` when not containerized). Never hardcode another project's service name, workdir, or toolchain.
+- **No host dependency installs** for containerized services (`{AGENT_RULES_FILE}` § Host hygiene) — e.g. run `npm ci` via `docker compose exec`, not on the host.
 - **Protected files** per `{AGENT_RULES_FILE}` §Protected Files - require explicit user permission before modification. Stop and ask.
 - **No secrets in code, tests, or comments.** Use `.env` variables or KMS references.
 - **Completion Gate is non-negotiable.** Per `.cursorrules`: code changed → checks run → output reviewed → residual risks listed. Cannot be skipped.
