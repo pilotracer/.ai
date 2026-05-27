@@ -115,6 +115,7 @@ Replace `M{N}` with the milestone you're working on (see `NEXT.md ## Recommended
 | To start a brand-new project | `@plan-foundation greenfield` |
 | To check if foundation work is done | `@plan-foundation status` then `@plan-foundation certify` |
 | To audit foundation or master plans (symmetric to code-verify) | `@plan-verify foundation` · `@plan-verify master` · `@plan-verify alignment` |
+| To map app routes/pages/APIs to feature SPECs (code locate-ability) | `@plan-verify coverage` → `@plan-repair repair - from coverage` |
 | Existing repo never ran plan-foundation / plan-master (brownfield) | `@plan-verify brownfield` → `@plan-repair brownfield` → `@plan-verify brownfield` |
 | To fix plan gaps or brownfield planning docs | `@plan-repair foundation - <goal>` · `@plan-repair master - <goal>` · `@plan-repair brownfield` |
 | To author the master implementation plan | `@plan-master greenfield` (foundation must be `plan-master-ready` first; if a draft plan exists - `@plan-master continue`) |
@@ -231,6 +232,7 @@ Use **`@process-router - <question>`** for anything not listed - it routes to th
 | Which concept prompt (MOD)? | `@concept-run list` · `@concept-run - MOD-06` (required for agent/Cursor code sessions unless **`human-only`**) |
 | Add a DB table/column? | `@db-migration create - <description>` |
 | Fix broken `NEXT.md` / plan drift? | `@plan-verify alignment` · `@plan-repair repair - from alignment` · `20260518-tutorial-fix-existing-plans.md` · `@code-implementation plan - M{N}` |
+| Unmapped code / feature catalog gaps? | `@plan-verify coverage` · `@plan-repair repair - from coverage` |
 | Tests/lint/type-check failed? | §6 above · re-run task gate per `.cursorrules` |
 | Close session safely? | `@session-control close` · `@session-control close commit` · `@session-control close commit push` |
 | Foundation vs master plan? | `plan-foundation` = P0–P6 + **plan-master-ready** · `plan-master` = full plan + **implementation-ready** |

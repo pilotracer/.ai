@@ -21,6 +21,7 @@ Supplement to `skill.md`. Invocation examples and source-mode mapping.
 ```text
 @plan-verify alignment
 @plan-repair repair - from alignment
+@plan-repair repair - from coverage
 ```
 
 ### Explicit goal (open language)

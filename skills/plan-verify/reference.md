@@ -11,6 +11,8 @@ Supplement to `skill.md`. Invocation examples and mode picker.
 @plan-verify foundation
 @plan-verify master
 @plan-verify alignment
+@plan-verify coverage                 # app surfaces vs SPECs / DIRECTORY_MAP
+@plan-verify registry                 # alias: coverage
 @plan-verify drift                    # alias: alignment
 @plan-verify status
 @plan-verify                          # default: brownfield if code-first repo; else alignment / master / foundation
@@ -23,6 +25,8 @@ Open language (agent maps to mode; emits **Request interpretation** block before
 @plan-verify - is our master plan ready for implementation?
 @plan-verify - check NEXT against the full plan for M2
 @plan-verify - align existing repo to Agent OS without plan-foundation greenfield
+@plan-verify - find unmapped dashboard pages and API routes
+@plan-verify coverage - audit code-to-feature registry before M2
 ```
 
 **Interpretation flow (free requests):**

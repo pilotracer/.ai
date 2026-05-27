@@ -94,7 +94,22 @@ Feature flags, migration order, rollback steps.
 
 ---
 
-## 13. Concept / NFR registry (section 15 in FEATURE_STANDARD)
+## 13. Open questions
+
+REPLACE:OPEN_QUESTIONS
+
+---
+
+## 14. Implementation map (optional)
+
+| Layer | Paths |
+|-------|-------|
+| frontend | REPLACE:FRONTEND_PATHS |
+| backend | REPLACE:BACKEND_PATHS |
+
+---
+
+## 15. Concept / NFR registry
 
 | Concept id | Applies | Notes |
 |------------|---------|-------|

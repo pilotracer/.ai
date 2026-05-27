@@ -4,17 +4,15 @@
 
 ## Session status
 
-**Open:** -
+**Closed:** 2026-05-27 — Added `@plan-verify coverage` and `@plan-repair repair - from coverage` for code-to-SPEC registry parity; synced framework guidance into START_HERE, standards, and templates.
 
-**Updated:** YYYY-MM-DD
+**Updated:** 2026-05-27
 
-**Closed:** -
-
-**Repository state:** Greenfield / planning / implementation - describe briefly.
+**Repository state:** Agent OS framework repo (self-hosted). Coverage/registry verify-repair path documented; `framework-verify.sh` passed this session. Codeiva consumer patch applied out-of-band at `/mnt/data/Projects/CODE/RECODE/codeiva` (not in this git tree).
 
 **Recommended pick-up file:** `.work/plans/NEXT.md`
 
-**Lost or new?** Read `.ai/START_HERE.md` (from repo root).
+**Lost or new?** Read `START_HERE.md` (from repo root).
 
 ---
 
@@ -40,6 +38,7 @@ End with **`@session-control close`** (add `commit` / `commit push` only when re
 | Stack / topology | `REPLACE:TECH_STACK_DOC` |
 | Master plan / milestones | `.work/plans/full/*-full-plan.md` |
 | High-risk feature | Relevant `.work/features/<slug>/*-SPEC.md` |
+| Unmapped app surfaces / registry gaps | `@plan-verify coverage` |
 
 ---
 
@@ -55,6 +54,7 @@ End with **`@session-control close`** (add `commit` / `commit push` only when re
 
 | Date | Session | Artifacts |
 |------|---------|-----------|
+| 2026-05-27 | Coverage/registry parity | `plan-verify` coverage mode; `plan-repair` from coverage; FEATURE_STANDARD §14; DIRECTORY_MAP gate; templates/work/reports |
 | YYYY-MM-DD | | |
 
 ---

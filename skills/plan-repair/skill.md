@@ -47,6 +47,7 @@ Normalize to **mode** + optional **source** or **goal text** (after `-`). ASCII 
 | `@plan-repair` **repair** - **from** **foundation** | repair (foundation) | Findings from `@plan-verify foundation` |
 | `@plan-repair` **repair** - **from** **master** | repair (master) | Findings from `@plan-verify master` |
 | `@plan-repair` **repair** - **from** **alignment** | repair (alignment) | Findings from `@plan-verify alignment` |
+| `@plan-repair` **repair** - **from** **coverage** | repair (coverage) | Findings from `@plan-verify coverage` |
 | `@plan-repair` **repair** - **custom** - \<brief\> | repair | User brief → F* table → targeted layer |
 | `@plan-repair` **brownfield** | brownfield | [Brownfield bootstrap](#brownfield-bootstrap) |
 | `@plan-repair` **brownfield** - **foundation** | brownfield | Scaffold + foundation artifacts |
@@ -306,6 +307,40 @@ Or run **`@plan-repair brownfield`** to align without prior formal foundation.
 
 ---
 
+## Coverage repair
+
+**Triggers:** `repair - from coverage`, `@plan-verify coverage` **fail** or **pass with gaps**, or user goal to register unmapped app surfaces.
+
+**Objective:** Close gaps between application surfaces and `{FEATURE_SPEC_ROOT}` without inventing parallel registries (`feature.yml`, ad-hoc domain-registry files). Canon: FEATURE_STANDARD SPEC + DIRECTORY_MAP.
+
+### CG0 - Intake
+
+1. Run `@plan-verify coverage` **or** absorb a coverage report from chat (same session).
+2. Build F* rows: one per **unmapped** surface (severity **High** for production routes/APIs; **Med** for cross-cutting shell/LMS-style clusters).
+
+### CG1 - Remediate (per gap)
+
+| Step | Action |
+|------|--------|
+| 1 | Pick kebab-case **slug** (`dashboard-shell`, `courses-lms`, …) — no collision with existing folder |
+| 2 | `@feature-spec create - <slug>` — **Draft** SPEC; fill **Implementation map** with inventoried paths; Purpose one paragraph; §2 Out of scope explicit |
+| 3 | Update DIRECTORY_MAP bounded-context / path rows to reference the slug |
+| 4 | Add slug to `{FEATURE_SPEC_ROOT}/README.md` index (navigation list only — no duplicate path tables) |
+
+**Do not** create `feature.yml` unless the user explicitly requires a legacy consumer; prefer SPEC **§14 Implementation map**.
+
+### CG2 - Optional audit artifact
+
+When user asked to persist the verify run, update `{WORK_ROOT}/reports/YYYYMMDD-code-registry-audit.md` **Resolved** rows for closed gaps.
+
+### CG3 - Post-repair
+
+[R4](#r4--re-verify-mandatory) → `@plan-verify coverage`.
+
+If framework slots were also missing → `@plan-verify brownfield` after coverage **pass**.
+
+---
+
 ## Brownfield repair protocol
 
 **Triggers:** `@plan-repair brownfield`, `brownfield - foundation`, `brownfield - master`, BF0 = yes on any repair, or verify **brownfield-gap** / **fail** with brownfield header.
@@ -342,7 +377,7 @@ Use the same BF0 rules as `plan-verify` § Brownfield detection. If **brownfield
 | `02` integration | If external APIs | `.ai/docs/integration/`, code clients |
 | `03` adjacency | If multi-product | README roadmap, module boundaries |
 | ADRs | If `{DECISIONS_ROOT}` thin | Migrate `docs/adr/*` → `.work/decisions/` or index with links |
-| SPECs | If contexts lack SPEC | `@feature-spec create - <slug>` from module + tests (**Inference** rules) |
+| SPECs | If contexts lack SPEC | `@feature-spec create - <slug>` from module + tests (**Inference** rules); or `@plan-verify coverage` → `repair - from coverage` |
 | Standards | If missing | Copy from `.ai/standards/` templates; fill **Inference** from linter/tsconfig |
 | Registries | If empty | Extract from TODOs, README risks, open issues |
 

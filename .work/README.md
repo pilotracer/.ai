@@ -15,6 +15,7 @@
 | `.work/prompts/` | Decision questionnaires; optional user scratch (`initial.md` - **not read by skills** unless user names it) |
 | `.work/decisions/` | ADRs (`YYYYMMDD-NNN-*.md`) |
 | `.work/context/` | `HANDOFF.md` - read/write via `@session-control` |
+| `.work/reports/` | Optional verify snapshots (e.g. code-registry audit from `@plan-verify coverage`) |
 
 ## Placeholder map
 

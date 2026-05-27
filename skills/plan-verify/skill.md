@@ -2,10 +2,11 @@
 name: plan-verify
 description: >-
   Verification layer for planning artifacts: foundation (P0–P6), master plan,
-  NEXT vs full-plan alignment, and brownfield framework alignment when
-  plan-foundation or plan-master were never run formally. Orchestrates upstream
-  status/integrity when present; otherwise assesses repo evidence against .ai
-  slots. Use plan-verify foundation, master, alignment, brownfield, or open language.
+  NEXT vs full-plan alignment, code-to-SPEC registry coverage, and brownfield
+  framework alignment when plan-foundation or plan-master were never run formally.
+  Orchestrates upstream status/integrity when present; otherwise assesses repo
+  evidence against .ai slots. Use plan-verify foundation, master, alignment,
+  coverage, brownfield, or open language.
 ---
 
 # plan-verify
@@ -41,6 +42,8 @@ Normalize to **mode** + optional scope. Use ASCII hyphen **`-`** between tokens.
 | `@plan-verify` **drift** | alignment | Alias for **alignment** |
 | `@plan-verify` **status** | status | [Status protocol](#status-protocol) — read-only summary |
 | `@plan-verify` **brownfield** | brownfield | [Brownfield verify](#brownfield-verify-protocol) — full framework alignment pass |
+| `@plan-verify` **coverage** | coverage | [Coverage verify](#coverage-verify-protocol) — app surfaces vs SPECs / DIRECTORY_MAP |
+| `@plan-verify` **registry** | coverage | Alias for **coverage** |
 | `@plan-verify` **verify** | *(infer)* | See **Default** below |
 | `plan-verify` **audit** **foundation** | foundation | Alias |
 | `plan-verify` **check** **master** | master | Alias |
@@ -57,6 +60,8 @@ Normalize to **mode** + optional scope. Use ASCII hyphen **`-`** between tokens.
 **Aliases:** `audit`, `check` → same mode inference as bare `@plan-verify`.
 
 Open language → **brownfield** when user says: existing repo, legacy, never ran plan-foundation, adopt Agent OS, align to `.ai` framework, brownfield.
+
+Open language → **coverage** when user says: unmapped surfaces, code-to-plan parity, feature catalog gap, 100% cataloged, map routers/pages to features, undocumented app surfaces.
 
 ### Open language interpretation (free requests)
 
@@ -440,6 +445,104 @@ When **BF0 = yes**:
 
 ---
 
+## Coverage verify protocol
+
+**Triggers:** `@plan-verify coverage`, `@plan-verify registry`, or open language about **unmapped app surfaces** / **code-to-registry parity**.
+
+**Objective:** Read-only inventory of **deployable application surfaces** (routes, pages, controllers, standalone utilities under `{APP}`) vs **registry artifacts** (`{FEATURE_SPEC_ROOT}/<slug>/*-SPEC.md` **Implementation map**, `{BOUNDARY_MAP}` / DIRECTORY_MAP rows). Ensures agents can locate code from `.work/` without ad-hoc tree walks.
+
+**Not in scope:** Full behavioural SPEC review (use `@feature-spec review`); iteration task scope (use `@code-verify milestone`); framework self-check (use `bash scripts/framework-verify.sh` from Agent OS repo root).
+
+**Legacy artifacts:** Project-specific `feature.yml` or domain-registry markdown files are **not** framework canon. Treat them as **substitutes** during inventory; migrate paths into SPEC **Implementation map** (FEATURE_STANDARD) when repairing.
+
+### C0 - Prerequisites
+
+| # | Read | When |
+|---|------|------|
+| 1 | `{AGENT_RULES_FILE}` — `REPLACE:APP_ROOT`, `REPLACE:FRONTEND_ROOT`, boundary placeholders | always |
+| 2 | `.ai/standards/*DIRECTORY_MAP*` (or `{BOUNDARY_MAP}`) | always |
+| 3 | `{FEATURE_SPEC_ROOT}/README.md` + each `*/…-SPEC.md` (Implementation map + Purpose) | always |
+| 4 | Application tree under `{APP}` (2–3 levels; route entrypoints) | always |
+
+If no application source exists → **skip** with verdict **pass** (nothing to map); suggest `@plan-verify foundation`.
+
+### C1 - Surface inventory (mandatory)
+
+Build a **surface list** — one row per independently routable or operable unit:
+
+| Surface kind | Typical evidence (adapt per stack) |
+|--------------|-----------------------------------|
+| HTTP API routers / controllers | FastAPI `APIRouter`, Express routers, Nest modules |
+| UI routes / pages | Next.js `pages/` or `app/`, React Router route files |
+| BFF / API routes | `pages/api/`, server actions with distinct URLs |
+| Workers / jobs | Celery tasks, queue consumers with dedicated modules |
+| Standalone utilities | Scripts under `{APP}` invoked in production (not one-off `scripts/` dev tools unless documented in HANDOFF) |
+
+**Exclude:** `tests/`, `migrations/`, generated code, vendor mirrors under `.ai/docs/integration/`, pure config.
+
+Label each row **Confirmed** (file cite) | **Inference** (heuristic grouping).
+
+### C2 - Registry mapping (mandatory)
+
+For each surface, resolve **mapped slug** using this order:
+
+1. SPEC **## Implementation map** (§14) path table (FEATURE_STANDARD) — **Confirmed**
+2. DIRECTORY_MAP bounded-context / path row — **Confirmed** or **Inference**
+3. SPEC Purpose / §6 APIs naming the surface — **Inference**
+4. No match → **unmapped**
+
+### C3 - Coverage matrix
+
+| Surface | Mapped slug | Evidence | Status |
+|---------|-------------|----------|--------|
+| … | `<slug>` \| — | path + SPEC § | mapped \| unmapped \| waived |
+
+**Waivers:** Only when HANDOFF or same-message user documents intentional orphan (e.g. deprecated module pending removal). Cite waiver id.
+
+**Coverage %:** `mapped + waived` / total surfaces (round down; label **Estimate**).
+
+### C4 - Coverage report (mandatory)
+
+```markdown
+## plan-verify coverage - <Project>
+
+**Date:** <ISO> · **Mode:** coverage (read-only)
+**Surfaces inventoried:** <N> · **Coverage:** <N>% (Estimate)
+
+### Request interpretation
+<when open language — insert block; else: explicit coverage mode>
+
+### Unmapped surfaces
+| Surface | Suggested slug | Notes |
+|---------|----------------|-------|
+
+### Waivers
+<list or "none">
+
+### Registry snapshot
+| Slug | SPEC path | Has Implementation map? |
+|------|-----------|-------------------------|
+
+### Verdict
+**pass** | **pass with gaps** | **fail**
+
+### Next step
+- gaps: `@plan-repair repair - from coverage` (or `@plan-repair brownfield` when framework slots also missing)
+- pass: optional `bash scripts/framework-verify.sh` when validating Agent OS install
+```
+
+**Verdict rules:**
+
+- **pass** — 100% mapped or only documented waivers; DIRECTORY_MAP references every bounded context with a SPEC.
+- **pass with gaps** — ≤3 unmapped non-critical surfaces (shell fragments, dev-only) with repair plan obvious.
+- **fail** — any unmapped production route/API/page cluster, or >10% unmapped without waivers.
+
+### C5 - Optional persistence
+
+When user asks to **record** the audit in the same message, write `{WORK_ROOT}/reports/YYYYMMDD-code-registry-audit.md` (summary + unmapped table only). Otherwise report in chat only — verify stays read-only.
+
+---
+
 ## Status protocol
 
 Read-only. No artifact writes.
@@ -462,7 +565,7 @@ Read-only. No artifact writes.
 **Implementation-ready:** yes | no | unknown
 **Active iteration:** M{N} | none
 
-**Suggested verify:** @plan-verify brownfield | foundation | master | alignment
+**Suggested verify:** @plan-verify brownfield | foundation | master | alignment | coverage
 ```
 
 ---
@@ -473,7 +576,8 @@ Read-only. No artifact writes.
 |-------|----------------|
 | `plan-foundation` | **Upstream** for foundation status; plan-verify **orchestrates**, does not replace |
 | `plan-master` | **Upstream** for master status + integrity |
-| `plan-repair` | **Downstream** on **fail** — `@plan-repair repair - from foundation` \| `from master` \| `from alignment` |
+| `plan-repair` | **Downstream** on **fail** — `@plan-repair repair - from foundation` \| `from master` \| `from alignment` \| `from coverage` |
+| `feature-spec` | **Downstream** for new slugs when coverage finds unmapped surfaces |
 | `code-verify` | **Orthogonal** — code vs plan; run both before broad release |
 | `code-repair` | Wrong layer for plan gaps — redirect to `plan-repair` |
 | `code-implementation` | Regenerates iteration block after master/plan repair |
@@ -506,3 +610,5 @@ Read-only. No artifact writes.
 - Hard-stopping brownfield repos solely for missing formal certify (use BF branch + `@plan-repair brownfield`)
 - Claiming **implementation-ready** or **plan-master-ready** from brownfield alignment alone
 - Running open-language verify without emitting a **Request interpretation** block (see [Open language interpretation](#open-language-interpretation-free-requests))
+- Claiming **100% cataloged** from framework slot alignment alone — run **coverage** when the question is code locate-ability
+- Introducing parallel registries (`feature.yml`, per-repo domain-registry files) instead of SPEC **Implementation map** + DIRECTORY_MAP

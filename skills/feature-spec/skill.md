@@ -73,7 +73,8 @@ Orchestrate **feature SPEC** artifacts under `{FEATURE_SPEC_ROOT}/<feature-slug>
 4. Create `{FEATURE_SPEC_ROOT}/<slug>/YYYYMMDD-SPEC.md` with all §3 H2 sections.
 5. Fill **§15 Concept / NFR registry** - one row per MOD-01…MOD-06 with Applies yes/no + reason (or run `@concept-run list` for trigger hints).
 6. Set `**Status:** Draft`.
-7. Output create report with path and open questions (§13).
+7. When creating for **brownfield catalog** or cross-cutting surfaces (shell, layout, analytics): add optional **§14 Implementation map** (FEATURE_STANDARD) with primary file paths from `@plan-verify coverage` or user inventory.
+8. Output create report with path and open questions (§13).
 
 **Stop** if user has not stated problem scope - ask once for one-paragraph purpose.
 

@@ -4,6 +4,11 @@ All notable changes to Agent OS are documented here. Format inspired by [Keep a 
 
 ## [Unreleased]
 
+### Added
+- **`@plan-verify coverage`** (alias `registry`) — read-only code-to-SPEC parity audit; surfaces vs `{FEATURE_SPEC_ROOT}` Implementation map and DIRECTORY_MAP.
+- **`@plan-repair repair - from coverage`** — register unmapped surfaces via `@feature-spec create` + DIRECTORY_MAP (no parallel `feature.yml` canon).
+- **FEATURE_STANDARD §14 Implementation map** (optional) — primary code paths for brownfield locate-ability.
+
 ### Changed
 - **`.cursorrules` / `cursorrules.template` § Host hygiene** — container-first package installs; anti-pattern for host `npm`/`pip` on Compose projects; frontend `npm ci` in-container example.
 

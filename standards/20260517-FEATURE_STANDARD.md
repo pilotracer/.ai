@@ -52,6 +52,28 @@ Proposal → Spec → Implementation → Release notes → Archive
 ## 10. Security and privacy
 ## 11. Test plan
 ## 12. Rollout and rollback
+## 13. Open questions
+## 14. Implementation map (optional — brownfield / locate-ability)
+## 15. Concept / NFR registry
+```
+
+**§14 Implementation map** — list primary code paths so `@plan-verify coverage` and agents can find files without tree walks. Not a substitute for R1… behavioural rules. Use for cross-cutting surfaces (shell, layout, analytics dashboards) and brownfield adoption.
+
+**§15 Concept / NFR registry** — one row per MOD-01…MOD-06 (`Applies` yes/no + reason). Required before **Approved** (see `feature-spec` skill).
+
+```markdown
+## 14. Implementation map (optional)
+| Layer | Paths |
+|-------|-------|
+| frontend | `dashboard/src/pages/...` |
+| backend | `apis/src/...` |
+```
+
+```markdown
+## 15. Concept / NFR registry
+| Concept id | Applies | Notes |
+|------------|---------|-------|
+| MOD-06 | yes | … |
 ```
 
 ## 4. SPEC quality bar
@@ -86,3 +108,5 @@ Proposal → Spec → Implementation → Release notes → Archive
 | Review SPEC | `@feature-spec review - <path>` |
 | Implement | `@code-implementation start` / `continue` |
 | Verify milestone | `@code-verify milestone` |
+| Map code surfaces to registry | `@plan-verify coverage` |
+| Close registry gaps | `@plan-repair repair - from coverage` |

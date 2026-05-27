@@ -67,3 +67,5 @@ REPLACE:APP_ROOT/
 ## Gate
 
 Foundation doc 04 should reference this map. Update it when adding a new top-level directory (ADR per FEATURE_STANDARD §9).
+
+**Code-to-registry parity:** After material app-tree changes or brownfield adoption, run `@plan-verify coverage`. Unmapped routes/pages/controllers → `@plan-repair repair - from coverage` (SPEC **Implementation map**, not parallel `feature.yml` registries).
