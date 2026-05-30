@@ -26,7 +26,7 @@ Then in chat:
 
 ## What you get
 
-- **Skills** - `@session-control`, `@code-implementation`, `@plan-foundation`, … run the playbook (11 in total).
+- **Skills** - `@session-control`, `@code-implementation`, `@plan-foundation`, … run the playbook (14 skills in total).
 - **Standards** - binding contracts (CONVENTIONS, FEATURE_STANDARD, observability, security) keep agent output honest.
 - **`.work/`** - the project's memory: plans, SPECs, ADRs, `HANDOFF.md`, `NEXT.md`. Survives session boundaries.
 - **Gates** - `plan-master-ready`, `implementation-ready`, milestone verify; skip a step and the agent **stops** with a redirect.
@@ -183,7 +183,7 @@ All **14** skills live under [`skills/`](skills/README.md). Invoke as `@<skill-i
 | **code-implementation** | Run one milestone from `NEXT.md`; per-task gates | `plan - M{N}` · `start` · `continue` · `continue - N` · `complete` |
 | **code-verify** | Audits (not implementation): milestone, dirty tree, last commit/push | `milestone` · `uncommitted` · `last` |
 | **code-repair** | Fix verifier/migration/SPEC findings; re-verify before pass | `repair - from uncommitted` · `repair - custom - …` · `status` |
-| **feature-spec** | Author, review, or amend feature SPECs | `create - <slug>` · `review - <path>` · `amend - <slug>` |
+| **feature-spec** | Triage, author, review, or amend feature SPECs | `intake - <free sentence>` · `create - <slug>` · `review - <path>` · `amend - <slug>` |
 | **concept-run** | Run MOD-01…06 architecture/NFR prompts | `list` · `status` · `run - MOD-06` (required for agent-assisted code) |
 | **db-migration** | Idempotent numbered SQL scripts (no Alembic chain) | `init` · `create - <description>` · `run` · `status` · `verify` |
 | **dev-stack** | Generate or update isolated Docker `bin/start.sh` | `init` · `status` |

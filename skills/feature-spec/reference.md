@@ -9,12 +9,17 @@ Supplement to `skill.md`. Invocation examples, mode comparison, and edge cases.
 ### Cursor
 
 ```
+@feature-spec intake - let users export invoices to CSV
+@feature-spec intake - add SSO across the whole app ; force=cross-cutting
 @feature-spec create - user-auth
+@feature-spec create - let users reset their password by email
 @feature-spec review - .work/features/user-auth/YYYYMMDD-SPEC.md
 @feature-spec amend - .work/features/<slug>/YYYYMMDD-SPEC.md
 @feature-spec status - master-data
 @feature-spec approve - .work/features/<slug>/YYYYMMDD-SPEC.md
 ```
+
+> **Intake vs create:** `intake` is the free-text *front door* - it classifies a request and routes it (a `local` request flows straight into `create`; cross-cutting/brownfield/underspecified are handed off to plan skills). The canonical classification table lives in [`skill.md` § Intake protocol](skill.md#intake-protocol).
 
 ### Claude Code / opencode / Codex
 
@@ -34,14 +39,15 @@ Follow .ai/skills/feature-spec/skill.md - status - master-data. Read-only.
 
 ## Mode comparison
 
-| | create | review | amend | status | approve |
-|---|---|---|---|---|---|
-| Read FEATURE_STANDARD | yes | yes | yes | no | yes (via review) |
-| Write SPEC | yes | no | no | no | header only |
-| Write amendment | no | no | yes | no | no |
-| Check §15 registry | yes | yes | no | yes | yes |
-| ADR alignment check | yes | yes | yes | yes | yes |
-| Completion checklist | yes | yes | yes | no | no |
+| | intake | create | review | amend | status | approve |
+|---|---|---|---|---|---|---|
+| Read FEATURE_STANDARD | no | yes | yes | yes | no | yes (via review) |
+| Write SPEC | only if class=local | yes | no | no | no | header only |
+| Write amendment | no | no | no | yes | no | no |
+| Check §15 registry | no | yes | yes | no | yes | yes |
+| ADR alignment check | no | yes | yes | yes | yes | yes |
+| Records to NEXT.md § Intake queue | yes | no | no | no | no | no |
+| Completion checklist | no | yes | yes | yes | no | no |
 
 ---
 
@@ -78,6 +84,10 @@ Amendment filenames:
 | FEATURE_STANDARD path moved | Read `.ai/standards/` for latest `*FEATURE_STANDARD*` by date prefix |
 | No concept pack in repo | §15 required anyway; mark each MOD row `N/A - no pack` with reason |
 | §2 Out of scope empty | Review fails - must be explicit, not `TBD` |
+| Intake request is vague ("make it better") | Class `underspecified` → route to `@plan-foundation probe`; do not create a SPEC yet |
+| Intake spans many milestones / new NFR | Class `cross-cutting` → hand off to `@plan-master probe`; intake does not write the plan |
+| Intake on a repo with no plan | Class `brownfield` → `@plan-verify brownfield` first, then re-run intake |
+| Operator disagrees with detected class | Re-run with `; force=<class>` to override IN1 |
 
 ---
 
@@ -104,7 +114,7 @@ Amendment filenames:
 
 | Prompt | Problem | Use instead |
 |--------|---------|-------------|
-| `@feature-spec create -` (no slug) | No target | Provide a kebab-case slug |
+| `@feature-spec create -` (no slug) | No target | Provide a kebab-case slug, or use `@feature-spec intake - <sentence>` |
 | `@feature-spec create - master-data` (duplicate) | SPEC already exists | `@feature-spec amend` or `review` |
 | Editing SPEC after Approved without amend | Violates immutable rule | `@feature-spec amend - <path>` |
 | Marking SPEC Implemented in this skill | Wrong stage | `code-implementation complete` updates status |

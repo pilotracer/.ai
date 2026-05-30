@@ -39,6 +39,29 @@ for n in "${skill_dirs[@]}"; do
 done
 ok "${skill_count} skills: skill.md + matching frontmatter + README + DEPS rows (derived)"
 
+# Prose drift guard: any "<N> skill(s)" mention in landing docs must match the derived count.
+prose_before="${failures}"
+for doc in README.md START_HERE.md skills/README.md; do
+  while IFS= read -r num; do
+    [[ -z "${num}" ]] && continue
+    if [[ "${num}" -ne "${skill_count}" ]]; then
+      die "${doc} mentions '${num} skills' but ${skill_count} skill dirs exist (stale prose count)"
+    fi
+  done < <(sed 's/[*`]//g' "${doc}" | grep -oE '[0-9]+ skills?' | grep -oE '^[0-9]+' || true)
+done
+[[ "${failures}" -eq "${prose_before}" ]] && ok "skill-count prose matches derived count in landing docs"
+
+# Intake contract guard: classification is agent-judged (no executable classifier),
+# so we structurally assert the feature-spec intake table keeps all 4 classes + the
+# force override - preventing the routing contract from being silently gutted.
+intake_md="skills/feature-spec/skill.md"
+intake_before="${failures}"
+for cls in local cross-cutting brownfield underspecified; do
+  grep -qE "\*\*${cls}\*\*" "${intake_md}" || die "feature-spec intake table missing class '${cls}'"
+done
+grep -qE 'force=<class>' "${intake_md}" || die "feature-spec intake missing 'force=<class>' override"
+[[ "${failures}" -eq "${intake_before}" ]] && ok "feature-spec intake contract: 4 classes + force override present"
+
 # --- 2. Consumer bootstrap smoke ---
 note "Consumer bootstrap smoke"
 SMOKE_ROOT="$(mktemp -d)"

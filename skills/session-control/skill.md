@@ -254,6 +254,8 @@ Do not claim "all good" if tests failed.
 
 **Probe ledger pre-check (only if a `PROBE_LEDGER.md` exists):** run `bash .ai/scripts/readiness-verify.sh`. On **fail** (uncited `confirmed/high`, inflated Coverage %, or `coverage ≥ target` with a gate-blocking dimension still `unknown`), record it under [C3](#c3--follow-ups-required) and recommend `@plan-foundation probe` / `@plan-master probe` - do **not** claim planning is ready.
 
+**Traceability pre-check (only if a master plan exists):** run `bash .ai/scripts/traceability-verify.sh`. On **fail** (an FR maps to no task `M{N}-T{N}`), record under [C3](#c3--follow-ups-required) and recommend `@plan-master revise` / `@plan-repair master` - do **not** claim the plan is implementation-complete.
+
 ### C3 - Follow-ups required
 
 Detect and list:

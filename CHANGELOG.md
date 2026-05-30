@@ -4,6 +4,18 @@ All notable changes to Agent OS are documented here. Format inspired by [Keep a 
 
 ## [Unreleased]
 
+### Added
+- **`@feature-spec intake - <free sentence>`** — free-text feature-intake front door. Classifies a request by blast radius (`local` / `cross-cutting` / `brownfield` / `underspecified`), routes to the right executor (`create`, `plan-master probe`/`plan-repair`, `plan-verify brownfield`, or `plan-foundation probe`), and records it to `NEXT.md § Intake queue` so nothing is lost. Never auto-executes the gated paths; `; force=<class>` overrides classification. Implemented as a mode on `feature-spec` (skill count stays 14); structurally self-tested in `framework-verify.sh`. Supersedes the draft proposal in `.work/plans/proposals/20260529-feature-intake-orchestrator.md` (now **Accepted - implemented**).
+- **Free-text `@feature-spec create -`** — accepts an unstructured sentence (not just a kebab-case slug); new **CR0.5** derives the slug and carries the sentence verbatim into SPEC §1 Purpose.
+- **`feature-request` routing bucket** in `process-router` — routes unstructured "add feature X" intake to `@feature-spec intake`, which classifies and dispatches to the right executor.
+- **Skill-count prose guard** in `framework-verify.sh` — fails when any "`<N> skills`" mention in `README.md` / `START_HERE.md` / `skills/README.md` disagrees with the derived skill count (catches stale narrative counts the registry checks missed).
+- **Traceability pre-check** in `@session-control close` C2 — runs `traceability-verify.sh` when a master plan exists and routes orphan FRs to `@plan-master revise` / `@plan-repair master`.
+- **`CONTRIBUTING.md` § Cutting a release** — documents `scripts/release.sh <version>` as the only sanctioned tagging path.
+- **`.work/plans/proposals/20260529-feature-intake-orchestrator.md`** — draft proposal for a free-text feature-intake orchestrator (`@feature-spec intake`), pending approval.
+
+### Fixed
+- **`README.md`** stale prose count — "(11 in total)" corrected to "(14 skills in total)" and now covered by the prose guard above.
+
 ## [0.3.1] - 2026-05-29
 
 ### Fixed

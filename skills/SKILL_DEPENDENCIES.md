@@ -80,6 +80,7 @@ foundation-complete  →  plan-master-ready  →  implementation-ready
 | **code-repair** `repair` (open language / **custom**) | R0-free implementation alignment when no verifier report in chat | **Recommended** before F* rows |
 | **code-repair** `repair` | Findings from verifier report, fresh `@code-verify` / `@db-migration verify` / `@feature-spec review`, or **custom** brief (R0 gate) | **Recommended:** run source verifier if no report in chat |
 | **code-repair** `status` | - | Read-only |
+| **feature-spec** `intake` | None (free-text front door); classifies + routes, only writes a SPEC when class=`local` (then follows `create` gates) | - (read/route; records to `NEXT.md § Intake queue`) |
 | **feature-spec** `create` | FEATURE_STANDARD; **CR0** hard-stops if `<slug>/` folder exists; warns if `plan-master-ready: no` | **Required** (brownfield) + **Recommended** (readiness) |
 | **feature-spec** `review` / `amend` / `status` / `approve` | FEATURE_STANDARD; `approve` runs `review` first and only flips Status on pass | - |
 | **feature-spec** before **Approved** | §15 concept registry | **Required** per FEATURE_STANDARD |
@@ -152,6 +153,7 @@ All skills use the same verbs where applicable. This keeps muscle memory portabl
 | `complete` | Mark a unit as done | code-implementation |
 | `plan` | Prepare next unit | code-implementation *(alias: `plan-iteration`)* |
 | `init` | One-time setup | project-bootstrap, db-migration, dev-stack |
+| `intake` | Classify a free-text feature request → route to the right executor; records to `NEXT.md § Intake queue` (does not auto-execute cross-cutting/brownfield paths) | feature-spec |
 | `create` | Make a new artifact | feature-spec, db-migration |
 | `amend` | Modify an existing artifact | feature-spec |
 | `review` | Read-only audit of an artifact | feature-spec |

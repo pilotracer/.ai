@@ -25,6 +25,16 @@ CI runs the same checks on push/PR (`.github/workflows/framework-verify.yml`).
 
 **Release smoke (maintainers):** after a tag, copy this tree into a temp app repo, run bootstrap, then walk one skill path (`@session-control start` → manual `NEXT.md` or `@plan-foundation greenfield`). Document friction in `CHANGELOG.md` if gates block unexpectedly.
 
+## Cutting a release (maintainers)
+
+Tags are gated by a preflight - never `git tag` by hand:
+
+```bash
+bash scripts/release.sh <version>   # e.g. 0.3.2
+```
+
+It refuses to create the annotated tag `v<version>` unless **all** verifiers pass (`framework-verify`, `smoke-consumer`, `readiness-verify`, `traceability-verify`), `CHANGELOG.md` has a matching `## [<version>]` section, and the working tree is clean. It never pushes - review, then `git push origin main --follow-tags`. CI re-runs the same checks on the tag.
+
 ## Quick checklist before opening a PR
 
 1. **Read** [`.cursorrules`](.cursorrules) § Core Principles (truth-first, evidence-first, completion gate).

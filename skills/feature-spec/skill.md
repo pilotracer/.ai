@@ -3,7 +3,8 @@ name: feature-spec
 description: >-
   Author, review, or amend feature SPECs per FEATURE_STANDARD. Use when creating
   a new {FEATURE_SPEC_ROOT}/<slug>/SPEC, reviewing before Approved, writing an
-  amendment, or checking SPEC status. Ensures §15 Concept registry and mandatory
+  amendment, checking SPEC status, or triaging a free-text feature request
+  (intake) to the right executor. Ensures §15 Concept registry and mandatory
   H2 sections. Does not implement code.
 ---
 
@@ -30,7 +31,8 @@ Orchestrate **feature SPEC** artifacts under `{FEATURE_SPEC_ROOT}/<feature-slug>
 
 | User says | Mode | Action |
 |-----------|------|--------|
-| `@feature-spec` **create** - \<slug\> | create | New SPEC from template |
+| `@feature-spec` **intake** - \<free sentence\> | intake | Classify an unstructured request → route to the right executor |
+| `@feature-spec` **create** - \<slug \| free-text purpose\> | create | New SPEC from template (derives slug if given a sentence) |
 | `@feature-spec` **review** - \<path\> | review | Checklist against FEATURE_STANDARD |
 | `@feature-spec` **amend** - \<path\> | amend | New amendment file |
 | `@feature-spec` **status** - \<path or slug\> | status | Read-only: exists? status header? §15? |
@@ -44,11 +46,57 @@ Orchestrate **feature SPEC** artifacts under `{FEATURE_SPEC_ROOT}/<feature-slug>
 
 | Mode | Action |
 |------|--------|
+| **intake** | [Intake protocol](#intake-protocol) |
 | **create** | [Create protocol](#create-protocol) |
 | **review** | [Review protocol](#review-protocol) |
 | **amend** | [Amend protocol](#amend-protocol) |
 | **status** | [Status protocol](#status-protocol) |
 | **approve** | Run **review** first; on pass, update `**Status:**` to `Approved` |
+
+---
+
+## Intake protocol
+
+The free-text **front door**: classify one unstructured request, route it to the right executor, and record it so nothing is lost. **Never auto-executes** the cross-cutting / brownfield paths - those carry their own gates; intake only dispatches.
+
+### IN1 - CLASSIFY (by blast radius)
+
+First matching row wins, read top-down:
+
+| Signal in the request | Class | Route to |
+|-----------------------|-------|----------|
+| Repo has **no** foundation/master plan yet | **brownfield** | `@plan-verify brownfield` → `@plan-repair brownfield`, then re-run intake |
+| Vague intent / no measurable outcome statable | **underspecified** | `@plan-foundation probe` (or `@plan-master probe`), then re-classify |
+| Touches ≥2 milestones, adds a new NFR target, or shifts scope | **cross-cutting** | `@plan-master probe` → `@plan-master revise` / `@plan-repair master - <goal>` |
+| Single surface/endpoint/screen, no new cross-cutting NFR | **local** | continue into [CR0.5](#cr05---free-text-argument-derive-slug) → `create` |
+
+**Override:** `@feature-spec intake - <sentence> ; force=<class>` skips IN1 and uses the named class (`local` \| `cross-cutting` \| `brownfield` \| `underspecified`).
+
+### IN2 - ROUTE
+
+State the detected class and the **single** next command.
+- **local** → proceed into [CR0.5](#cr05---free-text-argument-derive-slug) (derive slug) then [CR1](#cr1---author-the-spec).
+- **cross-cutting / brownfield / underspecified** → **stop and hand off** the command; do not run it (each has its own gate).
+
+### IN3 - RECORD (request never lost)
+
+Append one line to `{PLANS_ROOT}/NEXT.md` under a `### Intake queue` heading (create the heading if absent):
+
+```text
+- <YYYY-MM-DD> · <class> · "<original sentence>" → <next command>
+```
+
+If the request is `underspecified` and the owner is not available to probe now, also add it to `{PLANS_ROOT}/UNKNOWNS.md` so it surfaces at session close.
+
+### Intake report
+
+```markdown
+## @feature-spec intake - <short label>
+
+**Request:** "<sentence>"  ·  **Class:** local | cross-cutting | brownfield | underspecified
+**Run next:** <single command>
+**Recorded:** {PLANS_ROOT}/NEXT.md § Intake queue
+```
 
 ---
 
@@ -64,6 +112,16 @@ Orchestrate **feature SPEC** artifacts under `{FEATURE_SPEC_ROOT}/<feature-slug>
    - **Warning:** SPEC will not slot into an Approved master plan yet (`plan-master-ready: no` or unknown). The SPEC is still useful for `plan-foundation` P3, but make sure your team expects out-of-plan SPECs.
    - **Run first (optional):** `@plan-foundation certify plan-master-ready` → `@plan-master status`
    - Then **continue** with create if user confirms in the same message.
+
+### CR0.5 - Free-text argument (derive slug)
+
+If the text after `-` is **not** a valid slug (kebab-case, ≤4 words, no spaces/capitals) treat it as a **free-text purpose**:
+
+1. Propose a kebab-case slug derived from the request (e.g. *"let users export invoices to CSV"* → `invoice-csv-export`). State it; proceed unless the user objects in the same message.
+2. Carry the original sentence verbatim into SPEC **§1 Purpose** (no need to re-ask the one-paragraph purpose in CR1).
+3. Re-run [CR0](#cr0---brownfield--readiness-gates) brownfield/readiness checks against the derived slug.
+
+Explicit kebab-case slug → skip this step.
 
 ### CR1 - Author the SPEC
 
