@@ -11,7 +11,7 @@ All notable changes to Agent OS are documented here. Format inspired by [Keep a 
 - **Skill-count prose guard** in `framework-verify.sh` — fails when any "`<N> skills`" mention in `README.md` / `START_HERE.md` / `skills/README.md` disagrees with the derived skill count (catches stale narrative counts the registry checks missed).
 - **Traceability pre-check** in `@session-control close` C2 — runs `traceability-verify.sh` when a master plan exists and routes orphan FRs to `@plan-master revise` / `@plan-repair master`.
 - **`CONTRIBUTING.md` § Cutting a release** — documents `scripts/release.sh <version>` as the only sanctioned tagging path.
-- **`.work/plans/proposals/20260529-feature-intake-orchestrator.md`** — draft proposal for a free-text feature-intake orchestrator (`@feature-spec intake`), pending approval.
+- **`.work/plans/proposals/20260529-feature-intake-orchestrator.md`** — proposal for the free-text feature-intake orchestrator (`@feature-spec intake`), **Accepted - implemented** in this cut (see the `@feature-spec intake` entry above).
 
 ### Fixed
 - **`README.md`** stale prose count — "(11 in total)" corrected to "(14 skills in total)" and now covered by the prose guard above.
