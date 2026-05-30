@@ -85,6 +85,7 @@ Per [SKILL_DEPENDENCIES.md § Blocked report shape](../SKILL_DEPENDENCIES.md#blo
 |------|------------------|
 | **greenfield** | No `*-full-plan.md` **or** user explicitly asked to replace; if Approved plan exists without **revise** → recommend **revise** instead |
 | **continue** | Latest `*-full-plan.md` exists (Draft or partial) |
+| **probe** | Latest `*-full-plan.md` exists (Draft or partial); if none → run **greenfield** first to create the Draft, then probe |
 | **revise** | Latest `*-full-plan.md` exists |
 | **integrity** | Foundation artifacts and/or master plan exist for the requested scope |
 | **status** / **show** | - (read-only; PG1 not required) |
@@ -100,6 +101,7 @@ Normalize the user message to **verb** + optional **modifiers** + optional **goa
 | `@plan-master` **status** | status | Read-only: plan exists? phase progress? integrity snapshot |
 | `plan-master` **continue** | continue | Resume next incomplete planning phase |
 | `plan-master` **greenfield** | greenfield | New plan from YAML/minimal input |
+| `plan-master` **probe** | probe | Adaptive plan-completeness interrogation; fills gaps before integrity |
 | `plan-master` **integrity** | integrity | Phase 5 only - contradiction and fitness review |
 | `plan-master` **revise** - \<reason\> | revise | Update existing plan; bump version note in plan header |
 | `plan-master greenfield` - startup \| enterprise \| ai-native \| ultra-scale | greenfield | Apply [Advanced mode](#advanced-modes) |
@@ -121,6 +123,7 @@ Normalize the user message to **verb** + optional **modifiers** + optional **goa
 | **status** | [Status protocol](#status-protocol) |
 | **continue** | [Continue protocol](#continue-protocol) |
 | **greenfield** | [Greenfield protocol](#greenfield-protocol) |
+| **probe** | [Probe protocol](#probe-protocol) - adaptive plan-completeness loop; fills human-answerable gaps before `integrity` |
 | **integrity** | [Phase 5 - Verification](#phase-5--verification--integrity-validation) report only. Can be invoked standalone (`@plan-master integrity`) or from `plan-foundation` continue P3+/P6. |
 | **revise** | Read existing plan → apply delta → re-run Phase 5 subset |
 | **show** *(alias: `task`)* | [Show protocol](#show-protocol) - read-only; show task record(s) by `M{N}-T{N}` or milestone |
@@ -407,6 +410,34 @@ If master plan **missing** → **implementation-ready: no** - run **greenfield**
 3. Walk P0→P6; present **one phase INTERACTION** at a time when owner input required.
 4. Do not mark **Approved** until P5 **pass** (or documented waivers).
 5. Update HANDOFF **Repository state** only if user asks or `session-control` **close** runs.
+
+---
+
+## Probe protocol
+
+The **interactive front-end to `integrity`**: where `integrity` *detects* contradictions automatically, `probe` *asks the owner* to resolve human-answerable gaps (vague NFR targets, unmapped FRs, ownerless mitigations) and records the answers into the plan + registries. Run **probe first, then integrity**. Engine: **[`.ai/skills/probe-protocol.md`](../probe-protocol.md)** (loop, scoring, ledger - not restated here).
+
+**Coverage profile (caller contract):**
+
+| Parameter | Value |
+|-----------|-------|
+| **Coverage map** | [Master coverage map](reference.md#master-coverage-map) (M-D1…M-D7) in `reference.md` |
+| **Exit gate** | [Implementation-ready](#implementation-ready) (+ Phase 5 integrity **pass**) |
+| **Ledger path** | `{PLANS_ROOT}/full/PROBE_LEDGER.md` |
+| **Target** | Coverage ≥ 85%; no gate-blocking dimension below **partial** |
+
+**Sub-modes:** `probe` (one iteration) · `probe - until ready` (loop to target, ≤5 questions/batch) · `probe - status` (read-only).
+
+**Protocol:**
+
+0. Run [Prerequisite gate](#prerequisite-gate-mutating-modes) **PG1** (and **PG2** probe row - a Draft/partial `*-full-plan.md` must exist; else run **greenfield** first).
+1. **ASSESS:** read the plan body (Execution Roadmap, Traceability matrix, NFRs), the three registries, and `PROBE_LEDGER.md`. Score M-D1…M-D7.
+2. Run the engine loop ([probe-protocol.md § The loop](../probe-protocol.md#the-loop)).
+3. **RECORD** answers into the **plan body** (quantified NFRs, added tasks, acceptance criteria) and the canonical registries (`ASSUMPTIONS`, `UNKNOWNS`, `RISK_REGISTRY`) - never fork lists.
+4. Update `PROBE_LEDGER.md`; emit the [probe report](../probe-protocol.md#output-report-every-probe-run).
+5. **On target reached:** recommend `@plan-master integrity` (automated sweep) → then `@plan-master status` for **implementation-ready**. probe does **not** set `Approved`.
+
+**Anti-patterns:** see [probe-protocol.md § Anti-patterns](../probe-protocol.md#anti-patterns). In master specifically: do **not** mark the plan **Approved** or skip `integrity` because probe reached target - probe gathers input; integrity + the § 4 approval gate still decide Approved.
 
 ---
 

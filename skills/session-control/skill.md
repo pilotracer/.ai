@@ -252,6 +252,8 @@ Per `.cursorrules` Completion Gate - answer honestly:
 
 Do not claim "all good" if tests failed.
 
+**Probe ledger pre-check (only if a `PROBE_LEDGER.md` exists):** run `bash .ai/scripts/readiness-verify.sh`. On **fail** (uncited `confirmed/high`, inflated Coverage %, or `coverage ≥ target` with a gate-blocking dimension still `unknown`), record it under [C3](#c3--follow-ups-required) and recommend `@plan-foundation probe` / `@plan-master probe` - do **not** claim planning is ready.
+
 ### C3 - Follow-ups required
 
 Detect and list:

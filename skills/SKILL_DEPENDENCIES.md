@@ -55,10 +55,12 @@ foundation-complete  →  plan-master-ready  →  implementation-ready
 | **session-control** `status` | - | Read-only |
 | **plan-foundation** `greenfield` | `.cursorrules`, `{HANDOFF}` (GF0 gate) | Recommended: `@project-bootstrap init` |
 | **plan-foundation** `continue` | Prior foundation work started | - |
+| **plan-foundation** `probe` | `{HANDOFF}` + foundation doc 01 to record into (GF0 gate) | Recommended: `@plan-foundation greenfield` if nothing to probe |
 | **plan-foundation** `certify` | **foundation-complete: yes** (CF0 gate) | **Required** |
 | **plan-foundation** `status` | - | Read-only |
 | **plan-master** `greenfield` | **plan-master-ready: yes** (PG1 gate) | **Required** (see exceptions below) |
 | **plan-master** `continue` | **plan-master-ready: yes**; draft or partial `*-full-plan.md` | **Required** |
+| **plan-master** `probe` | **plan-master-ready: yes** (PG1); Draft/partial `*-full-plan.md` (PG2) | **Required**; run before `integrity` |
 | **plan-master** `revise` | Existing `*-full-plan.md`; **plan-master-ready** still valid | **Required** |
 | **plan-master** `integrity` | Target artifacts exist (foundation set **or** master plan for P5) | Invoked by plan-foundation certify **or** standalone |
 | **plan-master** `status` / `show` *(alias: `task`)* | - | Read-only |
@@ -128,6 +130,8 @@ foundation-complete  →  plan-master-ready  →  implementation-ready
 | `@plan-repair master` | Not plan-master-ready (formal) | `@plan-repair brownfield` **or** `@plan-repair foundation` → `@plan-foundation certify` |
 | Legacy repo, no `.work/plans/` | No formal planning | `@plan-verify brownfield` → `@plan-repair brownfield` |
 | Plan gaps during code work | Wrong layer | `@plan-repair` / `@plan-master revise` (not `code-repair`) |
+| Scope/NFRs/constraints vague; "do you understand the project?" | Understanding gap, not artifact gap | `@plan-foundation probe` (then `certify`) |
+| Plan has vague NFRs / unmapped FRs / ownerless risks | Plan-completeness gap | `@plan-master probe` → `@plan-master integrity` |
 
 ---
 
@@ -140,6 +144,7 @@ All skills use the same verbs where applicable. This keeps muscle memory portabl
 | `status` | Read-only: report current state | plan-foundation, plan-master, plan-verify, plan-repair, session-control, code-implementation, code-verify, code-repair, feature-spec, db-migration, concept-run, dev-stack, project-bootstrap |
 | `repair` | Fix reported issues; re-verify | code-repair, plan-repair |
 | `verify` | Audit planning artifacts (foundation / master / alignment) | plan-verify |
+| `probe` | Adaptive gap-driven interrogation loop; scores knowledge/plan coverage, asks targeted questions, fills gaps into registries. **New verb** (distinct from `status` read-only, `continue` resume-phase, `integrity` auto-sweep). Engine: [`probe-protocol.md`](probe-protocol.md) | plan-foundation, plan-master |
 | `start` | Begin a unit of work | session-control, code-implementation |
 | `continue` | Resume in-progress work | plan-foundation, plan-master, code-implementation |
 | `continue` + target (`code-implementation` only) | Batch tasks: `- N`, `- until blocked`, `- M{N}-T{a}..T{b}`; stop on gate fail or blocker | code-implementation |

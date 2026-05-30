@@ -333,6 +333,30 @@ Use for **foundation-complete** artifact presence - **not** for plan-master-read
 
 ---
 
+## Foundation coverage map
+
+The **coverage profile** consumed by `@plan-foundation probe` (engine: [`.ai/skills/probe-protocol.md`](../probe-protocol.md)). Each dimension lists "what good looks like" and the [S4](skill.md#s4--plan-master-readiness) criteria it unblocks. Gate-blocking dimensions (weight 2 in the Coverage Score) are marked **★**.
+
+| Dim | Topic | What good looks like | Primary S4 link | Records into |
+|-----|-------|----------------------|-----------------|--------------|
+| **D1 ★** | Product intent & success | Founder intent verbatim + measurable success criteria | S4-7 (traceability from goal) | doc 01 §Founder intent |
+| D2 | Audience / personas | Named personas or user types; primary journeys | S4-9 (UX/UI direction) | doc 01 §Audience; personas-v1 |
+| **D3 ★** | Scope in / out | Explicit in-scope and out-of-scope for v1 | S4-1 (foundation-complete) | doc 01 §Scope |
+| D4 | Functional capabilities | Core capabilities enumerated; map to bounded contexts | S4-3 (high-risk SPECs) | doc 01; SPEC drafts |
+| **D5 ★** | NFRs | Quantified perf/availability/security/privacy/i18n/a11y/cost targets | S4-8 (architecture fitness) | doc 04; observability/threat-model |
+| D6 | Integrations & ext deps | External APIs/files identified + mirrored (MANIFEST) | S4-8 (fitness) | doc 02; MANIFEST |
+| D7 | Data model & sensitivity | Key entities + PII/data-classification | S4-8 (security/fitness) | data-classification standard |
+| D8 | Constraints | Budget, timeline, team size, ops model, hosting limits | S4-2 (core ADRs) | ASSUMPTIONS; doc 01 |
+| **D9 ★** | Deploy / hosting / tenancy | Hosting, tenancy model, deploy/rollback path decided | S4-2, S4-4 (ADRs + map) | ADRs; doc 04 |
+| **D10 ★** | Risks & assumptions | Top risks have mitigation+owner; assumptions labeled | S4-5 (registries) | RISK_REGISTRY; ASSUMPTIONS |
+
+**Target:** Coverage ≥ 85% with no ★ dimension below **partial**. **Ledger:** `{PLANS_ROOT}/foundation/PROBE_LEDGER.md` (template: `templates/work/plans/foundation/PROBE_LEDGER.md.template`).
+
+**Invocation (Cursor):** `@plan-foundation probe` · `@plan-foundation probe - until ready` · `@plan-foundation probe - status`
+**Any agent:** `Read .ai/skills/plan-foundation/skill.md - run probe mode. Use the Foundation coverage map and .ai/skills/probe-protocol.md engine. Record answers into doc 01 + registries; update PROBE_LEDGER.md.`
+
+---
+
 ## Greenfield walkthrough - INTERACTION and IF templates
 
 Used by `@plan-foundation greenfield`. Skill body holds **Phase headers, Artifacts, and GATE checklists** (binding); this section holds the **questionnaires** (scaffolding the agent reads when running greenfield).

@@ -113,12 +113,14 @@ Replace `M{N}` with the milestone you're working on (see `NEXT.md ## Recommended
 | You need… | Run |
 |---|---|
 | To start a brand-new project | `@plan-foundation greenfield` |
+| The agent should ask questions until it truly understands the project | `@plan-foundation probe` (adaptive loop; fills scope/NFR/constraint gaps) |
 | To check if foundation work is done | `@plan-foundation status` then `@plan-foundation certify` |
 | To audit foundation or master plans (symmetric to code-verify) | `@plan-verify foundation` · `@plan-verify master` · `@plan-verify alignment` |
 | To map app routes/pages/APIs to feature SPECs (code locate-ability) | `@plan-verify coverage` → `@plan-repair repair - from coverage` |
 | Existing repo never ran plan-foundation / plan-master (brownfield) | `@plan-verify brownfield` → `@plan-repair brownfield` → `@plan-verify brownfield` |
 | To fix plan gaps or brownfield planning docs | `@plan-repair foundation - <goal>` · `@plan-repair master - <goal>` · `@plan-repair brownfield` |
 | To author the master implementation plan | `@plan-master greenfield` (foundation must be `plan-master-ready` first; if a draft plan exists - `@plan-master continue`) |
+| To interrogate a draft plan for completeness before approval | `@plan-master probe` (quantify NFRs, map FRs, owner risks) → `@plan-master integrity` |
 | To check if you can start coding | `@plan-master status` (only this skill scores `implementation-ready`) |
 | A new feature SPEC | `@feature-spec create - <slug>` (see `FEATURE_STANDARD` §3; **do not skip §15**) |
 | Concept / NFR prompts (MOD-01…06) | `@concept-run list` · `@concept-run - MOD-06` |

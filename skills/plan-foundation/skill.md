@@ -333,6 +333,7 @@ Detect from the user message. If ambiguous, ask once:
 | **status** | "foundation status", "plan-master-ready?", "foundation-complete?" | [Status protocol](#status-protocol) - read-only; **foundation-complete** + **plan-master-ready** only |
 | **continue** | "continue foundation", "what's next", "resume planning" | [Continue protocol](#continue-protocol) - detect phase → next gate |
 | **greenfield** | new project, empty repo, "start foundation" | [Greenfield protocol](#greenfield-protocol) - P0→P6 |
+| **probe** | "probe the project", "ask me questions", "fill the gaps", "make sure you understand", "what else do you need to know?" | [Probe protocol](#probe-protocol) - adaptive coverage loop; read+write planning artifacts only |
 | **certify** | "certify plan-master-ready", "verify foundation for plan-master" | Run [Plan-master readiness](#s4--plan-master-readiness); update HANDOFF if pass |
 
 **Do not** run greenfield INTERACTIONs when the user asked for **status** only.
@@ -348,6 +349,7 @@ Detect from the user message. If ambiguous, ask once:
 | Mode | Gate |
 |------|------|
 | **greenfield** | [GF0](#gf0--bootstrap-artifacts) |
+| **probe** | [GF0](#gf0--bootstrap-artifacts) (needs `{HANDOFF}` + doc 01 to record into); else suggest **greenfield** |
 | **certify** | [CF0](#cf0--foundation-complete) |
 | **continue** | Foundation started (≥1 foundation doc or HANDOFF notes P0); else suggest **greenfield** |
 | **status** | - (read-only) |
@@ -531,6 +533,35 @@ If the user asks "implementation-ready?" or "ready to code?":
 
 ---
 
+## Probe protocol
+
+Adaptive, gap-driven interrogation that **guarantees foundation understanding** before certification. Engine: **[`.ai/skills/probe-protocol.md`](../probe-protocol.md)** (the loop, scoring, ledger, and ease-of-use rules live there - do not restate them). This section supplies the foundation **coverage profile** only.
+
+**Coverage profile (caller contract):**
+
+| Parameter | Value |
+|-----------|-------|
+| **Coverage map** | [Foundation coverage map](reference.md#foundation-coverage-map) (D1–D10) in `reference.md` |
+| **Exit gate** | [S4 - Plan-master readiness](#s4--plan-master-readiness) (each dimension maps to one or more S4 criteria) |
+| **Ledger path** | `{PLANS_ROOT}/foundation/PROBE_LEDGER.md` |
+| **Target** | Coverage ≥ 85%; no gate-blocking dimension below **partial** |
+
+**Sub-modes:** `probe` (one iteration, then stop) · `probe - until ready` (loop to target, ≤5 questions/batch) · `probe - status` (read-only Coverage + gaps; asks nothing).
+
+**Protocol:**
+
+1. Run [GF0](#gf0--bootstrap-artifacts) - need `{HANDOFF}` and foundation doc 01 to record answers into.
+2. **ASSESS:** read foundation docs 01–04, ADRs, the three registries, and `PROBE_LEDGER.md` (create from template if absent). Score D1–D10.
+3. Run the engine loop (ASSESS → PRIORITIZE → ASK → RECORD → RE-SCORE → EXIT) from [probe-protocol.md](../probe-protocol.md#the-loop).
+4. **RECORD** answers to their canonical home (doc 01, ADR **Proposed** stubs, `ASSUMPTIONS`, `UNKNOWNS`, `RISK_REGISTRY`) - never fork lists; never set ADR **Decided** from a probe answer.
+5. Update `PROBE_LEDGER.md`; emit the [probe report](../probe-protocol.md#output-report-every-probe-run).
+6. **On target reached:** recommend `@plan-foundation certify plan-master-ready` (probe fills gaps; certify + `plan-master integrity` still own the gate).
+7. **Relationship to greenfield:** greenfield's static `INTERACTION` blocks seed D1–D10; probe adds adaptive follow-ups when an answer is vague or a dimension stays **unknown**. Use probe at each GATE to close residual gaps before declaring the gate done.
+
+**Anti-patterns:** see [probe-protocol.md § Anti-patterns](../probe-protocol.md#anti-patterns). In foundation specifically: do **not** use probe to score **implementation-ready** (out of plan-foundation scope - redirect to `@plan-master status`).
+
+---
+
 ## Certify protocol (plan-master-ready)
 
 Use when the user asks to **certify**, **verify for plan-master**, or **plan-master-ready**.
@@ -558,7 +589,7 @@ Use when the user asks to **certify**, **verify for plan-master**, or **plan-mas
 
 ### If no
 - Blockers: <ordered list>
-- Next: `@plan-foundation continue` (phase/gate)
+- Next: `@plan-foundation continue` (missing artifacts) or `@plan-foundation probe` (understanding gaps - vague scope, NFRs, constraints)
 ```
 
 5. Do **not** create `*-full-plan.md` in certify mode - that is **plan-master**'s job.

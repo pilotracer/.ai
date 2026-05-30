@@ -67,6 +67,29 @@ Derive milestone order from foundation + SPECs in Phase 5 integrity - do not cop
 
 ---
 
+## Master coverage map
+
+The **coverage profile** consumed by `@plan-master probe` (engine: [`.ai/skills/probe-protocol.md`](../probe-protocol.md)). Probe is the **interactive complement to `integrity`**: it asks the owner to resolve gaps that an automated sweep can flag but not answer. Gate-blocking dimensions (weight 2) marked **★**.
+
+| Dim | Topic | What good looks like | Primary gate link | Records into |
+|-----|-------|----------------------|-------------------|--------------|
+| **M-D1 ★** | FR → task coverage | Every FR maps to ≥1 `M{N}-T{N}` task | Phase 4 gate / implementation-ready | plan §19 roadmap + trace matrix |
+| **M-D2 ★** | Quantified NFRs | Each NFR has a number (p95 latency, uptime %, cost ceiling) not an adjective | Phase 1 gate | plan §3–4 NFRs |
+| M-D3 | Sequencing & dependencies | Milestone order justified by repo evidence; hidden deps surfaced | Phase 4 / continuous integrity | plan §19; UNKNOWNS |
+| M-D4 | Resource & parallelization | Team size, parallelizable tracks, critical path stated | Phase 4 | ASSUMPTIONS; plan §19 |
+| **M-D5 ★** | Risk mitigation ownership | Each high/critical risk has mitigation **and** owner | Phase 5 gate | RISK_REGISTRY |
+| M-D6 | Acceptance criteria | Every milestone + high-risk task has testable acceptance criteria | Phase 4 / Phase 6 | plan §19 task records |
+| M-D7 | Agent-execution safety | Tasks have file paths, invariants, validation; model tier tagged | Phase 6 gate | plan §24 agent appendix |
+
+**Target:** Coverage ≥ 85% with no ★ dimension below **partial**. **Ledger:** `{PLANS_ROOT}/full/PROBE_LEDGER.md` (same template as foundation).
+
+**Order:** run `@plan-master probe` to fill these gaps, **then** `@plan-master integrity` for the automated contradiction/fitness sweep, **then** `@plan-master status` for implementation-ready.
+
+**Invocation (Cursor):** `@plan-master probe` · `@plan-master probe - until ready` · `@plan-master probe - status`
+**Any agent:** `Read .ai/skills/plan-master/skill.md - run probe mode. Use the Master coverage map and .ai/skills/probe-protocol.md engine. Record answers into the plan body + registries; update PROBE_LEDGER.md. Do not set Approved.`
+
+---
+
 ## Traceability matrix (minimal example)
 
 Task IDs use the globally unique **`M{N}-T{N}`** format. Shorthand `T{N}` is acceptable only when the milestone context is explicit.

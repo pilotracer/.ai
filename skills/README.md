@@ -29,8 +29,8 @@ Use for **new** skills and for any **rename** (update `.cursorrules`, this READM
 
 | Skill id | Folder | Role |
 |----------|--------|------|
-| plan-foundation | `plan-foundation/` | **Orchestrator:** P0–P6 foundation gates, ADRs, SPECs, registries; certifies **plan-master-ready** |
-| plan-master | `plan-master/` | Master implementation plan, integrity, traceability; certifies **implementation-ready** |
+| plan-foundation | `plan-foundation/` | **Orchestrator:** P0–P6 foundation gates, ADRs, SPECs, registries; **probe** (adaptive understanding loop); certifies **plan-master-ready** |
+| plan-master | `plan-master/` | Master implementation plan, **probe** (plan-completeness loop), integrity, traceability; certifies **implementation-ready** |
 | plan-verify | `plan-verify/` | Plan audits: foundation, master, alignment, **coverage** (code→SPEC), **brownfield** (framework slots) |
 | plan-repair | `plan-repair/` | Fix plan gaps; **brownfield synthesis** from code/README/ROADMAP; optional formal certify later |
 | session-control | `session-control/` | Session open/close, HANDOFF, NEXT, optional git |
@@ -47,6 +47,8 @@ Use for **new** skills and for any **rename** (update `.cursorrules`, this READM
 **Typical flow (greenfield):** `@project-bootstrap init` → `plan-foundation greenfield` → `certify plan-master-ready` → `plan-master greenfield` → `plan-master status` (implementation-ready) → `code-implementation plan` → `code-implementation start/continue/complete`.
 
 **Canonical verb vocabulary:** see [SKILL_DEPENDENCIES.md § Canonical command vocabulary](SKILL_DEPENDENCIES.md#canonical-command-vocabulary). Every skill uses `status` for read-only state, `init` for one-time setup, and so on - no skill invents bespoke verbs.
+
+**Shared engine docs (not skills):** [`SKILL_DEPENDENCIES.md`](SKILL_DEPENDENCIES.md) (gate graph) and [`probe-protocol.md`](probe-protocol.md) (the adaptive `probe` loop reused by `plan-foundation` and `plan-master`) are single-source-of-truth fragments that skills **link** rather than restate. They are files, not skill folders, so they are not counted in the 14-skill registry.
 
 **Skill prerequisites (gates):** [SKILL_DEPENDENCIES.md](SKILL_DEPENDENCIES.md) - which modes **stop** if an upstream step was skipped (e.g. `@plan-master greenfield` before `@plan-foundation certify plan-master-ready`).
 

@@ -17,3 +17,6 @@ jobs:
 
       - name: Consumer smoke
         run: bash scripts/smoke-consumer.sh
+
+      - name: Probe ledger honesty (no-op if no PROBE_LEDGER.md)
+        run: bash scripts/readiness-verify.sh
