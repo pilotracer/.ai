@@ -36,6 +36,8 @@
        │
        ├── "I need to plan something new"           ─────────► §4  Plan
        │
+       ├── "I have a feature idea (free text)"       ─────────► `@feature-spec intake - <sentence>`
+       │
        ├── "I'm closing for the day"                ─────────► §5  Close
        │
        ├── "Tests / lint / type check failed"        ─────────► §6  Failure recovery
@@ -122,6 +124,7 @@ Replace `M{N}` with the milestone you're working on (see `NEXT.md ## Recommended
 | To author the master implementation plan | `@plan-master greenfield` (foundation must be `plan-master-ready` first; if a draft plan exists - `@plan-master continue`) |
 | To interrogate a draft plan for completeness before approval | `@plan-master probe` (quantify NFRs, map FRs, owner risks) → `@plan-master integrity` |
 | To check if you can start coding | `@plan-master status` (only this skill scores `implementation-ready`) |
+| A free-text feature idea (don't know where it goes) | `@feature-spec intake - <free sentence>` (classifies local / cross-cutting / brownfield / underspecified and routes it) |
 | A new feature SPEC | `@feature-spec create - <slug>` (see `FEATURE_STANDARD` §3; **do not skip §15**) |
 | Concept / NFR prompts (MOD-01…06) | `@concept-run list` · `@concept-run - MOD-06` |
 | A new ADR | `.work/decisions/YYYYMMDD-NNN-<slug>.md` - see existing ADRs for shape |
@@ -230,6 +233,7 @@ Use **`@process-router - <question>`** for anything not listed - it routes to th
 | Where am I / what's next? | `@session-control status` + `.work/context/HANDOFF.md` + `.work/plans/NEXT.md` |
 | What does each `@skill` do? | [`README.md`](README.md) § Skills at a glance |
 | Ready to code? | `@plan-master status` (implementation-ready) → `@code-implementation start` |
+| Free-text feature idea? | `@feature-spec intake - <free sentence>` (classifies + routes) |
 | New feature SPEC? | `@feature-spec create - <slug>` |
 | Which concept prompt (MOD)? | `@concept-run list` · `@concept-run - MOD-06` (required for agent/Cursor code sessions unless **`human-only`**) |
 | Add a DB table/column? | `@db-migration create - <description>` |
