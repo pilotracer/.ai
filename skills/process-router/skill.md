@@ -50,22 +50,11 @@ description: >-
 ## Route protocol
 
 1. Read the user question (text after `-` or remainder of message).
-2. Classify into one primary bucket (see [reference.md](reference.md) § Routing table):
-   - **bootstrap** - first-time setup, empty `.work`, install `.cursorrules`
-   - **orient** - where am I / what's next
-   - **session** - start / close / status
-   - **plan** - foundation / master plan / ADR
-   - **implement** - iteration / task / verify
-   - **spec** - feature SPEC author/review
-   - **concept** - MOD-01…06 prompts
-   - **schema** - migrations
-   - **stack** - Docker / dev environment
-   - **test** - requesting or running tests
-   - **standard** - conventions, observability, security
-   - **learn** - reading order / architecture
-3. Load **only** the row's linked paths (do not read the whole repo).
+2. Classify into one primary bucket. **The authoritative bucket set is the row list in [reference.md](reference.md) § Routing table** - match against it directly (e.g. `orient`, `session`, `plan-foundation`, `implement`, `spec`, `feature-request`, `schema`, `learn`, …). Do **not** maintain a second canonical copy of the bucket list here; if you add a bucket, add the row in `reference.md`.
+3. Load **only** the matched row's linked paths (do not read the whole repo).
 4. Output the route report. If multiple buckets match, list primary first, secondary one line each.
-5. If question is ambiguous, ask **once** with ≤3 multiple-choice options from the table.
+5. If the question matches **no** bucket, say so and route to `.ai/START_HERE.md` §1 (decision tree) - never invent a skill/path.
+6. If the question is ambiguous, ask **once** with ≤3 multiple-choice options drawn from the table.
 
 ---
 
