@@ -104,23 +104,7 @@ Agents **MUST** use this terminology in status/certify reports when pointing at 
 
 `plan-master` **governs** planning intelligence: when deep architecture validation, risk analysis, UX/UI strategy depth, implementation decomposition, or AI-agent execution guidance is required, the agent **MUST** read and apply `.ai/skills/plan-master/skill.md` (at minimum its [Continuous integrity rules](.ai/skills/plan-master/skill.md#continuous-integrity-rules), [Hallucination prevention](.ai/skills/plan-master/skill.md#hallucination-prevention), and Phase 5 integrity protocol).
 
-**Escalation flow (three readiness states):**
-
-```text
-P0–P6 foundation gates
-    ↓
-foundation-complete (artifacts + gates; not sufficient alone)
-    ↓
-plan-master-ready certification (semantic validation - THIS skill certifies)
-    ↓
-@plan-master greenfield | continue → {PLANS_ROOT}/full/YYYYMMDD-full-plan.md
-    ↓
-master plan Approved
-    ↓
-implementation-ready (@plan-master status - safe for broad execution)
-    ↓
-code per approved roadmap + SPECs
-```
+**Three readiness states** (foundation owns the first two; plan-master owns the third):
 
 | State | Meaning | Certified by |
 |-------|---------|--------------|
@@ -145,13 +129,7 @@ Do not duplicate plan-master content in foundation artifacts - **reference** and
 
 ## Planning lifecycle (shared with plan-master)
 
-| Stage | Owner skill | Output |
-|-------|-------------|--------|
-| Foundation P0–P6 | plan-foundation | `{PLANS_ROOT}/foundation/` 01–04, ADRs, SPECs, HANDOFF, NEXT, registries |
-| **plan-master-ready** certification | plan-foundation + plan-master integrity | HANDOFF note; unlocks plan-master |
-| Master implementation plan | plan-master | [Master plan artifact](#master-plan-artifact) |
-| **implementation-ready** | plan-master status | Safe to execute approved roadmap |
-| Code | FEATURE_STANDARD + SPECs | Application source |
+Stages and owners are the three readiness states above, then **Code** (FEATURE_STANDARD + SPECs → application source). Per-stage outputs live in each Phase section and [Master plan artifact](#master-plan-artifact); registries are listed in [Planning registries](#planning-registries-canonical-artifacts).
 
 **Shared terminology:** Phase (P0–P6 foundation) vs Phase (0–6 plan-master) - always prefix **foundation P*** or **plan-master P*** in reports. Never conflate **plan-master-ready** with **implementation-ready**.
 

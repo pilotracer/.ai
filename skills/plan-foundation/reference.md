@@ -14,11 +14,6 @@ Supplement to `skill.md`. **How to invoke**, **verify**, and **certify plan-mast
 | **plan-master-ready** | Is foundation semantically mature enough for a master plan? | plan-foundation **certify** + `plan-master integrity` | `@plan-master greenfield` / `continue` |
 | **implementation-ready** | Is the Approved master plan safe to execute broadly? | **plan-master** **status** only | Multi-milestone implementation |
 
-```text
-P0–P6 → foundation-complete → plan-master-ready → plan-master → Approved master plan → implementation-ready → code
-     └─ plan-foundation ─────────────┘              └─ plan-master ─────────────────────────────┘
-```
-
 ---
 
 ## How to invoke (quick reference)

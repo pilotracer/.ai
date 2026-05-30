@@ -107,6 +107,40 @@ done < <(find . -name '*.md' ! -path './.git/*' ! -path './.work/*' -print0 2>/d
 
 ok "markdown link scan complete"
 
+# --- 6. readiness-verify self-test (exercise the probe-ledger linter) ---
+note "readiness-verify self-test"
+RV_ROOT="$(mktemp -d)"
+RV_LEDGER="${RV_ROOT}/PROBE_LEDGER.md"
+
+# Honest ledger: D1 confirmed/high with a cite; computed = claimed = 100%.
+cat > "${RV_LEDGER}" <<'EOF'
+**Coverage:** 100% (target 85%)
+
+| Dim | Topic | Status | Conf | Evidence / source | Iter |
+|-----|-------|--------|------|-------------------|------|
+| D1 ★ | Intent | confirmed | high | doc01 §scope | 1 |
+EOF
+if bash "${REPO_ROOT}/scripts/readiness-verify.sh" "${RV_LEDGER}" >/dev/null 2>&1; then
+  ok "readiness-verify accepts an honest ledger"
+else
+  die "readiness-verify rejected an honest ledger"
+fi
+
+# Dishonest ledger: confirmed/high with no evidence -> must exit non-zero.
+cat > "${RV_LEDGER}" <<'EOF'
+**Coverage:** 100% (target 85%)
+
+| Dim | Topic | Status | Conf | Evidence / source | Iter |
+|-----|-------|--------|------|-------------------|------|
+| D1 ★ | Intent | confirmed | high | — | 1 |
+EOF
+if bash "${REPO_ROOT}/scripts/readiness-verify.sh" "${RV_LEDGER}" >/dev/null 2>&1; then
+  die "readiness-verify accepted a dishonest ledger (confirmed/high, no cite)"
+else
+  ok "readiness-verify rejects an uncited confirmed/high dimension"
+fi
+rm -rf "${RV_ROOT}"
+
 if [[ "${failures}" -gt 0 ]]; then
   echo ""
   echo "framework-verify: ${failures} check(s) failed" >&2

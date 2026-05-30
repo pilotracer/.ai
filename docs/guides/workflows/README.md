@@ -106,6 +106,7 @@ The **artifact matrix** below maps **planning** vs **implementation** (plus cros
 | `.ai/docs/guides/workflows/20260518-guide-workflows-index.md` | Both | Guide | Curriculum map, principles, link back to this matrix. |
 | `.ai/docs/guides/workflows/20260518-guide-*.md` | Both | Guide | Reference workflow docs (pattern): end-to-end template, boundary map, observability, testing-in-process, plan companions. |
 | `.ai/docs/guides/workflows/20260518-tutorial-*.md` | Both | Guide | Operator step-by-step tutorials (pattern): bootstrap, walk-throughs, NEXT/delivery, test requests. |
+| `.ai/docs/guides/workflows/20260529-tutorial-probe-project.md` | Planning | Guide | Operator tutorial: `probe` mode - adaptive interrogation to fill foundation/plan gaps before certification. |
 | `.ai/docs/integration/MANIFEST.txt` | Implementation | Context | Vendor artifact inventory (project adds; see `docs/integration/README.md`). |
 | `.ai/docs/integration/**` | Implementation | Context | Cached vendor specs (project-owned; read on demand). |
 | `.work/plans/foundation/*-01-*-initial-scope.md` | Planning | Living | **P0 initial scope** mini-plan - `@plan-foundation` greenfield creates; canonical product-intent capture (not `{PROMPTS_ROOT}/initial.md`). |

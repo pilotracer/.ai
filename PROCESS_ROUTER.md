@@ -71,13 +71,7 @@ The verb is optional - `@process-router - <question>` is enough. Aliases: `ask`,
 
 ## Readiness states (quick reference)
 
-```text
-foundation-complete  →  plan-master-ready  →  implementation-ready
-   @plan-foundation       @plan-foundation       @plan-master status
-                          certify
-```
-
-Only `@plan-master status` certifies **implementation-ready**.
+`foundation-complete → plan-master-ready → implementation-ready`. Only `@plan-master status` certifies **implementation-ready**. Full table + gates: [`.ai/skills/SKILL_DEPENDENCIES.md`](skills/SKILL_DEPENDENCIES.md).
 
 ---
 

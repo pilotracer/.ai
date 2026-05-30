@@ -270,6 +270,7 @@ Record: **integrity:** pass | pass with waivers | fail
 | Traceability | Scope ↔ ADR ↔ SPEC spot-check for touched contexts? | pass / fail / gap |
 | Terminology | Doc 04 not called "the full plan" in artifacts? | pass / fail |
 | Integrity (F1) | plan-master integrity on foundation? | pass / fail / waived |
+| Probe coverage | If `{PLANS_ROOT}/foundation/PROBE_LEDGER.md` exists: `bash .ai/scripts/readiness-verify.sh` passes? Coverage % vs target; ★ gaps? | pass / gap / n/a |
 
 ### F3 - Foundation verify report (mandatory)
 
@@ -292,6 +293,7 @@ Record: **integrity:** pass | pass with waivers | fail
 ### Readiness (report only — do not certify here)
 - **foundation-complete:** yes | no
 - **plan-master-ready:** yes | no
+- **Probe coverage:** NN% (target 85%) · ledger honest: yes/fail | no ledger - if understanding is thin, run `@plan-foundation probe`
 
 ### Gaps
 <ordered - severity High / Med / Low>
@@ -353,6 +355,7 @@ Against `.ai/standards/20260519-MASTER_PLAN_STANDARD.md`:
 | Traceability | FR/NFR ids in tasks exist in plan body? | pass / fail / gap |
 | Registries | Links to ASSUMPTIONS/RISK/UNKNOWNS — no duplicate forks? | pass / fail |
 | Approved gate | Approved required for implementation-ready? | pass / fail / waived |
+| Probe coverage | If `{PLANS_ROOT}/full/PROBE_LEDGER.md` exists: `bash .ai/scripts/readiness-verify.sh` passes? Coverage % vs target; ★ gaps? | pass / gap / n/a |
 
 ### M4 - Master verify report (mandatory)
 
@@ -374,6 +377,7 @@ Against `.ai/standards/20260519-MASTER_PLAN_STANDARD.md`:
 
 ### Readiness (from plan-master — do not contradict)
 - **implementation-ready:** yes | no
+- **Probe coverage:** NN% (target 85%) · ledger honest: yes/fail | no ledger - if NFRs/FRs/risks are thin, run `@plan-master probe` → `@plan-master integrity`
 
 ### Gaps
 <ordered>
