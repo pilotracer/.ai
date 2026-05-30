@@ -23,17 +23,21 @@ for f in START_HERE.md README.md skills/README.md skills/SKILL_DEPENDENCIES.md t
   fi
 done
 
-skill_count="$(find skills -mindepth 1 -maxdepth 1 -type d ! -name '.*' 2>/dev/null | wc -l | tr -d ' ')"
-if [[ "${skill_count}" -eq 14 ]]; then
-  ok "14 skill directories"
-else
-  die "expected 14 skill directories, found ${skill_count}"
-fi
-
-for s in skills/*/skill.md; do
-  [[ -f "${s}" ]] || die "missing ${s}"
+# Derived count + registry cross-check (no hardcoded magic number - prevents
+# the silent drift that left smoke-consumer asserting a stale count).
+skill_dirs=()
+while IFS= read -r d; do skill_dirs+=("$(basename "${d}")"); done \
+  < <(find skills -mindepth 1 -maxdepth 1 -type d ! -name '.*' | sort)
+skill_count="${#skill_dirs[@]}"
+[[ "${skill_count}" -ge 1 ]] || die "no skill directories found under skills/"
+for n in "${skill_dirs[@]}"; do
+  s="skills/${n}/skill.md"
+  if [[ ! -f "${s}" ]]; then die "missing ${s}"; continue; fi
+  grep -Eq "^name: ${n}[[:space:]]*$" "${s}" || die "${s}: frontmatter name does not match folder '${n}'"
+  grep -q "${n}" skills/README.md || die "skill '${n}' not registered in skills/README.md"
+  grep -q "${n}" skills/SKILL_DEPENDENCIES.md || die "skill '${n}' not in SKILL_DEPENDENCIES.md matrix"
 done
-ok "all skill.md files present"
+ok "${skill_count} skills: skill.md + matching frontmatter + README + DEPS rows (derived)"
 
 # --- 2. Consumer bootstrap smoke ---
 note "Consumer bootstrap smoke"
@@ -140,6 +144,26 @@ else
   ok "readiness-verify rejects an uncited confirmed/high dimension"
 fi
 rm -rf "${RV_ROOT}"
+
+# --- 7. traceability-verify self-test (exercise the FR->task linter) ---
+note "traceability-verify self-test"
+TV_ROOT="$(mktemp -d)"
+TV_PLAN="${TV_ROOT}/x-full-plan.md"
+# Orphan: FR-02 never on a task line -> must fail.
+printf '## reqs\n- FR-01 - FR-02\n| signup | FR-01 | M2-T1 |\n' > "${TV_PLAN}"
+if bash "${REPO_ROOT}/scripts/traceability-verify.sh" "${TV_PLAN}" >/dev/null 2>&1; then
+  die "traceability-verify missed an orphan FR (FR-02 not on any task line)"
+else
+  ok "traceability-verify catches an FR with no task"
+fi
+# Fully mapped -> must pass.
+printf '## reqs\n| signup | FR-01 | M2-T1 |\n| reset | FR-02 | M2-T2 |\n' > "${TV_PLAN}"
+if bash "${REPO_ROOT}/scripts/traceability-verify.sh" "${TV_PLAN}" >/dev/null 2>&1; then
+  ok "traceability-verify passes a fully-mapped plan"
+else
+  die "traceability-verify rejected a fully-mapped plan"
+fi
+rm -rf "${TV_ROOT}"
 
 if [[ "${failures}" -gt 0 ]]; then
   echo ""

@@ -4,6 +4,16 @@ All notable changes to Agent OS are documented here. Format inspired by [Keep a 
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-05-29
+
+### Fixed
+- **`scripts/smoke-consumer.sh`** asserted a stale skill count (11) after the registry grew to 14 in 0.2.0, silently failing the CI `Consumer smoke` job since that release. Both `smoke-consumer.sh` and `framework-verify.sh` now **derive** the count and cross-check that every skill folder is registered in `skills/README.md` and `SKILL_DEPENDENCIES.md` with matching frontmatter — eliminating hardcoded-count drift.
+
+### Added
+- **`scripts/traceability-verify.sh`** — machine-checks that every FR id in a master plan maps to a task `M{N}-T{N}` (MASTER_PLAN_STANDARD Phase 4 gate as a test); NFRs reported not failed; exits 0 when no plan. Self-tested in `framework-verify.sh`; referenced by `plan-verify master` and `plan-master` Gate P4; runs in CI (no-op without a plan).
+- **`scripts/release.sh <version>`** — release preflight that runs every verifier, asserts the CHANGELOG has the version section and a clean tree, and only then creates the annotated tag (never pushes). A tag can no longer ship while verification is red.
+- **CI** now also triggers on `v*` tag pushes and runs `traceability-verify`, so released tags are verified.
+
 ## [0.3.0] - 2026-05-29
 
 ### Added

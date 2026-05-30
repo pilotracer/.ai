@@ -352,7 +352,7 @@ Against `.ai/standards/20260519-MASTER_PLAN_STANDARD.md`:
 | Header metadata | Status, version, dates present? | pass / fail |
 | §19 roadmap | Milestones M1… with task ids `M{N}-T{N}`? | pass / fail / gap |
 | §20–§21 | Global acceptance + validation gates? | pass / fail / gap |
-| Traceability | FR/NFR ids in tasks exist in plan body? | pass / fail / gap |
+| Traceability | FR/NFR ids in tasks exist in plan body? Run `bash .ai/scripts/traceability-verify.sh` (every FR maps to a task M{N}-T{N})? | pass / fail / gap |
 | Registries | Links to ASSUMPTIONS/RISK/UNKNOWNS — no duplicate forks? | pass / fail |
 | Approved gate | Approved required for implementation-ready? | pass / fail / waived |
 | Probe coverage | If `{PLANS_ROOT}/full/PROBE_LEDGER.md` exists: `bash .ai/scripts/readiness-verify.sh` passes? Coverage % vs target; ★ gaps? | pass / gap / n/a |

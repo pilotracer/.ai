@@ -29,7 +29,12 @@ find .work .cursorrules DOCS_TECH_STACK.md -type f 2>/dev/null | sort
 echo ""
 echo "Skill registry:"
 test -f .ai/skills/SKILL_DEPENDENCIES.md
-test "$(find .ai/skills -mindepth 1 -maxdepth 1 -type d | wc -l)" -eq 11
+# Derive expected from the source tree (no hardcoded count): the consumer copy
+# must carry the same number of skills as the framework it was bootstrapped from.
+expected_skills="$(find "${REPO_ROOT}/skills" -mindepth 1 -maxdepth 1 -type d ! -name '.*' | wc -l | tr -d ' ')"
+actual_skills="$(find .ai/skills -mindepth 1 -maxdepth 1 -type d ! -name '.*' | wc -l | tr -d ' ')"
+test "${actual_skills}" -eq "${expected_skills}"
+echo "  ${actual_skills} skills carried into consumer (expected ${expected_skills})"
 
 echo ""
 echo "Next (manual / agent chat):"

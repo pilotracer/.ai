@@ -3,6 +3,7 @@ name: framework-verify
 on:
   push:
     branches: [main, master]
+    tags: ['v*']
   pull_request:
     branches: [main, master]
 
@@ -20,3 +21,6 @@ jobs:
 
       - name: Probe ledger honesty (no-op if no PROBE_LEDGER.md)
         run: bash scripts/readiness-verify.sh
+
+      - name: Traceability (no-op if no master plan)
+        run: bash scripts/traceability-verify.sh

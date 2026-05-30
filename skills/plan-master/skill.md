@@ -243,7 +243,7 @@ Execute in order. At **each phase gate**, run [Continuous integrity rules](#cont
 
 **Sync:** Update `{ITERATION_CARRIER}` **Recommended next** to `M1-T1` (first task of M1) when plan is **Approved**.
 
-**Gate P4:** Every FR1… maps to ≥1 task (`M{N}-T{N}`); every high-risk task has validation in Phase 5 table.
+**Gate P4:** Every FR1… maps to ≥1 task (`M{N}-T{N}`); every high-risk task has validation in Phase 5 table. Machine-check with `bash .ai/scripts/traceability-verify.sh` (FR→task coverage; orphan FR → gate fail).
 
 ---
 
