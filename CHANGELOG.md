@@ -5,6 +5,9 @@ All notable changes to Agent OS are documented here. Format inspired by [Keep a 
 ## [Unreleased]
 
 ### Added
+- **`scripts/gate-verify.sh`** — machine-checkable **completion gate** (`.cursorrules` Core Principle 7). Parses the `### Tasks` table in `NEXT.md` and **fails when a task marked `done`/`complete` records no gate evidence** (test/lint/type result or an exit code) in its Notes — the exact "claimed PASS without proof" failure the framework forbids. Exits 0 when no `NEXT.md` or no done tasks exist. Self-tested in `framework-verify.sh`, added to the `release.sh` preflight, and runs in CI (no-op until tasks are completed).
+- **Skill context-budget guard** in `framework-verify.sh` — `skill.md` (the file an agent loads first) is held to a **soft budget (24 KB, reported as `DEBT:`)** and a **hard ceiling (42 KB, fails)**. The ceiling is a ratchet set just above today's largest skill, so skills can only get leaner. Dogfoods the framework's own context discipline.
+- **Toolchain preflight** in `framework-verify.sh` — fails fast (exit 3) with the missing tool when `git`/`rsync`/`awk`/`sed`/`grep`/`find` is absent, instead of a confusing mid-run error on a host without the expected POSIX tools.
 - **`@feature-spec intake - <free sentence>`** — free-text feature-intake front door. Classifies a request by blast radius (`local` / `cross-cutting` / `brownfield` / `underspecified`), routes to the right executor (`create`, `plan-master probe`/`plan-repair`, `plan-verify brownfield`, or `plan-foundation probe`), and records it to `NEXT.md § Intake queue` so nothing is lost. Never auto-executes the gated paths; `; force=<class>` overrides classification. Implemented as a mode on `feature-spec` (skill count stays 14); structurally self-tested in `framework-verify.sh`. Supersedes the draft proposal in `.work/plans/proposals/20260529-feature-intake-orchestrator.md` (now **Accepted - implemented**).
 - **Free-text `@feature-spec create -`** — accepts an unstructured sentence (not just a kebab-case slug); new **CR0.5** derives the slug and carries the sentence verbatim into SPEC §1 Purpose.
 - **`feature-request` routing bucket** in `process-router` — routes unstructured "add feature X" intake to `@feature-spec intake`, which classifies and dispatches to the right executor.
@@ -14,6 +17,7 @@ All notable changes to Agent OS are documented here. Format inspired by [Keep a 
 - **`.work/plans/proposals/20260529-feature-intake-orchestrator.md`** — proposal for the free-text feature-intake orchestrator (`@feature-spec intake`), **Accepted - implemented** in this cut (see the `@feature-spec intake` entry above).
 
 ### Fixed
+- **Markdown link scan was a silent no-op** — `framework-verify.sh` extracted links with `rg` (ripgrep) guarded by `|| true`, so on any host without `rg` it checked nothing while reporting `OK`, and its `sed` stripping never removed the `](` prefix. Rewritten with portable `grep -oE` + correct stripping (no `ripgrep` dependency). The now-functional scan exposed and fixed **4 broken relative links** (`plan-foundation/skill.md` → `plan-master`, `process-router/reference.md` → `PROCESS_ROUTER.md`, and two workflow guides → `skills/README.md`).
 - **`README.md`** stale prose count — "(11 in total)" corrected to "(14 skills in total)" and now covered by the prose guard above.
 
 ## [0.3.1] - 2026-05-29

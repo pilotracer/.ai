@@ -4,11 +4,11 @@
 
 ## Session status
 
-**Closed:** 2026-05-27 — Added `@plan-verify coverage` and `@plan-repair repair - from coverage` for code-to-SPEC registry parity; synced framework guidance into START_HERE, standards, and templates.
+**Closed:** 2026-06-01 — Integrated `gate-verify.sh` into CI, release preflight, and docs; fixed 4 broken relative links in skill docs and workflow guides.
 
-**Updated:** 2026-05-27
+**Updated:** 2026-06-01
 
-**Repository state:** Agent OS framework repo (self-hosted). Coverage/registry verify-repair path documented; `framework-verify.sh` passed this session. Codeiva consumer patch applied out-of-band at `/mnt/data/Projects/CODE/RECODE/codeiva` (not in this git tree).
+**Repository state:** Agent OS framework repo (self-hosted). `gate-verify.sh` wired into `.github/workflows/framework-verify.yml` and `scripts/release.sh`. CHANGELOG, CONTRIBUTING updated. 4 broken relative links fixed. `scripts/framework-verify.sh` local recovery (toolchain preflight, skill budget, gate-verify self-test, markdown link fix) pending in Trash.
 
 **Recommended pick-up file:** `.work/plans/NEXT.md`
 
@@ -54,8 +54,8 @@ End with **`@session-control close`** (add `commit` / `commit push` only when re
 
 | Date | Session | Artifacts |
 |------|---------|-----------|
+| 2026-06-01 | gate-verify integration | `gate-verify.sh` in CI + release; CHANGELOG, CONTRIBUTING updated; 4 broken links fixed |
 | 2026-05-27 | Coverage/registry parity | `plan-verify` coverage mode; `plan-repair` from coverage; FEATURE_STANDARD §14; DIRECTORY_MAP gate; templates/work/reports |
-| YYYY-MM-DD | | |
 
 ---
 

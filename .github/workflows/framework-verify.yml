@@ -24,3 +24,6 @@ jobs:
 
       - name: Traceability (no-op if no master plan)
         run: bash scripts/traceability-verify.sh
+
+      - name: Completion gate (no-op if no done tasks in NEXT.md)
+        run: bash scripts/gate-verify.sh

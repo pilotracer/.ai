@@ -14,14 +14,24 @@ Thanks for considering a contribution. Agent OS is a **portable process framewor
 
 ## Verification (required before PR)
 
+**Prerequisites:** the shell verifiers run on a POSIX toolchain - `bash`, `git`, `rsync`, `awk`, `sed`, `grep`, `find`. `framework-verify.sh` checks this first and fails fast (exit 3) with the missing tool if your environment lacks one (e.g. bare Windows/PowerShell). No `ripgrep` dependency - the link scan uses portable `grep`.
+
 From the **repository root**:
 
 ```bash
-bash scripts/framework-verify.sh   # layout, consumer bootstrap, link scan, template tokens
-bash scripts/smoke-consumer.sh       # optional: verbose consumer artifact listing
+bash scripts/framework-verify.sh    # toolchain, layout, skill budget, consumer bootstrap, link scan, tokens, self-tests
+bash scripts/gate-verify.sh          # completion gate: a done task in NEXT.md must record gate evidence
+bash scripts/smoke-consumer.sh        # optional: verbose consumer artifact listing
 ```
 
-CI runs the same checks on push/PR (`.github/workflows/framework-verify.yml`).
+CI runs all of these on push/PR (`.github/workflows/framework-verify.yml`).
+
+### Skill context budget
+
+`skills/<id>/skill.md` is the first file an agent loads to act, so it must stay cheap to read. `framework-verify.sh` enforces a budget:
+
+- **Soft budget (24 KB):** reported as `DEBT:` (non-failing) - trim examples/edge cases into `skills/<id>/reference.md`.
+- **Hard ceiling (42 KB):** **fails** the build. This is a ratchet set just above today's largest skill, so the ceiling can only move down.
 
 **Release smoke (maintainers):** after a tag, copy this tree into a temp app repo, run bootstrap, then walk one skill path (`@session-control start` → manual `NEXT.md` or `@plan-foundation greenfield`). Document friction in `CHANGELOG.md` if gates block unexpectedly.
 
@@ -33,7 +43,7 @@ Tags are gated by a preflight - never `git tag` by hand:
 bash scripts/release.sh <version>   # e.g. 0.3.2
 ```
 
-It refuses to create the annotated tag `v<version>` unless **all** verifiers pass (`framework-verify`, `smoke-consumer`, `readiness-verify`, `traceability-verify`), `CHANGELOG.md` has a matching `## [<version>]` section, and the working tree is clean. It never pushes - review, then `git push origin main --follow-tags`. CI re-runs the same checks on the tag.
+It refuses to create the annotated tag `v<version>` unless **all** verifiers pass (`framework-verify`, `smoke-consumer`, `readiness-verify`, `traceability-verify`, `gate-verify`), `CHANGELOG.md` has a matching `## [<version>]` section, and the working tree is clean. It never pushes - review, then `git push origin main --follow-tags`. CI re-runs the same checks on the tag.
 
 ## Quick checklist before opening a PR
 

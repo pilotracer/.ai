@@ -73,4 +73,4 @@ The **canonical artifact matrix** - paths that participate in **planning** or **
 
 ## Skills index (execution layer)
 
-Portable skills live under **`{SKILLS_ROOT}`** - see [`.ai/skills/README.md`](../../skills/README.md). **Orientation (read-only):** `@process-router`. Guides explain **when** to invoke which skill; **`skill.md`** is still the source of truth for parse verbs and checklists.
+Portable skills live under **`{SKILLS_ROOT}`** - see [`.ai/skills/README.md`](../../../skills/README.md). **Orientation (read-only):** `@process-router`. Guides explain **when** to invoke which skill; **`skill.md`** is still the source of truth for parse verbs and checklists.

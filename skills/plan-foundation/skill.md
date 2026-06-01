@@ -102,7 +102,7 @@ Agents **MUST** use this terminology in status/certify reports when pointing at 
 
 `plan-foundation` **orchestrates** the planning lifecycle and repository artifacts.
 
-`plan-master` **governs** planning intelligence: when deep architecture validation, risk analysis, UX/UI strategy depth, implementation decomposition, or AI-agent execution guidance is required, the agent **MUST** read and apply `.ai/skills/plan-master/skill.md` (at minimum its [Continuous integrity rules](.ai/skills/plan-master/skill.md#continuous-integrity-rules), [Hallucination prevention](.ai/skills/plan-master/skill.md#hallucination-prevention), and Phase 5 integrity protocol).
+`plan-master` **governs** planning intelligence: when deep architecture validation, risk analysis, UX/UI strategy depth, implementation decomposition, or AI-agent execution guidance is required, the agent **MUST** read and apply `plan-master/skill.md` (at minimum its [Continuous integrity rules](../plan-master/skill.md#continuous-integrity-rules), [Hallucination prevention](../plan-master/skill.md#hallucination-prevention), and Phase 5 integrity protocol).
 
 **Three readiness states** (foundation owns the first two; plan-master owns the third):
 

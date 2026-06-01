@@ -25,7 +25,7 @@ bad() { echo "    BLOCK: $*" >&2; fail=1; }
 step "Release preflight for ${tag}"
 
 # 1. All verifiers must pass.
-for v in framework-verify smoke-consumer readiness-verify traceability-verify; do
+for v in framework-verify smoke-consumer readiness-verify traceability-verify gate-verify; do
   if bash "scripts/${v}.sh" >/dev/null 2>&1; then
     echo "    OK: ${v}"
   else

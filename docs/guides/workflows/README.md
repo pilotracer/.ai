@@ -125,4 +125,4 @@ The **artifact matrix** below maps **planning** vs **implementation** (plus cros
 
 ---
 
-**Skills registry (`@` handles, naming protocol):** [`.ai/skills/README.md`](../../skills/README.md). **Curriculum and principles:** [20260518-guide-workflows-index.md](20260518-guide-workflows-index.md).
+**Skills registry (`@` handles, naming protocol):** [`.ai/skills/README.md`](../../../skills/README.md). **Curriculum and principles:** [20260518-guide-workflows-index.md](20260518-guide-workflows-index.md).

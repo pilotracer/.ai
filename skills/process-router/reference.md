@@ -8,7 +8,7 @@ Update this table when registering a new skill or guide. Keep **Run next** comma
 
 | Bucket | Example questions | Run next | Canonical sources |
 |--------|-------------------|----------|-------------------|
-| **orient** | "Where am I?", "What's next?", "Lost" | `@session-control status` then `.work/context/HANDOFF.md` → `.work/plans/NEXT.md` | `.ai/START_HERE.md` §2 · [`PROCESS_ROUTER.md`](../PROCESS_ROUTER.md) |
+| **orient** | "Where am I?", "What's next?", "Lost" | `@session-control status` then `.work/context/HANDOFF.md` → `.work/plans/NEXT.md` | `.ai/START_HERE.md` §2 · [`PROCESS_ROUTER.md`](../../PROCESS_ROUTER.md) |
 | **session** | "Start/close session", "Bookend work" | `@session-control start` · `@session-control close` | `.ai/skills/session-control/skill.md` |
 | **plan-foundation** | "Is foundation done?", "New project greenfield" | `@plan-foundation status` · `@plan-foundation greenfield` | `.ai/skills/plan-foundation/skill.md` · `20260518-guide-plan-foundation.md` |
 | **plan-master** | "Master plan", "Implementation-ready?" | `@plan-master status` · `@plan-master greenfield` | `.ai/skills/plan-master/skill.md` · `20260518-guide-plan-master-full.md` |
