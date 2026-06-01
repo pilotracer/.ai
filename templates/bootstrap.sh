@@ -49,6 +49,12 @@ for dir in foundation full operations proposals archives; do
   touch "${WORK}/plans/${dir}/.gitkeep"
 done
 
+# Create output-sink dirs (not populated by bootstrap; appear when work runs)
+for dir in analysis scripts; do
+  mkdir -p "${WORK}/${dir}"
+  touch "${WORK}/${dir}/.gitkeep"
+done
+
 if [[ ! -f "${REPO_ROOT}/.cursorrules" ]]; then
   if [[ -f "${AI_ROOT}/templates/cursorrules.template" ]]; then
     cp "${AI_ROOT}/templates/cursorrules.template" "${REPO_ROOT}/.cursorrules"

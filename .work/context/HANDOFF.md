@@ -4,11 +4,11 @@
 
 ## Session status
 
-**Closed:** 2026-06-01 — Integrated `gate-verify.sh` into CI, release preflight, and docs; fixed 4 broken relative links in skill docs and workflow guides.
+**Closed:** 2026-06-01 — Added `.work/analysis/` and `.work/scripts/` to framework directory structure; updated `.work/README.md`, `DIRECTORY_MAP`, and bootstrap.
 
 **Updated:** 2026-06-01
 
-**Repository state:** Agent OS framework repo (self-hosted). `gate-verify.sh` wired into `.github/workflows/framework-verify.yml` and `scripts/release.sh`. CHANGELOG, CONTRIBUTING updated. 4 broken relative links fixed. `scripts/framework-verify.sh` local recovery (toolchain preflight, skill budget, gate-verify self-test, markdown link fix) pending in Trash.
+**Repository state:** Agent OS framework repo (self-hosted). `.work/analysis/` (investigation/audit output sink) and `.work/scripts/` (operational runbooks) now documented in canonical layout. Bootstrap creates both dirs. `scripts/framework-verify.sh` local recovery still pending in Trash.
 
 **Recommended pick-up file:** `.work/plans/NEXT.md`
 
@@ -54,6 +54,7 @@ End with **`@session-control close`** (add `commit` / `commit push` only when re
 
 | Date | Session | Artifacts |
 |------|---------|-----------|
+| 2026-06-01 | .work/ dir structure | `.work/analysis/`, `.work/scripts/` + READMEs; `.work/README.md`, `DIRECTORY_MAP`, `bootstrap.sh` updated |
 | 2026-06-01 | gate-verify integration | `gate-verify.sh` in CI + release; CHANGELOG, CONTRIBUTING updated; 4 broken links fixed |
 | 2026-05-27 | Coverage/registry parity | `plan-verify` coverage mode; `plan-repair` from coverage; FEATURE_STANDARD §14; DIRECTORY_MAP gate; templates/work/reports |
 

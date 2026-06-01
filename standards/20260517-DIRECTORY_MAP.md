@@ -16,6 +16,8 @@
 | `.work/features/<slug>/` | Feature SPECs per FEATURE_STANDARD |
 | `.work/decisions/` | ADRs |
 | `.work/context/` | `HANDOFF.md` |
+| `.work/analysis/` | Generated investigation / audit markdown (gap analyses, session postmortems, parity reports) |
+| `.work/scripts/` | Markdown runbooks for one-off operational scripts; code lives in application tree |
 | `REPLACE:APP_ROOT/` | Primary application (backend, monolith, or service tree) |
 | `REPLACE:FRONTEND_ROOT/` | Optional UI (if any) |
 | `REPLACE:WORKER_ROOT/` | Optional async workers (if any) |

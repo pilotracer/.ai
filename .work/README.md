@@ -16,6 +16,8 @@
 | `.work/decisions/` | ADRs (`YYYYMMDD-NNN-*.md`) |
 | `.work/context/` | `HANDOFF.md` - read/write via `@session-control` |
 | `.work/reports/` | Optional verify snapshots (e.g. code-registry audit from `@plan-verify coverage`) |
+| `.work/analysis/` | Generated investigation / audit markdown (gap analyses, session postmortems, parity reports) |
+| `.work/scripts/` | Markdown runbooks for one-off operational scripts (backfills, repairs); code lives in application tree |
 
 ## Placeholder map
 
