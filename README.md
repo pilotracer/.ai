@@ -324,6 +324,7 @@ Skill prerequisite gates: [`skills/SKILL_DEPENDENCIES.md`](skills/SKILL_DEPENDEN
 | [`docs/integration/`](docs/integration/) | Vendor mirror layout + `MANIFEST` template (project adds artifacts) |
 | [`templates/`](templates/README.md) | **`cursorrules.template`** - copy to repo root as `.cursorrules`; **`.ai/.cursorrules`** mirrors the template when present (keep in sync) |
 | `plans/`, `features/`, … | **Pointers only** → `.work/` |
+| [`.quick/`](.quick/README.md) | Copy-paste cheat sheets for common workflows |
 
 ---
 
