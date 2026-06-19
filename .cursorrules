@@ -126,6 +126,8 @@ Reusable agent skills live under `.ai/skills/`. Each skill is a subfolder contai
 
 | Skill | Folder | Purpose |
 |-------|--------|---------|
+| deploy-files | `.ai/skills/deploy-files/` | Deploy `.ai/` files into target project (clean rsync, no VCS artifacts) |
+| deploy-repo | `.ai/skills/deploy-repo/` | Full repo deploy: clone (git mirror) or archive (snapshot with .github) |
 | plan-foundation | `.ai/skills/plan-foundation/` | P0–P6 orchestration; certify plan-master-ready |
 | plan-master | `.ai/skills/plan-master/` | Master implementation plan; certify implementation-ready |
 | plan-verify | `.ai/skills/plan-verify/` | Plan audits: foundation, master, alignment, **coverage** (code→SPEC), **brownfield** |
