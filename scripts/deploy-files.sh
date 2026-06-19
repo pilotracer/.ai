@@ -67,7 +67,13 @@ fi
 # --others            : untracked files
 # --exclude-standard  : skip untracked files that .gitignore excludes
 # Net set = every file not excluded by .git → enforces the invariant.
-# Skill-level excludes are intentional omissions of otherwise-tracked files.
+# Skill-level excludes are intentional omissions of otherwise-tracked files:
+#   .github/      — CI/VCS, shipped via @deploy-repo (full-repo mode) only
+#   .gitignore    — framework-repo hygiene, not consumer concern
+#   .gitattributes — same
+#   .cursorrules  — created in target by @project-bootstrap init from template
+#   scripts/deploy-files.sh, scripts/deploy-repo.sh — the deploy scripts
+#                   themselves (run from source repo, not consumer concern)
 SKILL_EXCLUDE_REGEX='^(\.github/|\.gitignore$|\.gitattributes$|\.cursorrules$|scripts/deploy-files\.sh$|scripts/deploy-repo\.sh$)'
 
 TMP_LIST="$(mktemp)"

@@ -50,7 +50,7 @@ Deploys this `.ai` framework into a target project so the project can use Agent 
 
 1. `bash .ai/scripts/deploy-files.sh "<resolved-path>"`
 2. **File set:** `git ls-files --cached --others --exclude-standard` from the source repo root — i.e. every file **not** excluded by `.gitignore`. Anything gitignored (`.credentials/`, `.private/`, `tmp/`, …) is never copied.
-3. **Skill-level omissions** (intentional, on top of the git-based set): `.github/`, `.gitignore`, `.gitattributes`, `.cursorrules`, `scripts/deploy-files.sh`, `scripts/deploy-repo.sh`.
+3. **Skill-level omissions** (intentional, on top of the git-based set): `.github/`, `.gitignore`, `.gitattributes`, `.cursorrules`, `scripts/deploy-files.sh`, `scripts/deploy-repo.sh` (the deploy scripts themselves — run from source repo, not consumer concern).
 4. Re-copies on re-run (idempotent overwrite). No `--delete` — target-side customizations are preserved.
 5. Outputs next steps for the target project.
 
