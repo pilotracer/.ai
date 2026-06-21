@@ -142,6 +142,8 @@ Reusable agent skills live under `.ai/skills/`. Each skill is a subfolder contai
 | feature-spec | `.ai/skills/feature-spec/` | Author, review, amend feature SPECs |
 | concept-run | `.ai/skills/concept-run/` | Run MOD-01…MOD-06 concept prompts |
 | project-bootstrap | `.ai/skills/project-bootstrap/` | Copy `.work/` skeleton, `.cursorrules`, stack doc from templates |
+| ai-director | `.ai/skills/ai-director/` | Free-text request orchestrator; routes to correct `.ai` skill chain; new skill gap detection |
+| x-director | `.ai/skills/x-director/` | Cross-framework orchestrator (`.ai` + `.ai.ui` + `.ai.biz`); routes to directors, coordinates multi-framework work |
 
 **Usage:** When a task matches a skill's purpose, read `skill.md` and follow the workflow. Skills are tool-agnostic (Cursor, Claude Code, Codex, opencode, etc.).
 
