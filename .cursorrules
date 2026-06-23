@@ -8,7 +8,7 @@ You are not a yes-machine. You are a trusted advisor whose sole objective is the
 
 # AI Agent Rules — REPLACE:PROJECT_NAME
 
-> **Bootstrap:** Copy this file from `.ai/templates/cursorrules.template` to the **repository root** as `.cursorrules`, then replace every `REPLACE:` token below.
+> **Bootstrap:** Copy this file from `templates/cursorrules.template` to the **repository root** as `.cursorrules`, then replace every `REPLACE:` token below.
 
 ## Core Principles (ALWAYS APPLY)
 
@@ -63,26 +63,28 @@ These principles override all other instructions. They are non-negotiable.
 
 ## Required Context Files
 
-**Lost or unsure what to do? Read [`.ai/START_HERE.md`](.ai/START_HERE.md) first** — operator decision tree and recovery guide.
+**Lost or unsure what to do? Read [`START_HERE.md`](START_HERE.md) first** — operator decision tree and recovery guide.
+
+**Free-text entry points:** If you don't know which skill to run, invoke `@ai-director - <describe what you want>` (Agent OS), `@ui-director - <describe what you want>` (UI Design OS), `@biz-director - <describe what you want>` (Business OS), or `@x-director - <describe what you want>` when the work spans frameworks.
 
 Read these at the start of every conversation and when relevant:
 
 | File | Purpose |
 |------|---------|
-| **`.ai/START_HERE.md`** | What to invoke right now; forgetfulness checklist |
-| **`.ai/PROCESS_ROUTER.md`** | Process Q&A; `@process-router` vs `@session-control status` |
+| **`START_HERE.md`** | What to invoke right now; forgetfulness checklist |
+| **`PROCESS_ROUTER.md`** | Process Q&A; `@process-router` vs `@session-control status`; director fallbacks |
 | **`REPLACE:TECH_STACK_DOC`** | Technology stack (e.g. `DOCS_TECH_STACK.md` at repo root) |
-| **`.ai/standards/REPLACE:CONVENTIONS_FILE`** | Code layout, naming, maintainability |
-| **`.ai/standards/REPLACE:FEATURE_STANDARD_FILE`** | Feature SPEC lifecycle |
-| **`.ai/standards/REPLACE:DIRECTORY_MAP_FILE`** | Repository layout and boundaries |
+| **`standards/REPLACE:CONVENTIONS_FILE`** | Code layout, naming, maintainability |
+| **`standards/REPLACE:FEATURE_STANDARD_FILE`** | Feature SPEC lifecycle |
+| **`standards/REPLACE:DIRECTORY_MAP_FILE`** | Repository layout and boundaries |
 | **`.work/context/HANDOFF.md`** | Session handoff (session-control read/write) |
-| **`.ai/docs/guides/workflows/README.md`** | Workflow index and artifact matrix |
+| **`docs/guides/workflows/README.md`** | Workflow index and artifact matrix |
 
 ### Workflow bootstrap (concepts + guides)
 
-Portable process docs: **`.ai/docs/guides/workflows/README.md`** (artifact matrix). Curriculum: **`20260518-guide-workflows-index.md`** (when present). Tutorials: **`20260518-tutorial-*`**. Reference guides: **`20260518-guide-*`**.
+Portable process docs: **`docs/guides/workflows/README.md`** (artifact matrix). Curriculum: **`20260518-guide-workflows-index.md`** (when present). Tutorials: **`20260518-tutorial-*`**. Reference guides: **`20260518-guide-*`**.
 
-**Concept pack:** `.ai/concepts/README.md` (MOD-01–MOD-06). When a change touches **architecture, coupling, latency chains, cost, ops load, or AI-generated code**: list applicable concept ids, run matching `prompt.md` under `.ai/concepts/<name>/`, attach outputs to the PR or **`### Concept / NFR registry`** in `.work/plans/NEXT.md`; tag quantitative claims with `measured` | `estimated` | `assumption` | `unknown`.
+**Concept pack:** `concepts/README.md` (MOD-01–MOD-06). When a change touches **architecture, coupling, latency chains, cost, ops load, or AI-generated code**: list applicable concept ids, run matching `prompt.md` under `concepts/<name>/`, attach outputs to the PR or **`### Concept / NFR registry`** in `.work/plans/NEXT.md`; tag quantitative claims with `measured` | `estimated` | `assumption` | `unknown`.
 
 **Placeholder quick map (customize for this repository):**
 
@@ -96,9 +98,9 @@ Portable process docs: **`.ai/docs/guides/workflows/README.md`** (artifact matri
 | `{ITERATION_CARRIER}` | `.work/plans/NEXT.md` |
 | `{MASTER_PLAN}` | `.work/plans/full/*-full-plan.md` (latest **Approved**) |
 | `{HANDOFF}` | `.work/context/HANDOFF.md` |
-| `{CONCEPTS_ROOT}` | `.ai/concepts/` |
-| `{SKILLS_ROOT}` | `.ai/skills/` |
-| `{OBSERVABILITY_SPEC}` | REPLACE:OBSERVABILITY_SPEC_PATH (e.g. `.ai/standards/YYYYMMDD-observability-spec.md`) |
+| `{CONCEPTS_ROOT}` | `concepts/` |
+| `{SKILLS_ROOT}` | `skills/` |
+| `{OBSERVABILITY_SPEC}` | REPLACE:OBSERVABILITY_SPEC_PATH (e.g. `standards/YYYYMMDD-observability-spec.md`) |
 | `{BOUNDARY_MAP}` | REPLACE:BOUNDARY_MAP_PATH (directory map or dedicated boundary doc) |
 | `{AGENT_RULES_FILE}` | **`.cursorrules` (this file)** — `AGENTS.md` is NOT used unless the owner explicitly adopts it |
 | `REPLACE:APP_ROOT` | Primary application tree (e.g. `backend/`, `apis/`, `src/`) |
@@ -120,45 +122,45 @@ Portable process docs: **`.ai/docs/guides/workflows/README.md`** (artifact matri
 
 ## Skills
 
-Reusable agent skills live under `.ai/skills/`. Each skill is a subfolder containing a `skill.md` file. The folder name is the skill identifier.
+Reusable agent skills live under `skills/`. Each skill is a subfolder containing a `skill.md` file. The folder name is the skill identifier.
 
 **Available skills:**
 
 | Skill | Folder | Purpose |
 |-------|--------|---------|
-| deploy-files | `.ai/skills/deploy-files/` | Deploy `.ai/` files into target project (clean rsync, no VCS artifacts) |
-| deploy-repo | `.ai/skills/deploy-repo/` | Full repo deploy: clone (git mirror) or archive (snapshot with .github) |
-| plan-foundation | `.ai/skills/plan-foundation/` | P0–P6 orchestration; certify plan-master-ready |
-| plan-master | `.ai/skills/plan-master/` | Master implementation plan; certify implementation-ready |
-| plan-verify | `.ai/skills/plan-verify/` | Plan audits: foundation, master, alignment, **coverage** (code→SPEC), **brownfield** |
-| plan-repair | `.ai/skills/plan-repair/` | Remediate plan gaps; **brownfield synthesis** from repo evidence; mandatory re-verify |
-| session-control | `.ai/skills/session-control/` | Session open/close; HANDOFF, NEXT; optional git |
-| db-migration | `.ai/skills/db-migration/` | Idempotent numbered SQL migration scripts |
-| code-implementation | `.ai/skills/code-implementation/` | Iteration execution from NEXT.md |
-| code-verify | `.ai/skills/code-verify/` | Milestone/uncommitted/last audits; open-language → Request interpretation |
-| code-repair | `.ai/skills/code-repair/` | Fix verify/SPEC/migration findings; open-language → R0-free alignment map |
-| dev-stack | `.ai/skills/dev-stack/` | Isolated Docker Compose dev stack helper (`bin/start.sh`) |
-| process-router | `.ai/skills/process-router/` | Read-only process Q&A router |
-| feature-spec | `.ai/skills/feature-spec/` | Author, review, amend feature SPECs |
-| concept-run | `.ai/skills/concept-run/` | Run MOD-01…MOD-06 concept prompts |
-| project-bootstrap | `.ai/skills/project-bootstrap/` | Copy `.work/` skeleton, `.cursorrules`, stack doc from templates |
-| ai-director | `.ai/skills/ai-director/` | Free-text request orchestrator; routes to correct `.ai` skill chain; new skill gap detection |
-| x-director | `.ai/skills/x-director/` | Cross-framework orchestrator (`.ai` + `.ai.ui` + `.ai.biz`); routes to directors, coordinates multi-framework work |
+| deploy-files | `skills/deploy-files/` | Deploy Agent OS files into target project (clean rsync, no VCS artifacts) |
+| deploy-repo | `skills/deploy-repo/` | Full repo deploy: clone (git mirror) or archive (snapshot with .github) |
+| plan-foundation | `skills/plan-foundation/` | P0–P6 orchestration; certify plan-master-ready |
+| plan-master | `skills/plan-master/` | Master implementation plan; certify implementation-ready |
+| plan-verify | `skills/plan-verify/` | Plan audits: foundation, master, alignment, **coverage** (code→SPEC), **brownfield** |
+| plan-repair | `skills/plan-repair/` | Remediate plan gaps; **brownfield synthesis** from repo evidence; mandatory re-verify |
+| session-control | `skills/session-control/` | Session open/close; HANDOFF, NEXT; optional git |
+| db-migration | `skills/db-migration/` | Idempotent numbered SQL migration scripts |
+| code-implementation | `skills/code-implementation/` | Iteration execution from NEXT.md |
+| code-verify | `skills/code-verify/` | Milestone/uncommitted/last audits; open-language → Request interpretation |
+| code-repair | `skills/code-repair/` | Fix verify/SPEC/migration findings; open-language → R0-free alignment map |
+| dev-stack | `skills/dev-stack/` | Isolated Docker Compose dev stack helper (`bin/start.sh`) |
+| process-router | `skills/process-router/` | Read-only process Q&A router |
+| feature-spec | `skills/feature-spec/` | Author, review, amend feature SPECs |
+| concept-run | `skills/concept-run/` | Run MOD-01…MOD-06 concept prompts |
+| project-bootstrap | `skills/project-bootstrap/` | Copy `.work/` skeleton, `.cursorrules`, stack doc from templates |
+| ai-director | `skills/ai-director/` | Free-text request orchestrator; routes to correct `.ai` skill chain; new skill gap detection |
+| x-director | `skills/x-director/` | Cross-framework orchestrator (`.ai` + `.ai.ui` + `.ai.biz`); routes to directors, coordinates multi-framework work |
 
 **Usage:** When a task matches a skill's purpose, read `skill.md` and follow the workflow. Skills are tool-agnostic (Cursor, Claude Code, Codex, opencode, etc.).
 
-**Creating new skills:** Add `.ai/skills/<skill-name>/skill.md`; register in the table above. **Naming:** `.ai/skills/README.md` § Naming protocol (`{domain}-{role}`, kebab-case).
+**Creating new skills:** Add `skills/<skill-name>/skill.md`; register in the table above. **Naming:** `skills/README.md` § Naming protocol (`{domain}-{role}`, kebab-case).
 
 ---
 
 ## External integration documentation (optional)
 
-When this project integrates with **vendor-published APIs, XSDs, PDFs, or OpenAPI/HTML specs**, cache reference artifacts under **`.ai/docs/integration/`**.
+When this project integrates with **vendor-published APIs, XSDs, PDFs, or OpenAPI/HTML specs**, cache reference artifacts under **`docs/integration/`**.
 
 Rules:
 
-1. **Subfolders:** Organize by source and version (e.g. `.ai/docs/integration/vendor-v1/`) so upgrades do not silently overwrite pinned files.
-2. **Manifest:** Record every download in `.ai/docs/integration/MANIFEST.txt` (source URL, local path, batch date).
+1. **Subfolders:** Organize by source and version (e.g. `docs/integration/vendor-v1/`) so upgrades do not silently overwrite pinned files.
+2. **Manifest:** Record every download in `docs/integration/MANIFEST.txt` (source URL, local path, batch date).
 3. **Sources:** Prefer official vendor domains; third-party mirrors only with an explicit manifest note.
 4. **Secrets:** Never place keys, PEM/P12, passwords, tokens, or `.env` content in this directory.
 5. **Verification:** After download, confirm file type (not an HTML error page masquerading as a PDF).
@@ -238,7 +240,7 @@ Customize paths and ORM for your project.
 
 ### Migration policy (canonical)
 
-Numbered SQL under **`REPLACE:MIGRATIONS_DIR`** is the default schema path. Procedure: `@db-migration` (`.ai/skills/db-migration/skill.md`).
+Numbered SQL under **`REPLACE:MIGRATIONS_DIR`** is the default schema path. Procedure: `@db-migration` (`skills/db-migration/skill.md`).
 
 1. **Startup:** `REPLACE:MIGRATION_RUNNER_PATH` runs all scripts in alphanumeric order on **every application start**, before the HTTP server accepts traffic. Each script must be idempotent (safe to re-run N times).
 2. **Verify idempotency:** After creating or changing a script, run `@db-migration verify` (or run the full runner twice in a dev DB) before claiming the migration is done.
@@ -364,7 +366,7 @@ If the team uses OpenSpec:
 
 - **Proposals first** for new features or significant changes.
 - Implement exactly as defined in the approved proposal.
-- Document lifecycle commands under `.ai/commands/openspec/` when that tree exists.
+- Document lifecycle commands under `commands/openspec/` when that tree exists.
 
 If OpenSpec is not used, delete this section or replace with your team's proposal gate.
 
@@ -387,9 +389,11 @@ If OpenSpec is not used, delete this section or replace with your team's proposa
 
 ---
 
-## Documentation layout (`.ai/` vs `.work/`)
+## Documentation layout (framework vs project memory)
 
-**`.ai/`** — agnostic: skills, standards, concepts, workflow guides, integration mirror, `START_HERE.md`, `PROCESS_ROUTER.md`, **`templates/`** (including this file's source). Pointer READMEs only under `.ai/plans/`, `.ai/features/`, etc.
+In this self-hosted framework repo, the `.ai/` layer sits at the repo root without the `.ai/` prefix.
+
+**`/` (framework layer)** — agnostic: `skills/`, `standards/`, `concepts/`, workflow guides, integration mirror, `START_HERE.md`, `PROCESS_ROUTER.md`, **`templates/`** (including this file's source). Pointer READMEs only under `plans/`, `features/`, etc.
 
 **`.work/`** — project-specific: plans, SPECs, ADRs, prompts, `HANDOFF.md`.
 
@@ -402,8 +406,8 @@ Generated filenames under `.work/` use the `YYYYMMDD-` prefix unless documented 
 | `.work/decisions/` | ADRs |
 | `.work/prompts/` | Questionnaires; user scratch |
 | `.work/context/HANDOFF.md` | Session handoff |
-| `.ai/standards/` | Binding engineering standards |
-| `.ai/skills/` | Portable agent skills |
-| `.ai/templates/cursorrules.template` | **Copy to repo root as `.cursorrules`** when bootstrapping |
+| `standards/` | Binding engineering standards |
+| `skills/` | Portable agent skills |
+| `templates/cursorrules.template` | **Copy to repo root as `.cursorrules`** when bootstrapping |
 
-Canonical map: `.ai/README.md` · Working tree: `.work/README.md`.
+Canonical map: `README.md` · Working tree: `.work/README.md`.

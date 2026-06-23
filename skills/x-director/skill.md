@@ -53,6 +53,48 @@ The x-director knows about every framework in the workspace:
 
 ---
 
+## Free-text intake contract
+
+`@x-director` is the user's single free-text entry point when they are unsure which framework owns the work or when the work spans multiple frameworks. Follow this contract so every inquiry is structured, routed, and recorded.
+
+### 1. Capture
+- Preserve the user's exact wording (quote it in every touched HANDOFF).
+- Do not silently narrow a cross-framework request to a single director.
+
+### 2. Load all framework contexts
+- Read every HANDOFF/NEXT file that exists across `.ai`, `.ai.ui`, and `.ai.biz` (listed in § Load context).
+- Skip missing files with a note; do not fail the whole request because one framework is not bootstrapped.
+
+### 3. Classify framework domain(s)
+- Match by intent, not keyword. Use the bucket table in § Classify intent.
+- A request is **cross-framework** if it naturally requires outputs from ≥2 frameworks (e.g., API + UI, strategy + landing page).
+- A request is **single-framework** if it clearly belongs to one domain, even if the user does not name the framework.
+
+### 4. Channel to the right director(s)
+- Single-framework: route to `@ai-director`, `@ui-director`, or `@biz-director` with the user's request.
+- Cross-framework: coordinate sequentially by dependency; update each director's HANDOFF after its part.
+- Use canonical syntax: `@<director> - <free-text request>`.
+- Never execute a skill directly when a director already owns the chain.
+
+### 5. Structure/format the record
+After completing or changing state, update **every touched HANDOFF** with this exact shape:
+
+```markdown
+## Cross-framework action (@x-director)
+**Date:** YYYY-MM-DD
+**Request:** "<user's original request>"
+**Frameworks involved:** .ai, .ai.ui, .ai.biz (list only those touched)
+**Classified bucket(s):** <bucket-name(s)>
+**Executed:**
+1. @<director> - "<request>" → <result>
+2. ...
+**Coordination notes:** <cross-framework dependencies managed>
+**Blockers:** <any unresolved items | none>
+**Next recommended:** @<director> - "<next action>"
+```
+
+---
+
 ## Orchestration protocol
 
 When user says `@x-director - <anything>`:

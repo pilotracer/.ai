@@ -274,6 +274,7 @@ The bird's-eye flow above is the conceptual map. Below is the **literal command 
 |--------|---------|
 | Where am I? | `@session-control status` |
 | How do I…? | `@process-router - <question>` |
+| Don't know which skill to use | `@ai-director - <describe what you want>` · `@x-director - <describe what you want>` (cross-framework) |
 | Stuck on process | [`START_HERE.md`](START_HERE.md) |
 | Dirty tree before commit | `@code-verify uncommitted` |
 | After you committed | `@code-verify last` |

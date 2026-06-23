@@ -27,6 +27,45 @@ description: >-
 | `status` | Report current Agent OS state: bootstrap, foundation, master plan, iteration, pending verifications |
 | `help` | Display this skill's purpose, available skills summary, and invocation examples |
 
+## Free-text intake contract
+
+When the user invokes `@ai-director` with natural language, follow this write/structure/format/channel discipline so the request is always turned into the correct skill invocation and recorded in project memory.
+
+### 1. Capture
+- Preserve the user's exact wording (quote it in `{HANDOFF}`).
+- Do not silently rewrite the goal into a different skill than the intent demands.
+
+### 2. Load context
+- Read `{HANDOFF}` and `{ITERATION_CARRIER}` before classifying.
+- If either file is missing, treat as bootstrap state and note it.
+
+### 3. Classify (intent → bucket)
+- Match by intent, not keyword. Use the bucket table in § Orchestration protocol.
+- If the intent is UI/design, route to `@ui-director`. If business/strategy/sales, route to `@biz-director`. If it spans frameworks, route to `@x-director`.
+- If the intent is unclear, run a short probe (max 3 clarifying questions) or route to `@process-router` / `@plan-foundation probe`.
+
+### 4. Channel (bucket → skill chain)
+- Map the bucket to the exact skill chain from § Route / Shortcut chains.
+- Check `SKILL_DEPENDENCIES.md` gates before invoking each skill.
+- Use canonical invocation syntax: `@<skill-id> <mode> - <argument>` with ASCII hyphen `-`.
+
+### 5. Structure/format the record
+After the workflow completes or changes state, append to `{HANDOFF}` using this exact shape:
+
+```markdown
+## Latest action (@ai-director)
+**Date:** YYYY-MM-DD
+**Request:** "<user's original request>"
+**Classified bucket:** <bucket-name>
+**Executed:**
+1. @<skill> <mode> - <arg> → <result>
+2. ...
+**Blockers:** <any unresolved items | none>
+**Next recommended:** @<skill> <mode> - <arg>
+```
+
+Also update `{ITERATION_CARRIER}` § **Recommended next** when the build cycle advances.
+
 ## Orchestration protocol
 
 When user says `@ai-director - <anything>`:
