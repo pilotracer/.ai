@@ -58,6 +58,45 @@ Follow .ai/skills/session-control/skill.md - close commit push.
 
 Default `close` never runs `git commit` or `git push`. User runs git manually from the drafted message if they want.
 
+### GitHub task registry (optional)
+
+If the project has `github_task_registry_enabled` **and** `auto_prefix_enabled`, the app
+maintains a lightweight registry file (`.github/task-registry.json`) via the GitHub Contents
+API. Whenever a task or ticket is created/updated/deleted, the registry is synced to the linked
+GitHub repo. (With only `github_task_registry_enabled`, the query endpoint still works but
+returns an empty registry — no entries are pushed.)
+
+The AI SHOULD query the registry to discover the correct task/ticket ref:
+
+```bash
+curl -s -H "Authorization: Bearer <JWT>" \
+  http://localhost:8300/v1/projects/{project_id}/github/task-registry
+```
+
+Response format:
+```json
+{
+  "version": 1,
+  "updated_at": "2026-06-25T12:00:00Z",
+  "tasks": [
+    {"ref": "PROJ-456", "title": "Add login form", "status": "todo", "project_id": "..."}
+  ],
+  "tickets": [
+    {"ref": "PROJ-T-23", "title": "Login broken", "status": "open", "project_id": "..."}
+  ]
+}
+```
+
+If the registry is unreachable or no match is found, fall back to HANDOFF/branch/last-commit.
+**Never block** — the system works seamlessly without the registry.
+
+**Inbound auto-linking (closes the loop):** when commits are synced from GitHub (manual sync,
+background poll, or `/sync-backfill`), the app scans each commit message for `[A-Z]+-(?:T-)?\d+`
+refs (e.g. `PROJ-456:` / `PROJ-T-23:`), resolves them to task/ticket rows in the same project,
+and writes idempotent `commit_subject_refs` rows. So a commit authored with the ref prefix above
+is automatically linked back to its task/ticket — no manual step required. Re-syncs never
+duplicate rows (`ON CONFLICT DO NOTHING`); linking failures never break the sync.
+
 **`close commit` / `commit` default scope:** stage all **safe** dirty paths from `git status --porcelain` (typically `git add .ai/ .work/` plus app dirs touched), **not** HANDOFF/NEXT only. Agent **must** run shell `git add` + `git commit` and show SHA + post-commit `git status -sb`. See `skill.md` § C4b.
 
 **Standalone `commit` / `commit push`:** same git behavior as `close commit` / `close commit push` but **skips** HANDOFF and NEXT updates. Session stays open.
@@ -136,6 +175,7 @@ Expect: same as commit, then `git push`. Session stays open.
 | Commit message in output | no | no | **always** | **always** | **always** | **always** | **always** |
 | Completion checklist | yes | no | yes | yes | yes | **yes** | **yes** |
 | Task ref auto-detected | - | - | - | yes | yes | **yes** | **yes** |
+| Query GitHub task registry (optional) | yes | no | no | yes | yes | **yes** | **yes** |
 
 ---
 

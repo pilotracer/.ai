@@ -156,6 +156,25 @@ If the session goal mentions coding, M1, implementation, or a feature task:
 2. If **implementation-ready: no** and no HANDOFF waiver for the named milestone → note in start report under **### Readiness (do not implement yet)** with redirect: `@plan-master status` → approve plan, or add HANDOFF waiver, or `@code-implementation plan - M{N}` only after prerequisites pass.
 3. Do **not** invoke `@code-implementation start` from session-control - route the user to that skill after gates pass.
 
+### S4c - GitHub task registry (optional discovery)
+
+If `.cursorrules` / project config indicates `github_task_registry_enabled` (the
+registry is populated only when `auto_prefix_enabled` is also on), the AI
+MAY query the GitHub task registry to discover the current task/ticket for this session:
+
+```bash
+curl -s -H "Authorization: Bearer <JWT>" \
+  http://localhost:8300/v1/projects/{project_id}/github/task-registry
+```
+
+Match the response against the session goal or branch name:
+- If a single entry matches → note it as the active task reference.
+- If multiple match → prefer `in_progress` > `todo` > `open`.
+- If none match or the endpoint is unreachable → **continue without error**.
+
+The resolved ref (if any) is stored in the start report and used as priority #2 in
+commit message ref extraction (see [M4](#m4---commit-message-with-task-ref-always)).
+
 ### S5 - Mark session open (HANDOFF)
 
 Update **only** the `## Session status` block at the top of `{HANDOFF}`:
@@ -252,9 +271,14 @@ Format per `.cursorrules` (plain text, no surrounding quotes).
 Look for an active task reference in this priority order:
 
 1. **HANDOFF session goal** — if `{HANDOFF}` `## Session status` contains a ref matching `[A-Z]+-[0-9]+` (e.g. `PROJ-456`), use it.
-2. **Branch name** — if current branch matches `(feature|fix|chore|docs)/[A-Z]+-[0-9]+` or `[A-Z]+-[0-9]+/`, extract the ref.
-3. **Last commit subject** — if `git log -1 --oneline` starts with `[A-Z]+-[0-9]+`, reuse it.
-4. **None** — use conventional format without ref.
+2. **GitHub task registry** (optional) — if `.cursorrules` / project config has `github_task_registry_enabled` (registry is populated only when `auto_prefix_enabled` is also on), query the local API:
+   ```
+   curl -s -H "Authorization: Bearer <JWT>" http://localhost:8300/v1/projects/{project_id}/github/task-registry
+   ```
+   Parse the response, match against HANDOFF goal or branch name to find the best task/ticket. If match found, use its ref. If unreachable or no match, continue to next priority.
+3. **Branch name** — if current branch matches `(feature|fix|chore|docs)/[A-Z]+-[0-9]+` or `[A-Z]+-[0-9]+/`, extract the ref.
+4. **Last commit subject** — if `git log -1 --oneline` starts with `[A-Z]+-[0-9]+`, reuse it.
+5. **None** — use conventional format without ref.
 
 **Subject format:**
 - Ref found: `{REF}: {subject}` (e.g. `PROJ-456: Add login form with email validation`)
@@ -376,9 +400,14 @@ Format per `.cursorrules` (plain text, no surrounding quotes).
 Look for an active task reference in this priority order:
 
 1. **HANDOFF session goal** — if `{HANDOFF}` `## Session status` contains a ref matching `[A-Z]+-[0-9]+` (e.g. `PROJ-456`), use it.
-2. **Branch name** — if current branch matches `(feature|fix|chore|docs)/[A-Z]+-[0-9]+` or `[A-Z]+-[0-9]+/`, extract the ref.
-3. **Last commit subject** — if `git log -1 --oneline` starts with `[A-Z]+-[0-9]+`, reuse it.
-4. **None** — use conventional format without ref.
+2. **GitHub task registry** (optional) — if `.cursorrules` / project config has `github_task_registry_enabled` (registry is populated only when `auto_prefix_enabled` is also on), query the local API:
+   ```
+   curl -s -H "Authorization: Bearer <JWT>" http://localhost:8300/v1/projects/{project_id}/github/task-registry
+   ```
+   Parse the response, match against HANDOFF goal or branch name to find the best task/ticket. If match found, use its ref. If unreachable or no match, continue to next priority.
+3. **Branch name** — if current branch matches `(feature|fix|chore|docs)/[A-Z]+-[0-9]+` or `[A-Z]+-[0-9]+/`, extract the ref.
+4. **Last commit subject** — if `git log -1 --oneline` starts with `[A-Z]+-[0-9]+`, reuse it.
+5. **None** — use conventional format without ref.
 
 **Subject format:**
 - Ref found: `{REF}: {subject}` (e.g. `PROJ-456: Add login form with email validation`)

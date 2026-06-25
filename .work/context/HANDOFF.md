@@ -4,11 +4,11 @@
 
 ## Session status
 
-**Closed:** 2026-06-23 — Strengthened `@ai-director` and `@x-director` free-text intake contracts; wired directors into `.cursorrules`, `START_HERE.md`, `PROCESS_ROUTER.md`, `README.md`, and `context/README.md`; corrected self-hosted path references in `.cursorrules`.
+**Closed:** 2026-06-25 — Added standalone `@session-control commit` verb (commit without close) with auto task-ref extraction from HANDOFF/branch/prior commit; added optional GitHub task registry discovery for ref resolution; updated all docs, templates, and quick refs.
 
-**Updated:** 2026-06-23
+**Updated:** 2026-06-25
 
-**Repository state:** Agent OS framework repo (self-hosted). Director skills now expose a clear free-text intake contract (capture → load → classify → channel → record). All entry-point docs route free-text requests to `@ai-director` (Agent OS) or `@x-director` (cross-framework). Self-hosted `.cursorrules` path references now point to repo-root framework files. `scripts/framework-verify.sh` local recovery still pending in Trash.
+**Repository state:** Agent OS framework repo (self-hosted). Session-control now supports `commit`/`commit push` (no close) and auto-prepends task refs to commit subjects. GitHub task registry discovery (optional) available for projects with `github_task_registry_enabled`. `scripts/framework-verify.sh` local recovery still pending in Trash.
 
 **Recommended pick-up file:** `.work/plans/NEXT.md`
 
@@ -54,6 +54,7 @@ End with **`@session-control close`** (add `commit` / `commit push` only when re
 
 | Date | Session | Artifacts |
 |------|---------|-----------|
+| 2026-06-25 | session-control commit verb + task refs | `@session-control commit`/`commit push` standalone verb; auto task-ref extraction in commit messages (HANDOFF/branch/prior commit); optional GitHub task registry discovery; updated skill.md, reference.md, .cursorrules/template, SKILL_DEPENDENCIES.md, quick refs |
 | 2026-06-23 | deploy-files to tools-project | `@deploy-files copy - /mnt/work/Projects/tools-project` — 153 files re-copied to `tools-project/.ai/` (git-ignored content excluded) |
 | 2026-06-23 | director free-text intake | `skills/ai-director/skill.md` + `skills/x-director/skill.md` gained explicit Free-text intake contracts (capture → load → classify → channel → record); `.cursorrules`, `START_HERE.md`, `PROCESS_ROUTER.md`, `README.md`, `context/README.md` now route free-text requests to `@ai-director` / `@x-director`; self-hosted path references corrected throughout `.cursorrules` |
 | 2026-06-01 | .work/ dir structure | `.work/analysis/`, `.work/scripts/` + READMEs; `.work/README.md`, `DIRECTORY_MAP`, `bootstrap.sh` updated |
