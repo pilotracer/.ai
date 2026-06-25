@@ -4,7 +4,7 @@
 
 ## Session status
 
-**Closed:** 2026-06-25 — Added standalone `@session-control commit` verb (commit without close) with auto task-ref extraction from HANDOFF/branch/prior commit; added optional GitHub task registry discovery for ref resolution; updated all docs, templates, and quick refs.
+**Closed:** 2026-06-25 — Polish GitHub task registry discovery: use `API_BASE_URL` env var, simplify S4c to always-safe-to-attempt, consistent wording in M4 and C4 extraction sections.
 
 **Updated:** 2026-06-25
 
@@ -54,6 +54,7 @@ End with **`@session-control close`** (add `commit` / `commit push` only when re
 
 | Date | Session | Artifacts |
 |------|---------|-----------|
+| 2026-06-25 | github registry polish | `API_BASE_URL` env var, simplified S4c, consistent M4/C4 extraction wording |
 | 2026-06-25 | session-control commit verb + task refs | `@session-control commit`/`commit push` standalone verb; auto task-ref extraction in commit messages (HANDOFF/branch/prior commit); optional GitHub task registry discovery; updated skill.md, reference.md, .cursorrules/template, SKILL_DEPENDENCIES.md, quick refs |
 | 2026-06-23 | deploy-files to tools-project | `@deploy-files copy - /mnt/work/Projects/tools-project` — 153 files re-copied to `tools-project/.ai/` (git-ignored content excluded) |
 | 2026-06-23 | director free-text intake | `skills/ai-director/skill.md` + `skills/x-director/skill.md` gained explicit Free-text intake contracts (capture → load → classify → channel → record); `.cursorrules`, `START_HERE.md`, `PROCESS_ROUTER.md`, `README.md`, `context/README.md` now route free-text requests to `@ai-director` / `@x-director`; self-hosted path references corrected throughout `.cursorrules` |

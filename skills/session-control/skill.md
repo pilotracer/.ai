@@ -158,14 +158,18 @@ If the session goal mentions coding, M1, implementation, or a feature task:
 
 ### S4c - GitHub task registry (optional discovery)
 
-If `.cursorrules` / project config indicates `github_task_registry_enabled` (the
-registry is populated only when `auto_prefix_enabled` is also on), the AI
-MAY query the GitHub task registry to discover the current task/ticket for this session:
+The AI MAY query the project's task registry endpoint to discover the current
+task/ticket for this session. The endpoint returns an empty registry if the
+feature is disabled or no GitHub link is configured — so the query is always
+safe to attempt.
 
 ```bash
 curl -s -H "Authorization: Bearer <JWT>" \
-  http://localhost:8300/v1/projects/{project_id}/github/task-registry
+  "${API_BASE_URL:-http://localhost:8300}/v1/projects/{project_id}/github/task-registry"
 ```
+
+Use `{project_id}` from HANDOFF or the current project context. If
+`API_BASE_URL` is not set, default to `http://localhost:8300`.
 
 Match the response against the session goal or branch name:
 - If a single entry matches → note it as the active task reference.
@@ -271,11 +275,11 @@ Format per `.cursorrules` (plain text, no surrounding quotes).
 Look for an active task reference in this priority order:
 
 1. **HANDOFF session goal** — if `{HANDOFF}` `## Session status` contains a ref matching `[A-Z]+-[0-9]+` (e.g. `PROJ-456`), use it.
-2. **GitHub task registry** (optional) — if `.cursorrules` / project config has `github_task_registry_enabled` (registry is populated only when `auto_prefix_enabled` is also on), query the local API:
+2. **GitHub task registry** (optional) — query the project API (returns empty registry if the feature is disabled or unreachable, so always safe to try):
    ```
-   curl -s -H "Authorization: Bearer <JWT>" http://localhost:8300/v1/projects/{project_id}/github/task-registry
+   curl -s -H "Authorization: Bearer <JWT>" "${API_BASE_URL:-http://localhost:8300}/v1/projects/{project_id}/github/task-registry"
    ```
-   Parse the response, match against HANDOFF goal or branch name to find the best task/ticket. If match found, use its ref. If unreachable or no match, continue to next priority.
+   Parse the response, match against HANDOFF goal or branch name to find the best task/ticket. If match found, use its ref. If unreachable, empty, or no match, continue to next priority.
 3. **Branch name** — if current branch matches `(feature|fix|chore|docs)/[A-Z]+-[0-9]+` or `[A-Z]+-[0-9]+/`, extract the ref.
 4. **Last commit subject** — if `git log -1 --oneline` starts with `[A-Z]+-[0-9]+`, reuse it.
 5. **None** — use conventional format without ref.
@@ -400,11 +404,11 @@ Format per `.cursorrules` (plain text, no surrounding quotes).
 Look for an active task reference in this priority order:
 
 1. **HANDOFF session goal** — if `{HANDOFF}` `## Session status` contains a ref matching `[A-Z]+-[0-9]+` (e.g. `PROJ-456`), use it.
-2. **GitHub task registry** (optional) — if `.cursorrules` / project config has `github_task_registry_enabled` (registry is populated only when `auto_prefix_enabled` is also on), query the local API:
+2. **GitHub task registry** (optional) — query the project API (returns empty registry if the feature is disabled or unreachable, so always safe to try):
    ```
-   curl -s -H "Authorization: Bearer <JWT>" http://localhost:8300/v1/projects/{project_id}/github/task-registry
+   curl -s -H "Authorization: Bearer <JWT>" "${API_BASE_URL:-http://localhost:8300}/v1/projects/{project_id}/github/task-registry"
    ```
-   Parse the response, match against HANDOFF goal or branch name to find the best task/ticket. If match found, use its ref. If unreachable or no match, continue to next priority.
+   Parse the response, match against HANDOFF goal or branch name to find the best task/ticket. If match found, use its ref. If unreachable, empty, or no match, continue to next priority.
 3. **Branch name** — if current branch matches `(feature|fix|chore|docs)/[A-Z]+-[0-9]+` or `[A-Z]+-[0-9]+/`, extract the ref.
 4. **Last commit subject** — if `git log -1 --oneline` starts with `[A-Z]+-[0-9]+`, reuse it.
 5. **None** — use conventional format without ref.

@@ -70,7 +70,7 @@ The AI SHOULD query the registry to discover the correct task/ticket ref:
 
 ```bash
 curl -s -H "Authorization: Bearer <JWT>" \
-  http://localhost:8300/v1/projects/{project_id}/github/task-registry
+  "${API_BASE_URL:-http://localhost:8300}/v1/projects/{project_id}/github/task-registry"
 ```
 
 Response format:
