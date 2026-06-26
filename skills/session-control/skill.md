@@ -157,28 +157,46 @@ If the session goal mentions coding, M1, implementation, or a feature task:
 2. If **implementation-ready: no** and no HANDOFF waiver for the named milestone → note in start report under **### Readiness (do not implement yet)** with redirect: `@plan-master status` → approve plan, or add HANDOFF waiver, or `@code-implementation plan - M{N}` only after prerequisites pass.
 3. Do **not** invoke `@code-implementation start` from session-control - route the user to that skill after gates pass.
 
-### S4c - GitHub task registry (optional discovery)
+### S4c - GitHub task registry (mandatory)
 
-The AI MAY query the project's task registry endpoint to discover the current
-task/ticket for this session. The endpoint returns an empty registry if the
-feature is disabled or no GitHub link is configured — so the query is always
-safe to attempt.
+**Query the registry — no JWT required.** The endpoint returns an empty
+registry if the feature is disabled or no GitHub link is configured, so
+the query is always safe.
 
 ```bash
-curl -s -H "Authorization: Bearer <JWT>" \
-  "${API_BASE_URL:-http://localhost:8300}/v1/projects/{project_id}/github/task-registry"
+curl -s "${API_BASE_URL:-http://localhost:8300}/v1/projects/{project_id}/github/task-registry"
 ```
 
 Use `{project_id}` from HANDOFF or the current project context. If
 `API_BASE_URL` is not set, default to `http://localhost:8300`.
 
-Match the response against the session goal or branch name:
-- If a single entry matches → note it as the active task reference.
-- If multiple match → prefer `in_progress` > `todo` > `open`.
-- If none match or the endpoint is unreachable → **continue without error**.
+**Match the response to choose the active ref:**
 
-The resolved ref (if any) is stored in the start report and used as priority #2 in
-commit message ref extraction (see [M4](#m4---commit-message-with-task-ref-always)).
+1. Read the returned `tasks` and `tickets` arrays — each entry has
+   `ref`, `title`, `description`, `status`.
+2. Run `git diff HEAD --stat` to see which files changed this session.
+3. Compare changed file paths against entry `description` texts — pick
+   the best match by title/description relevance.
+   - If a single entry matches → use its `ref`.
+   - If multiple match → prefer `in_progress` > `todo` > `open` status.
+   - If none match or the endpoint is unreachable → **ask the user
+     for the ref manually** — do NOT proceed without one.
+
+**Write the chosen ref to `.work/active-ref`:**
+
+```bash
+echo "REF_HERE" > .work/active-ref
+```
+
+This file is read by the `prepare-commit-msg` hook (priority #2 after
+branch name) so every subsequent commit on this session automatically
+gets the ref prefix. The hook also supports the conventional branch-name
+extraction as priority #1, but `.work/active-ref` ensures that even
+commits on branches without a ref pattern are linked.
+
+If the registry was unreachable or empty and the user provided a ref
+manually, write that ref to `.work/active-ref` too — the file is the
+single source of truth for the session.
 
 ### S5 - Mark session open (HANDOFF)
 
@@ -276,24 +294,23 @@ Format per `.cursorrules` (plain text, no surrounding quotes).
 Look for an active task reference in this priority order:
 
 1. **HANDOFF session goal** — if `{HANDOFF}` `## Session status` contains a ref matching `[A-Z]+-[0-9]+` (e.g. `PROJ-456`), use it.
-2. **GitHub task registry** (optional) — query the project API (returns empty registry if the feature is disabled or unreachable, so always safe to try):
-   ```
-   curl -s -H "Authorization: Bearer <JWT>" "${API_BASE_URL:-http://localhost:8300}/v1/projects/{project_id}/github/task-registry"
-   ```
-   Parse the response, match against HANDOFF goal or branch name to find the best task/ticket. If match found, use its ref. If unreachable, empty, or no match, continue to next priority.
-3. **Branch name** — if current branch matches `(feature|fix|chore|docs)/[A-Z]+-[0-9]+` or `[A-Z]+-[0-9]+/`, extract the ref.
-4. **Diff analysis (LLM-assisted)** — run `git diff --cached --stat` (or `git diff HEAD --stat`). Read the changed files and compare against candidate task/ticket descriptions. Use this when branch name lacks a ref, HANDOFF mentions multiple tasks, or changes span a different concern:
+2. **`.work/active-ref`** — if the file exists (written by session start), read its first line and extract the ref:
    ```bash
-   curl -s "${API_BASE_URL:-http://localhost:8300}/v1/projects/{project_id}/tasks?limit=10" 2>/dev/null | python3 -m json.tool || true
-   curl -s "${API_BASE_URL:-http://localhost:8300}/v1/projects/{project_id}/tickets?limit=10" 2>/dev/null | python3 -m json.tool || true
+   head -1 .work/active-ref 2>/dev/null | grep -oE '[A-Z][A-Z0-9_]*-(T-)?[0-9]+' || true
    ```
-   Clear match → use that ref. Multiple refs → primary as prefix, others in body. No match → continue.
+   Fastest priority — no network call. Written during `@session-control start` from registry + diff analysis.
+3. **GitHub task registry** (mandatory — no JWT needed) — query the project API:
+   ```bash
+   curl -s "${API_BASE_URL:-http://localhost:8300}/v1/projects/{project_id}/github/task-registry"
+   ```
+   Parse response, match against HANDOFF goal, changed files (`git diff --cached --stat`), or descriptions. If match found, use that ref. If unreachable or empty, continue.
+4. **Branch name** — if current branch matches `(feature|fix|chore|docs)/[A-Z]+-[0-9]+` or `[A-Z]+-[0-9]+/`, extract the ref.
 5. **Last commit subject** — if `git log -1 --oneline` starts with `[A-Z]+-[0-9]+`, reuse it.
-6. **None** — use conventional format without ref.
+6. **FAIL** — no ref found at any priority. **Ask the user for the ref manually.** Do NOT proceed without one. If the user cannot provide one, use a placeholder like `no-ref` but log a warning.
 
 **Subject format:**
 - Ref found: `{REF}: {subject}` (e.g. `PROJ-456: Add login form with email validation`)
-- No ref: `type: short description` per existing `.cursorrules` convention
+- No ref: **must not happen** — see priority 6 above.
 
 Keep subject ≤72 chars (including ref prefix), imperative mood.
 
@@ -411,30 +428,27 @@ Format per `.cursorrules` (plain text, no surrounding quotes).
 Look for an active task reference in this priority order:
 
 1. **HANDOFF session goal** — if `{HANDOFF}` `## Session status` contains a ref matching `[A-Z]+-[0-9]+` (e.g. `PROJ-456`), use it.
-2. **GitHub task registry** (optional) — query the project API (returns empty registry if the feature is disabled or unreachable, so always safe to try):
-   ```
-   curl -s -H "Authorization: Bearer <JWT>" "${API_BASE_URL:-http://localhost:8300}/v1/projects/{project_id}/github/task-registry"
-   ```
-   Parse the response, match against HANDOFF goal or branch name to find the best task/ticket. If match found, use its ref. If unreachable, empty, or no match, continue to next priority.
-3. **Branch name** — if current branch matches `(feature|fix|chore|docs)/[A-Z]+-[0-9]+` or `[A-Z]+-[0-9]+/`, extract the ref.
-4. **Diff analysis (LLM-assisted)** — run `git diff --cached --stat` (or `git diff HEAD --stat`). Read the changed files and compare against candidate task/ticket descriptions. Use this when branch name lacks a ref, HANDOFF mentions multiple tasks, or changes span a different concern:
+2. **`.work/active-ref`** — if the file exists (written by session start), read its first line and extract the ref:
    ```bash
-   curl -s "${API_BASE_URL:-http://localhost:8300}/v1/projects/{project_id}/tasks?limit=10" 2>/dev/null | python3 -m json.tool || true
-   curl -s "${API_BASE_URL:-http://localhost:8300}/v1/projects/{project_id}/tickets?limit=10" 2>/dev/null | python3 -m json.tool || true
+   head -1 .work/active-ref 2>/dev/null | grep -oE '[A-Z][A-Z0-9_]*-(T-)?[0-9]+' || true
    ```
-   Clear match → use that ref. Multiple refs → primary as prefix, others in body. No match → continue.
+   Fastest priority — no network call. Written during `@session-control start`.
+3. **GitHub task registry** (mandatory — no JWT needed) — query the project API:
+   ```bash
+   curl -s "${API_BASE_URL:-http://localhost:8300}/v1/projects/{project_id}/github/task-registry"
+   ```
+   Parse response, match against HANDOFF goal, changed files, or descriptions. If match found, use that ref. If unreachable or empty, continue.
+4. **Branch name** — if current branch matches `(feature|fix|chore|docs)/[A-Z]+-[0-9]+` or `[A-Z]+-[0-9]+/`, extract the ref.
 5. **Last commit subject** — if `git log -1 --oneline` starts with `[A-Z]+-[0-9]+`, reuse it.
-6. **None** — use conventional format without ref.
+6. **FAIL** — no ref found at any priority. **Ask the user for the ref manually.** Do NOT proceed without one.
 
 **Subject format:**
 - Ref found: `{REF}: {subject}` (e.g. `PROJ-456: Add login form with email validation`)
-- No ref: `type: short description` per existing `.cursorrules` convention
+- No ref: **must not happen** — see priority 6 above.
 
 Keep subject ≤72 chars (including ref prefix), imperative mood (`add`, `fix`, not `added`).
 
 - **Body:** optional; wrap ~72 chars; **why**, not file list. Omit if subject is self-contained.
-
-Valid types (when no ref): `feat`, `fix`, `refactor`, `docs`, `chore`, `style`, `test`.
 
 - One message if changes are cohesive; suggest **split** with multiple message blocks if not.
 - Label in report: **Commit message (draft)** vs **Commit message (used)**.
@@ -503,6 +517,11 @@ Rewrite top sections (keep history table append-only style):
 7. **Open owner actions:** refresh.
 8. **Foundation gate snapshot** (if project uses doc 04 §14): update table.
 9. Remove stale "Open" session line; closed sessions must not say "in progress".
+
+**Cleanup:** Remove `.work/active-ref` if it exists:
+```bash
+rm -f .work/active-ref
+```
 
 Do not delete historical rows in artifact tables; append new entries.
 
