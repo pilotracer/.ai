@@ -38,6 +38,7 @@ Use for **new** skills and for any **rename** (update `.cursorrules`, this READM
 | session-control | `session-control/` | Session open/close, HANDOFF, NEXT, optional git |
 | db-migration | `db-migration/` | Idempotent numbered SQL migration scripts; no version table, no chain conflicts |
 | code-implementation | `code-implementation/` | Iteration execution: `NEXT.md` scope, task gates, completion |
+| tauri-development | `tauri-development/` | Domain guidance for Tauri desktop apps: IPC security, shell/webview patterns, Rust backend conventions, API bridge, event-driven state |
 | code-verify | `code-verify/` | Verification: milestone, uncommitted, last commit/push |
 | code-repair | `code-repair/` | Remediate verifier/migration/SPEC findings; mandatory re-verify |
 | dev-stack | `dev-stack/` | Isolated Docker Compose helper (`bin/start.sh`); safe `.env` handling |

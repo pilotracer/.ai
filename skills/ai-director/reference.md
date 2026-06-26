@@ -6,7 +6,7 @@ Full skill registry, dependency map, and routing tables for the `@ai-director` o
 
 ## 1. Complete skill registry (all `.ai` skills)
 
-All 16 registered skills + 2 deploy utilities. Source of truth: `skills/README.md`.
+All 17 registered skills + 2 deploy utilities. Source of truth: `skills/README.md`.
 
 | `@` handle | Folder | Role | Modes | Writes? | Depends on |
 |------------|--------|------|-------|---------|------------|
@@ -24,6 +24,7 @@ All 16 registered skills + 2 deploy utilities. Source of truth: `skills/README.m
 | `db-migration` | `db-migration/` | Idempotent numbered SQL migration scripts | `init`, `create - <description>`, `run`, `verify`, `status` | Yes (SQL scripts) | **Required:** `db-migration init` (for create/run) |
 | `dev-stack` | `dev-stack/` | Generate/update isolated Docker compose dev helper | `init`, `status` | Yes (`bin/start.sh`) | `docker-compose*.yml` present |
 | `process-router` | `process-router/` | Read-only: "how do I…?" → right skill or guide | `- <question>`, `help` | Read-only | — |
+| `tauri-development` | `tauri-development/` | Domain guidance for Tauri desktop apps: IPC security, shell/webview patterns, Rust backend conventions, API bridge, event-driven state | `status`, `help` | Read-only | Tauri project with `src-tauri/` |
 | `deploy-files` | `deploy-files/` | Deploy `.ai` files to target project (clean rsync) | `copy - <path>`, `status` | Yes (target `.ai/`) | Source git repo |
 | `deploy-repo` | `deploy-repo/` | Full git-based deploy (clone/archive) | `clone - <path>`, `archive - <path>`, `status` | Yes (target repo) | Source git remote (for clone) |
 
@@ -64,7 +65,7 @@ All 16 registered skills + 2 deploy utilities. Source of truth: `skills/README.m
 | **Per milestone** | `@code-implementation plan - M{N}` → `@code-implementation start` → `@code-implementation continue` (loop) → `@code-verify milestone` → `@code-implementation complete` |
 | **Feature intake to code** | `@feature-spec intake` → `@feature-spec create` → `@feature-spec review` → `@feature-spec approve` → plan → implement |
 | **Schema change** | `@db-migration init` (once) → `@db-migration create - <desc>` → `@db-migration verify` |
-| **Architecture review** | `@concept-run - MOD-01` through `MOD-06` as triggered |
+| **Architecture review** | `@concept-run - MOD-01` through `MOD-07` as triggered |
 | **Plan audit + repair** | `@plan-verify foundation` → `@plan-verify master` → findings → `@plan-repair repair - from <mode>` → re-verify |
 | **Deploy framework** | `@deploy-files copy - <path>` or `@deploy-repo clone - <path>` → next steps in target |
 
@@ -83,6 +84,7 @@ From `concepts/README.md`. Run these as required during the build cycle:
 | Ops/infra/cost change | `@concept-run - MOD-04` | Recommended |
 | Security review | `@concept-run - MOD-05` | Recommended |
 | Plan-foundation P6 | `@concept-run - MOD-06` | Required per P6 gate |
+| New LLM feature or hallucination patterns | `@concept-run - MOD-07` | Recommended; Required when handling sensitive data |
 
 ---
 
@@ -126,6 +128,7 @@ Before `@code-implementation complete`, ensure these all pass:
 | "Run MOD-06" | `concept` | `@concept-run - MOD-06` |
 | "Create a migration" | `db-migration` | `@db-migration init` (first) → `@db-migration create - <desc>` |
 | "Set up Docker" | `dev-stack` | `@dev-stack init` |
+| "Tauri desktop development" | `tauri-development` | `@tauri-development` |
 | "How do I...?" | `process-router` | `@process-router - <question>` |
 | "Deploy to /path/to/project" | `deploy` | `@deploy-files copy - /path/to/project` |
 | "I need a UI" | `ui-work` | Route to `@ui-director` (`.ai.ui` framework) |

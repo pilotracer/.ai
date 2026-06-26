@@ -93,6 +93,7 @@ Read `{HANDOFF}` and `{ITERATION_CARRIER}` for context. Classify the request int
 | `concept` | "run MOD prompt", "architecture check", "NFR concept" | `concept-run` |
 | `db-migration` | "schema change", "migration", "new table", "alter column" | `db-migration` |
 | `dev-stack` | "Docker setup", "dev environment", "compose config" | `dev-stack` |
+| `tauri-development` | "Tauri", "desktop app", "IPC setup", "shell strategy", "webview config", "bridge server" | `tauri-development` |
 | `process-router` | "how do I...?", "where is...?", "what skill...?" | `process-router` |
 | `deploy` | "deploy framework to another project", "copy to repo", "clone to path" | `deploy-files` / `deploy-repo` |
 | `ui-work` | "UI task", "design", "frontend", "screen", "component" | Redirect to `@ui-director` (via `.ai.ui`) |
@@ -135,6 +136,7 @@ Map the classified bucket to the correct skill chain. Respect the dependency gra
 | "Audit the whole project plan" | `@plan-verify foundation` → `@plan-verify master` → `@plan-verify alignment` |
 | "Fix the plan gaps from the audit" | `@plan-repair repair - from <mode>` matching the verify results |
 | "Run the architecture prompts" | `@concept-run list` → recommended MOD prompts → run |
+| "Tauri development guidance" | `@tauri-development` |
 | "How do I start an iteration?" | `@process-router - how do I start an iteration?` |
 | "Deploy Agent OS to my other project" | `@deploy-files copy - <path>` or `@deploy-repo clone - <path>` |
 | "I need a UI for the login feature" | Redirect to `@ui-director` (via `.ai.ui` director) |

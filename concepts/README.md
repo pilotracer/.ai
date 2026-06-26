@@ -40,6 +40,7 @@ Stable **MOD-*** ids are for cross-links only; they are not registered in `.curs
 | MOD-04 | [`ops-headcount/`](ops-headcount/README.md) | Ownership, on-call, SRE/DevOps capacity vs service count |
 | MOD-05 | [`modularity-vs-distribution/`](modularity-vs-distribution/README.md) | Choosing modular monolith vs services; extraction rationale |
 | MOD-06 | [`ai-amplification/`](ai-amplification/README.md) | **AI-generated code** reliability: boundaries, reviewability, churn |
+| MOD-07 | [`prompt-architecture/`](prompt-architecture/README.md) | **Prompt composition** audit: rule registry, layered composition, stage separation, post-generation validation |
 
 ---
 
@@ -58,6 +59,7 @@ This table answers: **"I am about to do X — which concept prompt MUST I run, a
 | Add a new **deployable / on-call surface** | [`ops-headcount/prompt.md`](ops-headcount/prompt.md) (MOD-04) | Operations runbook + ADR | Recommended |
 | Propose **extracting a service** from the monolith | MOD-01 + MOD-05 + MOD-03 + MOD-04 (run in that order) | Architecture ADR | **Required** before approval |
 | Run `@code-verify milestone` | Re-run any concept whose iteration row is `Applies=yes` and `Status=pending` | Iteration registry; mark `done` or `gap` | **Required** by verify check matrix |
+| Add a new **LLM feature** or observe **hallucination patterns** | [`prompt-architecture/prompt.md`](prompt-architecture/prompt.md) (MOD-07) | SPEC §15, ADR, or iteration registry | Recommended; **Required** when handling sensitive data |
 
 **Evidence tags (mandatory on every quantitative output):** `measured` | `estimated` | `assumption` | `unknown`. Skill outputs must not present an `assumption` as `measured`.
 

@@ -97,6 +97,8 @@ foundation-complete  →  plan-master-ready  →  implementation-ready
 | **deploy-repo** `status` | - | Read-only |
 | **dev-stack** `init` | User request / `docker-compose*.yml` present; brownfield gate refuses to silently overwrite existing `bin/start.sh` | - |
 | **dev-stack** `status` | - | Read-only |
+| **tauri-development** `status` | Tauri project with `src-tauri/` directory | Read-only; checks project structure and configuration |
+| **tauri-development** `help` | - | Read-only |
 | **process-router** `route` / `help` | - | Read-only |
 | **ai-director** `- <free-text>` | `.ai/` framework present with valid `skills/README.md` registry; `{HANDOFF}` readable | Recommended: read `{HANDOFF}` + `{ITERATION_CARRIER}` for routing context |
 | **ai-director** `status` | - | Read-only |
