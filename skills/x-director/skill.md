@@ -21,7 +21,7 @@ The x-director knows about every framework in the workspace:
 |-----------|------|----------|------|
 | **Agent OS** (`.ai`) | `.ai/` | `@ai-director` | Engineering: planning, coding, DB migrations, dev stack, sessions |
 | **UI Design OS** (`.ai.ui`) | `/mnt/work/Projects/.ai.ui/` | `@ui-director` | UI: design tokens, screen specs, components, visual/a11y verify |
-| **Business OS** (`.ai.biz`) | `/mnt/work/Projects/.ai.biz/` | `@biz-director` | Business: strategy, brand, content, sales pipeline, pricing |
+| **Business OS** (`.ai.biz`) | `/mnt/work/Projects/.ai.biz/` | `@biz-director` | Business: strategy, brand, pricing, content/community/sales/validation pipeline, content writing, business/product ideation |
 
 **Path resolution:** When the project root is the shared parent of all three framework directories, relative paths are resolved from project root. Otherwise absolute paths are used.
 
@@ -129,11 +129,14 @@ Parse the user's free-text request and classify into one or more of these bucket
 | `ui-design` | "design system", "tokens", "screen spec", "foundation" | `.ai.ui` | `@ui-director` → design skills |
 | `ui-build` | "build the UI", "implement screen", "component build" | `.ai.ui` | `@ui-director` → `@ui-component-build` |
 | `ui-verify` | "check visuals", "accessibility", "a11y", "visual audit" | `.ai.ui` | `@ui-director` → verify skills |
-| `business` | "business", "strategy", "niche", "offer", "pricing", "brand" | `.ai.biz` | `@biz-director` |
+| `business` | "business", "strategy", "niche", "offer", "pricing", "brand", "community", "referral", "proposal", "objection", "deal", "pipeline", "discovery", "validate", "review", "content", "writing", "idea", "product" | `.ai.biz` | `@biz-director` |
 | `business-strategy` | "define niche", "strategy", "positioning", "offer" | `.ai.biz` | `@biz-director` → `@biz-strategy` |
 | `business-brand` | "LinkedIn", "website", "brand", "online presence" | `.ai.biz` | `@biz-director` → `@biz-brand` |
 | `business-sales` | "pipeline", "proposal", "discovery call", "objections", "pricing" | `.ai.biz` | `@biz-director` → sales skills |
-| `business-content` | "content", "LinkedIn post", "publish", "content plan" | `.ai.biz` | `@biz-director` → `@biz-content` |
+| `business-content` | "content", "LinkedIn post", "publish", "content plan", "engagement cadence" | `.ai.biz` | `@biz-director` → `@biz-content` |
+| `business-writing` | "write me a post", "draft an article", "repurpose this", "case study", "landing page copy", "email sequence", "write content" | `.ai.biz` | `@biz-director` → `@content-writing` |
+| `business-ideas` | "business ideas", "product ideas", "what should I build", "monetize", "venture", "SaaS idea", "MVP scope" | `.ai.biz` | `@biz-director` → `@business-ideas` / `@product-service-ideas` |
+| `business-community` | "join communities", "ask for referrals", "engage on Reddit", "find my audience", "get introduced" | `.ai.biz` | `@biz-director` → `@biz-community` / `@biz-referrals` |
 | `cross-framework` | Spans multiple frameworks (e.g. "build the backend API and its UI", "create a strategy + brand + landing page") | All relevant | Coordinate across directors |
 | `new-skill-needed` | No existing skill in any framework can fulfill the request | Relevant framework | Follow new skill protocol |
 | `unsure` | Cannot classify, or user request is underspecified | — | Ask clarifying question or route to `@ai-director` → `@plan-foundation probe` |
@@ -156,6 +159,18 @@ Route directly to the appropriate director:
 @x-director - "Define my business niche and target audience"
   → Classify: business-strategy
   → Route: @biz-director - "define my business niche and target audience"
+
+@x-director - "Write a LinkedIn post about my new service"
+  → Classify: business-writing
+  → Route: @biz-director - "write a LinkedIn post about my new service"
+
+@x-director - "Give me product ideas for an AI developer tool"
+  → Classify: business-ideas
+  → Route: @biz-director - "give me product ideas for an AI developer tool"
+
+@x-director - "Find communities where my audience hangs out"
+  → Classify: business-community
+  → Route: @biz-director - "find communities where my audience hangs out"
 ```
 
 #### Multi-framework (cross-framework) requests
@@ -187,6 +202,9 @@ When the request spans multiple frameworks, coordinate the workflow:
 | "Create a landing page for my business" | `@biz-director` → strategy/brand → `@ui-director` → design/build landing page |
 | "Launch a SaaS product" | `@biz-director` → strategy/pricing → `@ai-director` → engineering plan/build → `@ui-director` → UI |
 | "Fix my LinkedIn and build a portfolio site" | `@biz-director` → brand overhaul → `@ui-director` → portfolio site |
+| "Write content and publish it" | `@biz-director` → `@content-writing write` (draft) → `@biz-content publish` (ship+track) |
+| "Generate business ideas and validate them" | `@biz-director` → `@business-ideas generate` → `@biz-market-validate design` |
+| "Build a product and its landing page" | `@biz-director` → strategy/pricing → `@biz-director` → `@product-service-ideas scope` → `@ui-director` → landing page |
 
 ### 4. EXECUTE
 
