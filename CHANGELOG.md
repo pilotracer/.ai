@@ -2,6 +2,26 @@
 
 All notable changes to Agent OS are documented here. Format inspired by [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) once tagged.
 
+## [0.3.2] - 2026-06-29
+
+### Added
+- **Cross-framework Confirm gate** on `@ai-director` and `@x-director` — both directors now render a **routing plan** (classified bucket, `Routing confidence: high|med|low`, the skills/directors about to invoke, and a list of non-reversible writes) and wait for explicit `y`/`yes` before any execute or HANDOFF write. Flags: `- <free-text> -y` skips the gate (trust-mode); `- <free-text> --dry-run` renders the plan and stops. Confidence `low` with no ack falls back to one clarifying question. Prevents misclassification from firing writes across 2–3 frameworks' `.work/` trees before the operator notices.
+- **`@ai-director review-routing`** mode — read-only feedback-loop aggregate over the last N `## Latest action (@ai-director)` HANDOFF blocks. Per bucket: counts `low`-confidence entries, non-empty `User correction` entries, and aborts at the Confirm gate; emits a `tighten / split / ok` verdict and lists signal strings to revise. Never edits the bucket table — surfaces the change request only.
+- **Frameworks registry in `.cursorrules`** — new section (template + self-hosted) listing `.ai` / `.ai.ui` / `.ai.biz` with their directors and bootstrap-artifact paths. Resolves a long-standing gap: target projects had **no documented mechanism** for x-director to discover sibling frameworks; it previously hardcoded `/mnt/work/Projects/...` absolute paths.
+- **Framework preflight (mandatory)** — `@ai-director` (when redirecting outside `.ai`) and `@x-director` (always) must now resolve sibling framework roots in this exact order: `.cursorrules` § Frameworks registry → sibling auto-discovery from `.ai/` parent → read `<framework>/skills/README.md`. Absent framework → one-line `framework not installed here` message and stop. Never route into the void.
+- **`Routing confidence` + `User correction` HANDOFF fields** — record schema extended on both directors so routing quality becomes observable signal. Aborts at the Confirm gate still write a record (`Executed: aborted at confirm gate` + correction note) so misroutes feed back into `review-routing`.
+- **SKILL_DEPENDENCIES § Frameworks registry resolution (mandatory)** — portable sibling-framework root resolution table, mirrored from `.cursorrules`.
+- **Existing `[Unreleased]` work** shipped in this cut: `scripts/gate-verify.sh` completion gate; `skill.md` context-budget guard (24 KB soft / 42 KB hard ratchet); toolchain preflight (exit 3 on missing POSIX tool); `@feature-spec intake - <free sentence>` free-text feature-intake orchestrator with `force=<class>` override; free-text `@feature-spec create -`; `feature-request` routing bucket in `process-router`; skill-count prose guard; traceability pre-check in `@session-control close`; `CONTRIBUTING.md § Cutting a release`.
+
+### Changed
+- **x-director is now a delegator, not a re-classifier.** The 13 duplicated sub-bucket rows (`engineering-bootstrap`, `ui-design`, `business-strategy`, …) dropped from `skills/x-director/skill.md`. x-director now classifies **only the coarse framework** and forwards the user's verbatim request to the chosen director, which owns its fine-grained bucket table as the single source of truth. Removes the two-bucket-tables-drift hazard and shrinks the skill's prose footprint.
+- **`.cursorrules` skills tables** (template + self-hosted) list `ai-director` / `x-director` rows that the template previously omitted.
+
+### Fixed
+- **x-director hardcoded absolute paths** (`/mnt/work/Projects/.ai.ui/`, `/mnt/work/Projects/.ai.biz/`) replaced with `.cursorrules`-driven resolution + sibling auto-discovery. The skill is now portable to any host layout.
+- **Markdown link scan was a silent no-op** — `framework-verify.sh` extracted links with `rg` (ripgrep) guarded by `|| true`, so on any host without `rg` it checked nothing while reporting `OK`, and its `sed` stripping never removed the `](` prefix. Rewritten with portable `grep -oE` + correct stripping (no `ripgrep` dependency). The now-functional scan exposed and fixed **4 broken relative links** (`plan-foundation/skill.md` → `plan-master`, `process-router/reference.md` → `PROCESS_ROUTER.md`, and two workflow guides → `skills/README.md`).
+- **`README.md`** stale prose count — "(11 in total)" corrected to "(14 skills in total)" and now covered by the prose guard above.
+
 ## [Unreleased]
 
 ### Added

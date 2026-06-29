@@ -15,15 +15,19 @@ description: >-
 
 ## Framework registry
 
-The x-director knows about every framework in the workspace:
+The x-director knows about every framework in the workspace. **Path resolution is dynamic** — never assume the framework dirs sit at a fixed absolute path. Resolve in this order:
 
-| Framework | Path | Director | Role |
-|-----------|------|----------|------|
-| **Agent OS** (`.ai`) | `.ai/` | `@ai-director` | Engineering: planning, coding, DB migrations, dev stack, sessions |
-| **UI Design OS** (`.ai.ui`) | `/mnt/work/Projects/.ai.ui/` | `@ui-director` | UI: design tokens, screen specs, components, visual/a11y verify |
-| **Business OS** (`.ai.biz`) | `/mnt/work/Projects/.ai.biz/` | `@biz-director` | Business: strategy, brand, pricing, content/community/sales/validation pipeline, content writing, business/product ideation |
+1. **Authoritative:** `.cursorrules` § *Frameworks registry* (the file shipped to every adopter repo). If the registry names a path for `.ai.ui` / `.ai.biz`, use it.
+2. **Auto-discover from `.ai` parent:** `parent="$(cd "$REPO_ROOT/.ai/.." && pwd)"`; a sibling dir at `${parent}/.ai.ui` or `${parent}/.ai.biz` is a valid framework root.
+3. **Preflight:** before routing to any director, verify `<framework_root>/skills/README.md` is readable. If not → output one line `framework not installed here` and stop. Never route into the void.
 
-**Path resolution:** When the project root is the shared parent of all three framework directories, relative paths are resolved from project root. Otherwise absolute paths are used.
+| Framework | Default sibling path | Director | Role (one line only — fine-grained routing lives in each director) |
+|-----------|---------------------|----------|------|
+| **Agent OS** (`.ai`) | *this directory* | `@ai-director` | Engineering: planning, coding, DB migrations, dev stack, sessions |
+| **UI Design OS** (`.ai.ui`) | `../.ai.ui` | `@ui-director` | UI: tokens, screen specs, components, verify |
+| **Business OS** (`.ai.biz`) | `../.ai.biz` | `@biz-director` | Business: strategy, brand, pricing, content, sales pipeline, ideas |
+
+> **Delegator rule (HARD):** x-director classifies only **which framework(s)** — never the sub-bucket. The fine-grained bucket table (`engineering-db`, `ui-design`, `business-strategy`, …) lives **inside each director's own `skill.md`**, which is the single source of truth for its domain. x-director forwards the user's verbatim request to the chosen director; the director re-classifies and owns the skill chain.
 
 **Location:** `.ai/skills/x-director/skill.md`
 
@@ -38,8 +42,9 @@ The x-director knows about every framework in the workspace:
    - `.ai.biz` work → `.work.biz/context/HANDOFF.md`
 3. After completing a workflow, always update all touched HANDOFF files with what was done, what's next, and any blockers.
 4. Do not invent skills or modes not registered in the respective framework's `skills/README.md`. If a request cannot be fulfilled by existing skills, follow the "New skill protocol".
-5. Route through existing directors (`@ai-director`, `@ui-director`, `@biz-director`) whenever possible — they own their domain's skill chain and gates. Only orchestrate directly when the request genuinely spans frameworks and requires coordination.
+5. Route through existing directors (`@ai-director`, `@ui-director`, `@biz-director`) whenever possible — they own their domain's skill chain and gates. x-director only classifies the framework; the director classifies the sub-bucket.
 6. Never duplicate a skill that exists in another framework. If in doubt, check all three skill registries.
+7. **Preflight before every route:** if a target director's framework is not installed (per § Framework registry resolution), stop and say so — never route into the void.
 
 ---
 
@@ -47,8 +52,10 @@ The x-director knows about every framework in the workspace:
 
 | Mode | Action |
 |------|--------|
-| `- <free-text request>` | Parse intent, classify framework domain(s), route to correct director(s), coordinate execution |
-| `status` | Report state of all frameworks: bootstrap, readiness gates, active iterations |
+| `- <free-text request>` | Parse intent, classify framework domain(s), show Confirm gate, route to correct director(s) |
+| `- <free-text request> -y` | Same as above but skip the Confirm gate (trust-mode; operator opted out) |
+| `- <free-text request> --dry-run` | Render the routing plan and stop — no director invokes, no HANDOFF writes |
+| `status` | Report state of all installed frameworks: bootstrap, readiness gates, active iterations; mark uninstalled frameworks |
 | `help` | Display this skill's purpose, framework registry, and invocation examples |
 
 ---
@@ -61,20 +68,51 @@ The x-director knows about every framework in the workspace:
 - Preserve the user's exact wording (quote it in every touched HANDOFF).
 - Do not silently narrow a cross-framework request to a single director.
 
-### 2. Load all framework contexts
-- Read every HANDOFF/NEXT file that exists across `.ai`, `.ai.ui`, and `.ai.biz` (listed in § Load context).
-- Skip missing files with a note; do not fail the whole request because one framework is not bootstrapped.
+### 2. Resolve frameworks + load contexts (preflight)
+- Resolve framework roots per § Framework registry, in **this exact order**: `.cursorrules` § Frameworks registry → sibling auto-discovery → preflight read of each `skills/README.md`.
+- For each framework present, read its HANDOFF/NEXT file (see § Load context).
+- Skip missing frameworks after emitting the one-line `framework not installed here` note so the user knows it was checked and intentionally skipped.
 
-### 3. Classify framework domain(s)
-- Match by intent, not keyword. Use the bucket table in § Classify intent.
+### 3. Classify framework domain(s) — coarse only
+- Match by intent, not keyword. Use the bucket table below — **only the four coarse buckets**, never sub-buckets.
 - A request is **cross-framework** if it naturally requires outputs from ≥2 frameworks (e.g., API + UI, strategy + landing page).
 - A request is **single-framework** if it clearly belongs to one domain, even if the user does not name the framework.
+- **Score routing confidence** (`high` | `med` | `low`) based on keyword strength (exact word vs partial vs fallback bucket). Carry this value into the record at step 6.
+
+| Bucket | Signals | Route to |
+|--------|---------|----------|
+| `engineering` | backend, API, database, migration, server, code, plan, architecture | `@ai-director - <verbatim request>` |
+| `ui` | UI, frontend, design, screen, component, visual, tailwind, CSS, a11y | `@ui-director - <verbatim request>` |
+| `business` | business, strategy, niche, offer, pricing, brand, community, referral, proposal, objection, deal, pipeline, discovery, validate, content, writing, idea, product | `@biz-director - <verbatim request>` |
+| `cross-framework` | Naturally requires ≥2 of the above | Coordinate across directors (see § ROUTE) |
+| `unsure` | Cannot classify | Ask one clarifying question (≤3 options) or route to `@ai-director - <verbatim request>` |
 
 ### 4. Channel to the right director(s)
-- Single-framework: route to `@ai-director`, `@ui-director`, or `@biz-director` with the user's request.
+- Single-framework: route to the chosen director with the user's verbatim request.
 - Cross-framework: coordinate sequentially by dependency; update each director's HANDOFF after its part.
 - Use canonical syntax: `@<director> - <free-text request>`.
 - Never execute a skill directly when a director already owns the chain.
+
+### 5. Confirm gate (before any director invoke)
+
+Before routing, render a **routing plan** and get explicit ack. Do **not** invoke any director or write any HANDOFF before ack.
+
+```markdown
+## x-director routing plan
+**Request:** "<user's verbatim request>"
+**Classified framework(s):** <engineering | ui | business | cross-framework>
+**Routing confidence:** high | med | low
+**Preflight (installed frameworks):** .ai ✓ | .ai.ui ✓/✗ | .ai.biz ✓/✗
+**Will invoke:**
+1. @<director> - "<verbatim request>" → <expected outcome one-liner>
+2. ...
+**Non-reversible writes:** <list of HANDOFF / NEXT / SPEC / migration files about to be created or modified, or "none (dry-run)">
+**Coordination order:** <which director first, why>
+Reply `y` / `yes` to proceed, `n` to abort, or edit the plan above.
+```
+
+**Trust mode (`-y`):** skip the gate. **Dry-run (`--dry-run`):** render the plan, write nothing, stop.
+**Confidence `low` with no user ack within the call:** do not route — ask one clarifying question instead.
 
 ### 5. Structure/format the record
 After completing or changing state, update **every touched HANDOFF** with this exact shape:
@@ -99,9 +137,9 @@ After completing or changing state, update **every touched HANDOFF** with this e
 
 When user says `@x-director - <anything>`:
 
-### 1. LOAD CONTEXT
+### 1. RESOLVE FRAMEWORKS + LOAD CONTEXT
 
-Read these files to understand the current state of all frameworks:
+Resolve framework roots per § Framework registry (precedence: `.cursorrules` § Frameworks registry → sibling auto-discovery → preflight read of each `skills/README.md`). Then read each **installed** framework's context files:
 
 | Framework | Context file | Purpose |
 |-----------|-------------|---------|
@@ -112,84 +150,47 @@ Read these files to understand the current state of all frameworks:
 | `.ai.biz` | `.work.biz/context/HANDOFF.md` | Business session state, strategy-ready |
 | `.ai.biz` | `.work.biz/plans/NEXT.md` | Business next action |
 
-Skip files that don't exist yet (framework may not be bootstrapped).
+Skip files/frameworks that don't exist **after** emitting the `framework not installed here` note (do not fail the whole request because one framework isn't bootstrapped).
 
-### 2. CLASSIFY INTENT
+### 2. CLASSIFY INTENT (coarse framework only)
 
-Parse the user's free-text request and classify into one or more of these buckets:
+Use the **four-bucket coarse table** in § Free-text intake contract step 3. The fine-grained bucket table (`engineering-db`, `ui-design`, `business-strategy`, etc.) lives inside each director's own `skill.md` — do **not** restate it here. x-director decides **which framework(s)**; the director decides the sub-bucket.
 
-| Bucket | Signals | Framework(s) | Route to |
-|--------|---------|-------------|----------|
-| `engineering` | "backend", "API", "database", "migration", "server", "code", "implement feature", "plan", "architecture" | `.ai` | `@ai-director` |
-| `engineering-bootstrap` | "start project", "set up engineering", "bootstrap .work" | `.ai` | `@ai-director` → `@project-bootstrap init` |
-| `engineering-plan` | "plan the project", "create foundation", "master plan", "roadmap", "milestones" | `.ai` | `@ai-director` → planning skills |
-| `engineering-code` | "build feature", "implement", "code the backend", "start coding" | `.ai` | `@ai-director` → `@code-implementation` |
-| `engineering-db` | "database schema", "migration", "new table" | `.ai` | `@ai-director` → `@db-migration` |
-| `ui` | "UI", "frontend", "design", "screen", "component", "visual", "tailwind", "CSS" | `.ai.ui` | `@ui-director` |
-| `ui-design` | "design system", "tokens", "screen spec", "foundation" | `.ai.ui` | `@ui-director` → design skills |
-| `ui-build` | "build the UI", "implement screen", "component build" | `.ai.ui` | `@ui-director` → `@ui-component-build` |
-| `ui-verify` | "check visuals", "accessibility", "a11y", "visual audit" | `.ai.ui` | `@ui-director` → verify skills |
-| `business` | "business", "strategy", "niche", "offer", "pricing", "brand", "community", "referral", "proposal", "objection", "deal", "pipeline", "discovery", "validate", "review", "content", "writing", "idea", "product" | `.ai.biz` | `@biz-director` |
-| `business-strategy` | "define niche", "strategy", "positioning", "offer" | `.ai.biz` | `@biz-director` → `@biz-strategy` |
-| `business-brand` | "LinkedIn", "website", "brand", "online presence" | `.ai.biz` | `@biz-director` → `@biz-brand` |
-| `business-sales` | "pipeline", "proposal", "discovery call", "objections", "pricing" | `.ai.biz` | `@biz-director` → sales skills |
-| `business-content` | "content", "LinkedIn post", "publish", "content plan", "engagement cadence" | `.ai.biz` | `@biz-director` → `@biz-content` |
-| `business-writing` | "write me a post", "draft an article", "repurpose this", "case study", "landing page copy", "email sequence", "write content" | `.ai.biz` | `@biz-director` → `@content-writing` |
-| `business-ideas` | "business ideas", "product ideas", "what should I build", "monetize", "venture", "SaaS idea", "MVP scope" | `.ai.biz` | `@biz-director` → `@business-ideas` / `@product-service-ideas` |
-| `business-community` | "join communities", "ask for referrals", "engage on Reddit", "find my audience", "get introduced" | `.ai.biz` | `@biz-director` → `@biz-community` / `@biz-referrals` |
-| `cross-framework` | Spans multiple frameworks (e.g. "build the backend API and its UI", "create a strategy + brand + landing page") | All relevant | Coordinate across directors |
-| `new-skill-needed` | No existing skill in any framework can fulfill the request | Relevant framework | Follow new skill protocol |
-| `unsure` | Cannot classify, or user request is underspecified | — | Ask clarifying question or route to `@ai-director` → `@plan-foundation probe` |
+### 3. CONFIRM GATE → ROUTE
 
-### 3. ROUTE
+Render the routing plan per § Confirm gate; obtain ack (or rely on `-y`/`--dry-run`). Then:
 
-#### Single-framework requests
-
-Route directly to the appropriate director:
+#### Single-framework requests — forward verbatim
 
 ```
 @x-director - "I need to create a database migration for the users table"
-  → Classify: engineering-db
-  → Route: @ai-director - "create a database migration for users table"
+  → Classify framework: engineering
+  → Route: @ai-director - "I need to create a database migration for the users table"  (verbatim)
 
 @x-director - "Design a login screen for the app"
-  → Classify: ui-design
-  → Route: @ui-director - "design a login screen"
+  → Classify framework: ui
+  → Route: @ui-director - "Design a login screen for the app"  (verbatim)
 
 @x-director - "Define my business niche and target audience"
-  → Classify: business-strategy
-  → Route: @biz-director - "define my business niche and target audience"
-
-@x-director - "Write a LinkedIn post about my new service"
-  → Classify: business-writing
-  → Route: @biz-director - "write a LinkedIn post about my new service"
-
-@x-director - "Give me product ideas for an AI developer tool"
-  → Classify: business-ideas
-  → Route: @biz-director - "give me product ideas for an AI developer tool"
-
-@x-director - "Find communities where my audience hangs out"
-  → Classify: business-community
-  → Route: @biz-director - "find communities where my audience hangs out"
+  → Classify framework: business
+  → Route: @biz-director - "Define my business niche and target audience"  (verbatim)
 ```
 
 #### Multi-framework (cross-framework) requests
 
-When the request spans multiple frameworks, coordinate the workflow:
-
 ```
 @x-director - "Build a signup feature with backend API and UI"
-  → Classify: cross-framework (engineering + ui)
+  → Classify framework: cross-framework (engineering + ui)
   → Route:
-    1. @ai-director - "create the backend signup API with database schema"
-    2. After API SPEC is done → @ui-director - "design and build the signup UI screen"
+    1. @ai-director - "Build a signup feature with backend API" (verbatim subset)
+    2. After API SPEC done → @ui-director - "design and build the signup UI screen" (downstream ask)
     3. Verify both sides work together
 ```
 
 **Cross-framework coordination rules:**
 
 1. Identify dependency order between frameworks (e.g., API usually precedes UI that consumes it).
-2. Route to each director sequentially respecting dependencies.
+2. Route to each director sequentially respecting dependencies — each director re-classifies sub-buckets internally.
 3. After each director completes its part, verify the output before proceeding.
 4. Record the coordination in ALL relevant HANDOFF files with a cross-reference.
 5. If the request requires simultaneous work (e.g., strategy + brand), directors can run in parallel.
@@ -198,13 +199,11 @@ When the request spans multiple frameworks, coordinate the workflow:
 
 | Request | Coordination |
 |---------|-------------|
-| "Build a full-stack feature" | `@ai-director` → backend (API, DB, logic) → `@ui-director` → UI screens |
-| "Create a landing page for my business" | `@biz-director` → strategy/brand → `@ui-director` → design/build landing page |
-| "Launch a SaaS product" | `@biz-director` → strategy/pricing → `@ai-director` → engineering plan/build → `@ui-director` → UI |
+| "Build a full-stack feature" | `@ai-director` → backend (verbatim) → `@ui-director` → UI screens |
+| "Create a landing page for my business" | `@biz-director` → strategy/brand (verbatim) → `@ui-director` → landing page |
+| "Launch a SaaS product" | `@biz-director` → strategy/pricing → `@ai-director` → engineering → `@ui-director` → UI |
 | "Fix my LinkedIn and build a portfolio site" | `@biz-director` → brand overhaul → `@ui-director` → portfolio site |
-| "Write content and publish it" | `@biz-director` → `@content-writing write` (draft) → `@biz-content publish` (ship+track) |
-| "Generate business ideas and validate them" | `@biz-director` → `@business-ideas generate` → `@biz-market-validate design` |
-| "Build a product and its landing page" | `@biz-director` → strategy/pricing → `@biz-director` → `@product-service-ideas scope` → `@ui-director` → landing page |
+| "Build a product and its landing page" | `@biz-director` → strategy → `@ui-director` → landing page |
 
 ### 4. EXECUTE
 
@@ -212,6 +211,7 @@ For each director in the chain:
 1. Invoke with the appropriate mode (`@<director> - <request>`).
 2. Verify the director's completion gate passed before proceeding.
 3. If a director reports a gap or blocker, route to the corrective skill — do not skip.
+4. If routing is found wrong mid-flow (user redirects), record it under `User correction` (step 5).
 
 ### 5. RECORD
 
@@ -221,14 +221,20 @@ After completing the workflow (or on any meaningful state change), update ALL to
 ## Cross-framework action (@x-director)
 **Date:** YYYY-MM-DD
 **Request:** "<user's original request>"
-**Frameworks involved:** .ai, .ai.ui (etc.)
+**Frameworks involved:** .ai, .ai.ui, .ai.biz (list only those touched)
+**Classified framework bucket(s):** <engineering | ui | business | cross-framework>
+**Routing confidence:** high | med | low
+**Preflight (frameworks installed):** .ai yes | .ai.ui yes/no | .ai.biz yes/no
 **Executed:**
-1. @<director> - "<request>" → <result>
+1. @<director> - "<verbatim request>" → <result>
 2. ...
-**Coordination notes:** <any cross-framework dependencies managed>
-**Blockers:** <any unresolved items>
+**User correction:** <none | "free-text of what rerouted the chain and why">
+**Coordination notes:** <cross-framework dependencies managed>
+**Blockers:** <any unresolved items | none>
 **Next recommended:** @<director> - "<next action>"
 ```
+
+**Feedback loop:** the `Routing confidence` and `User correction` fields feed `@ai-director review-routing` aggregates. Even if a routing plan aborts (user said `n` at the Confirm gate), still write a record with `Executed: aborted at confirm gate` and the correction note — this is signal that the bucket table needs tightening.
 
 ---
 
@@ -263,14 +269,17 @@ If the user request cannot be fulfilled by any existing skill across all framewo
 
 | # | Check |
 |---|-------|
-| 1 | User request classified to correct framework(s) |
-| 2 | All relevant HANDOFF files read before execution |
-| 3 | Correct director invoked for each framework domain |
-| 4 | Prerequisites met for each skill in chain (gates respected) |
-| 5 | Cross-framework dependencies ordered correctly |
-| 6 | Blockers/gaps reported and routed (not silently skipped) |
-| 7 | All touched HANDOFF files updated with action summary |
-| 8 | New skill registered properly (if created) |
+| 1 | Framework roots resolved via `.cursorrules` registry / sibling discovery / preflight read |
+| 2 | Uninstalled frameworks reported with `framework not installed here` (not routed into the void) |
+| 3 | User request classified to correct **coarse framework bucket(s)** only (no sub-bucketing here) |
+| 4 | Confirm gate rendered and ack obtained (or `-y` / `--dry-run` honoured) |
+| 5 | All relevant HANDOFF files read before execution |
+| 6 | Correct director invoked with user's verbatim request for each framework domain |
+| 7 | Prerequisites met for each skill in chain (gates respected) |
+| 8 | Cross-framework dependencies ordered correctly |
+| 9 | Blockers/gaps reported and routed (not silently skipped) |
+| 10 | All touched HANDOFF files updated with action summary including `Routing confidence` + `User correction` |
+| 11 | New skill registered properly (if created) |
 
 ---
 

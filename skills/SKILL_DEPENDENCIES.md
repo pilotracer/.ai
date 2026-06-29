@@ -21,6 +21,20 @@
 
 **Rule for agents:** In mandatory-read tables, `Read` tool calls, and blocked reports, use the **Resolved path** column. Do not strip the `.work/` prefix. Shorthand (`HANDOFF`, `NEXT.md`) in prose must still mean the resolved path above.
 
+## Frameworks registry resolution (cross-framework skills — mandatory)
+
+`@ai-director` (when redirecting outside `.ai`) and `@x-director` (always) must resolve sibling framework roots in **this exact order** before routing. Never assume a fixed absolute path.
+
+1. **`.cursorrules` § Frameworks registry** — the file shipped to every adopter repo. If it names a path for `.ai.ui` / `.ai.biz`, use it.
+2. **Sibling auto-discovery from `.ai` parent:** `parent="$(cd "$REPO_ROOT/.ai/.." && pwd)"; test -d "${parent}/.ai.ui"` (same for `.ai.biz`).
+3. **Preflight:** verify `<framework_root>/skills/README.md` is readable before invoking that framework's director. Absent → output one line `framework not installed here` and stop. Never route into the void.
+
+| Framework | Default sibling path | Director | Bootstrap artifact (preflight target) |
+|-----------|---------------------|----------|--------------------------------------|
+| `.ai` (Agent OS) | *this directory* | `@ai-director` | `skills/README.md` |
+| `.ai.ui` (UI Design OS) | `../.ai.ui` | `@ui-director` | `../.ai.ui/skills/README.md` |
+| `.ai.biz` (Business OS) | `../.ai.biz` | `@biz-director` | `../.ai.biz/skills/README.md` |
+
 **Readiness states** (do not conflate):
 
 ```text
@@ -100,11 +114,16 @@ foundation-complete  →  plan-master-ready  →  implementation-ready
 | **tauri-development** `status` | Tauri project with `src-tauri/` directory | Read-only; checks project structure and configuration |
 | **tauri-development** `help` | - | Read-only |
 | **process-router** `route` / `help` | - | Read-only |
-| **ai-director** `- <free-text>` | `.ai/` framework present with valid `skills/README.md` registry; `{HANDOFF}` readable | Recommended: read `{HANDOFF}` + `{ITERATION_CARRIER}` for routing context |
+| **ai-director** `- <free-text>` | `.ai/` framework present with valid `skills/README.md` registry; `{HANDOFF}` readable | Recommended: read `{HANDOFF}` + `{ITERATION_CARRIER}` for routing context. **Confirm gate** before any skill invoke (skip with `-y`; render-only with `--dry-run`). Cross-framework redirect requires framework preflight (`.cursorrules` § Frameworks registry → sibling discovery → read `<fw>/skills/README.md`). |
+| **ai-director** `- <free-text> -y` | Same as `- <free-text>` | Trust-mode: skips Confirm gate. |
+| **ai-director** `- <free-text> --dry-run` | Same as `- <free-text>` | Render routing plan, write nothing, stop. |
 | **ai-director** `status` | - | Read-only |
+| **ai-director** `review-routing` | `{HANDOFF}` readable with ≥1 `## Latest action (@ai-director)` block | Read-only; aggregates `Routing confidence` / `User correction` entries; surfaces buckets needing signal-table tightening. Never edits the bucket table. |
 | **ai-director** `help` | - | Read-only |
-| **x-director** `- <free-text>` | At least one framework directory (`.ai/`, `.ai.ui`, `.ai.biz`) must exist; relevant HANDOFF files readable | Recommended: read all present framework HANDOFF files for routing context |
-| **x-director** `status` | - | Read-only |
+| **x-director** `- <free-text>` | At least one framework directory (`.ai/`, `.ai.ui`, `.ai.biz`) must exist; relevant HANDOFF files readable | Recommended: read all present framework HANDOFF files for routing context. **Confirm gate** before any director invoke (skip with `-y`; render-only with `--dry-run`). **Framework preflight** mandatory: resolve roots via `.cursorrules` § Frameworks registry → sibling discovery → read `<fw>/skills/README.md`; absent framework → `framework not installed here`, no route into the void. |
+| **x-director** `- <free-text> -y` | Same as `- <free-text>` | Trust-mode: skips Confirm gate. |
+| **x-director** `- <free-text> --dry-run` | Same as `- <free-text>` | Render routing plan, write nothing, stop. |
+| **x-director** `status` | - | Read-only; marks uninstalled frameworks |
 | **x-director** `help` | - | Read-only |
 
 ---
@@ -184,7 +203,10 @@ All skills use the same verbs where applicable. This keeps muscle memory portabl
 | `alignment` / `drift` | NEXT vs master plan consistency | plan-verify (read-only), plan-repair (fix) |
 | `run` | Execute (scripts / prompts) | db-migration, concept-run |
 | `show` | Read-only inspect of a specific record | plan-master *(alias: `task`)* |
-| `- <free-text>` | Free-text routing: parse intent → classify → execute skill chain | ai-director, x-director |
+| `- <free-text>` | Free-text routing: parse intent → classify → Confirm gate → execute skill chain | ai-director, x-director |
+| `- <free-text> -y` | Trust-mode: skip the Confirm gate | ai-director, x-director |
+| `- <free-text> --dry-run` | Render the routing plan, write nothing, stop | ai-director, x-director |
+| `review-routing` | Read-only aggregate of `Routing confidence` / `User correction` HANDOFF entries; surface buckets needing signal-table tightening | ai-director |
 | `help` | Display skill's purpose, registry, and invocation examples | ai-director, x-director |
 | `list` | Enumerate available items | concept-run |
 | `route` / `help` | Read-only Q&A | process-router |

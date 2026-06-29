@@ -9,7 +9,15 @@
 | If your request is about… | Invoke |
 |---------------------------|--------|
 | Engineering, planning, coding, DB, dev stack | `@ai-director - <describe what you want>` |
-| Spans engineering + UI + business | `@x-director - <describe what you want>` |
+| UI / design / frontend | `@ui-director - <describe what you want>` (`.ai.ui` must be installed) |
+| Business / strategy / content / sales | `@biz-director - <describe what you want>` (`.ai.biz` must be installed) |
+| Spans engineering + UI + business | `@x-director - <describe what you want>` (auto-resolves sibling frameworks; preflight-checks each before routing) |
+
+**Flags (both directors):**
+- `-y` / `--yes` — skip the Confirm gate (trust-mode).
+- `--dry-run` — render the routing plan, write nothing, stop.
+
+**Feedback:** `@ai-director review-routing` — read-only aggregate of recent `Routing confidence` / `User correction` HANDOFF entries; surfaces buckets whose signal tables need tightening.
 
 ---
 
@@ -45,11 +53,12 @@
 ## What the director does
 
 1. **Captures** your exact wording.
-2. **Loads** `{HANDOFF}` and `{ITERATION_CARRIER}` for context.
-3. **Classifies** intent into a bucket (engineering, UI, business, cross-framework).
-4. **Checks** prerequisite gates in `SKILL_DEPENDENCIES.md`.
-5. **Invokes** the correct skill chain with canonical syntax.
-6. **Records** the action in `{HANDOFF}` and updates `{ITERATION_CARRIER}` when the cycle advances.
+2. **Loads** `{HANDOFF}` and `{ITERATION_CARRIER}` for context. (x-director: resolves sibling frameworks from `.cursorrules` § Frameworks registry → sibling discovery → preflight each `skills/README.md`.)
+3. **Classifies** intent into a coarse framework bucket (ai-director: fine `.ai` sub-bucket; x-director: framework only, never sub-buckets — directors own sub-bucketing).
+4. **Confirm gate** — shows a routing plan (bucket, confidence, skills to invoke, non-reversible writes) and waits for `y`/`yes`. Skip with `-y`; render-only with `--dry-run`.
+5. **Checks** prerequisite gates in `SKILL_DEPENDENCIES.md`.
+6. **Invokes** the correct skill chain with canonical syntax. (x-director forwards the verbatim request to the chosen director; the director sub-classifies.)
+7. **Records** the action in `{HANDOFF}` with `Routing confidence` + `User correction` fields, and updates `{ITERATION_CARRIER}` when the cycle advances.
 
 ---
 

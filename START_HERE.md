@@ -248,7 +248,7 @@ Use **`@process-router - <question>`** for anything not listed - it routes to th
 | Tests/lint/type-check failed? | §6 above · re-run task gate per `.cursorrules` |
 | Close session safely? | `@session-control close` · `@session-control close commit` · `@session-control close commit push` |
 | Mid-session checkpoint (commit only)? | `@session-control commit` · `@session-control commit push` |
-| Free-text request / don't know the skill? | `@ai-director - <describe what you want>` (Agent OS) · `@x-director - <describe what you want>` (spans frameworks) |
+| Free-text request / don't know the skill? | `@ai-director - <describe what you want>` (Agent OS) · `@x-director - <describe what you want>` (spans frameworks). Add `-y` to skip the confirm gate, `--dry-run` to preview only. `@ai-director review-routing` surfaces routing misclassifications over time. |
 | Foundation vs master plan? | `plan-foundation` = P0–P6 + **plan-master-ready** · `plan-master` = full plan + **implementation-ready** |
 | Read everything? | Don't - §7 reading order; stop when answered |
 

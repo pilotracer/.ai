@@ -188,8 +188,8 @@ All **19** skills live under [`skills/`](skills/README.md). Invoke as `@<skill-i
 | **db-migration** | Idempotent numbered SQL scripts (no Alembic chain) | `init` · `create - <description>` · `run` · `status` · `verify` |
 | **dev-stack** | Generate or update isolated Docker `bin/start.sh` | `init` · `status` |
 | **process-router** | Read-only: “how do I…?” → right skill or guide | `- <question>` · `help` |
-| **ai-director** | Free-text orchestrator: routes to correct `.ai` skill chain | `- <free-text>` · `status` · `help` |
-| **x-director** | Cross-framework director: orchestrates `.ai` + `.ai.ui` + `.ai.biz` | `- <free-text>` · `status` · `help` |
+| **ai-director** | Free-text orchestrator: routes to correct `.ai` skill chain | `- <free-text>` · `- <free-text> -y` (skip confirm) · `- <free-text> --dry-run` · `status` · `review-routing` · `help` |
+| **x-director** | Cross-framework director: orchestrates `.ai` + `.ai.ui` + `.ai.biz`; auto-resolves sibling frameworks via `.cursorrules` § Frameworks registry and preflight-checks each before routing | `- <free-text>` · `- <free-text> -y` · `- <free-text> --dry-run` · `status` · `help` |
 
 Gates between skills: [`skills/SKILL_DEPENDENCIES.md`](skills/SKILL_DEPENDENCIES.md).
 

@@ -23,8 +23,11 @@ description: >-
 
 | Mode | Action |
 |------|--------|
-| `- <free-text request>` | Parse intent, classify, route to the correct skill chain, execute |
+| `- <free-text request>` | Parse intent, classify, show Confirm gate, route to the correct skill chain, execute |
+| `- <free-text request> -y` | Same as above but skip the Confirm gate (trust-mode; operator opted out) |
+| `- <free-text request> --dry-run` | Render the routing plan and stop — no skill invokes, no HANDOFF writes |
 | `status` | Report current Agent OS state: bootstrap, foundation, master plan, iteration, pending verifications |
+| `review-routing` | Read-only: aggregate recent HANDOFF `Routing confidence`/`User correction` rows; surface buckets whose signal tables need tightening. No execution. |
 | `help` | Display this skill's purpose, available skills summary, and invocation examples |
 
 ## Free-text intake contract
@@ -41,15 +44,36 @@ When the user invokes `@ai-director` with natural language, follow this write/st
 
 ### 3. Classify (intent → bucket)
 - Match by intent, not keyword. Use the bucket table in § Orchestration protocol.
-- If the intent is UI/design, route to `@ui-director`. If business/strategy/sales, route to `@biz-director`. If it spans frameworks, route to `@x-director`.
+- If the intent is UI/design, route to `@ui-director` (preflight: `.ai.ui` installed — see § Framework preflight). If business/strategy/sales, route to `@biz-director` (preflight: `.ai.biz` installed). If it spans frameworks, route to `@x-director`.
 - If the intent is unclear, run a short probe (max 3 clarifying questions) or route to `@process-router` / `@plan-foundation probe`.
+- **Score routing confidence** (`high` | `med` | `low`) based on signal strength (exact signal match vs partial vs fallback bucket). Carry this value into the record at step 6.
 
 ### 4. Channel (bucket → skill chain)
 - Map the bucket to the exact skill chain from § Route / Shortcut chains.
 - Check `SKILL_DEPENDENCIES.md` gates before invoking each skill.
 - Use canonical invocation syntax: `@<skill-id> <mode> - <argument>` with ASCII hyphen `-`.
 
-### 5. Structure/format the record
+### 5. Confirm gate (before any skill invoke)
+
+Render a **routing plan** and get explicit ack. Do **not** invoke any skill or write `{HANDOFF}` before ack.
+
+```markdown
+## ai-director routing plan
+**Request:** "<user's verbatim request>"
+**Classified bucket:** <bucket-name>
+**Routing confidence:** high | med | low
+**Will execute:**
+1. @<skill> <mode> - <arg> → <expected outcome one-liner>
+2. ...
+**Non-reversible writes:** <list of HANDOFF / NEXT / SPEC / migration / plan files about to be created or modified, or "none (dry-run)">
+Reply `y` / `yes` to proceed, `n` to abort, or edit the plan above.
+```
+
+**Trust mode (`-y`):** skip the gate. **Dry-run (`--dry-run`):** render the plan, write nothing, stop.
+**Confidence `low` with no user ack within the call:** do not execute — ask one clarifying question instead.
+**Cross-framework redirect:** if classification yields `ui-work` / `biz-work` / `cross-framework`, the plan becomes a redirect to `@ui-director` / `@biz-director` / `@x-director` (with framework preflight) — no `.ai` skill is invoked.
+
+### 6. Structure/format the record
 After the workflow completes or changes state, append to `{HANDOFF}` using this exact shape:
 
 ```markdown
@@ -57,18 +81,32 @@ After the workflow completes or changes state, append to `{HANDOFF}` using this 
 **Date:** YYYY-MM-DD
 **Request:** "<user's original request>"
 **Classified bucket:** <bucket-name>
+**Routing confidence:** high | med | low
 **Executed:**
 1. @<skill> <mode> - <arg> → <result>
 2. ...
+**User correction:** <none | "free-text of what rerouted the chain and why">
 **Blockers:** <any unresolved items | none>
 **Next recommended:** @<skill> <mode> - <arg>
 ```
 
 Also update `{ITERATION_CARRIER}` § **Recommended next** when the build cycle advances.
 
+**Feedback loop:** the `Routing confidence` and `User correction` fields feed the `review-routing` mode. Even if a routing plan aborts (user said `n` at the Confirm gate), still write a record with `Executed: aborted at confirm gate` plus the correction note — that is signal the bucket table needs tightening.
+
 ## Orchestration protocol
 
 When user says `@ai-director - <anything>`:
+
+### 0. FRAMEWORK PREFLIGHT (only if routing may leave `.ai`)
+
+If classification may yield `ui-work` / `biz-work` / `cross-framework`, resolve sibling frameworks before invoking any redirect. Use this precedence (do not assume machine-specific paths):
+
+1. `.cursorrules` § *Frameworks registry* — if it names a path for `.ai.ui` / `.ai.biz`, use it.
+2. Auto-discover from `.ai` parent: `parent="$(cd "$REPO_ROOT/.ai/.." && pwd)"; test -d "${parent}/.ai.ui"`. Same for `.ai.biz`.
+3. Verify the target framework's `skills/README.md` is readable before redirecting. If absent → output one line `framework not installed here` and stop. Never redirect into the void.
+
+Standalone `.ai` buckets (`bootstrap`, `foundation`, `code-implementation`, etc.) skip this step — they never leave the framework.
 
 ### 1. PARSE & CLASSIFY
 
@@ -142,30 +180,77 @@ Map the classified bucket to the correct skill chain. Respect the dependency gra
 | "I need a UI for the login feature" | Redirect to `@ui-director` (via `.ai.ui` director) |
 | "Create a business strategy" | Redirect to `@biz-director` (via `.ai.biz` director) |
 
-### 3. EXECUTE
+### 3. CONFIRM GATE
+
+Render the routing plan per § Free-text intake contract step 5. Obtain ack (`y`/`yes`) unless `-y` was passed. `--dry-run` renders and stops. Confidence `low` with no ack → ask one clarifying question instead of executing.
+
+### 4. EXECUTE
 
 For each skill in the chain:
 1. Read the skill's `skill.md` to verify correct mode invocation.
 2. Invoke the skill with proper syntax (`@<skill-id> <mode> - <args>`).
 3. Verify the skill's completion checklist or gate passed before proceeding to the next step.
 4. If a skill reports a gap or blocker, route to the corrective skill (e.g. `probe`, `plan`, `create`) — do not skip.
+5. If the user redirects mid-flow (corrects the route), record the correction under `User correction` in step 5 RECORD; do not silently switch.
 
-### 4. RECORD
+### 5. RECORD
 
-After completing the workflow (or on any meaningful state change), update `{HANDOFF}`:
+After completing the workflow (or on any meaningful state change — including abort at the Confirm gate), update `{HANDOFF}`:
 
 ```markdown
 ## Latest action (@ai-director)
 **Date:** YYYY-MM-DD
 **Request:** "<user's original request>"
+**Classified bucket:** <bucket-name>
+**Routing confidence:** high | med | low
 **Executed:**
 1. @<skill> <mode> - <arg> → <result>
 2. ...
+**User correction:** <none | "free-text of what rerouted the chain and why">
 **Blockers:** <any unresolved items>
 **Next recommended:** @<skill> <mode> - <arg>
 ```
 
 Also update `{ITERATION_CARRIER}` § Recommended next if the workflow advanced the build cycle.
+
+## review-routing mode (feedback loop)
+
+**Read-only.** Aggregates signal from recent `{HANDOFF}` entries to find buckets whose signal tables need tightening. Use after sessions where the operator redirected the chain or where `Routing confidence: low` recurs.
+
+### Protocol
+
+1. Read `{HANDOFF}`. Collect the last N (default 20) `## Latest action (@ai-director)` blocks.
+2. For each block, extract: `Classified bucket`, `Routing confidence`, `User correction`, and whether `Executed` starts with `aborted at confirm gate`.
+3. Group by bucket. Compute per bucket:
+   - count of `low` confidence entries,
+   - count of non-empty `User correction` entries,
+   - count of aborts at the Confirm gate.
+4. Output a read-only report:
+
+```markdown
+## ai-director review-routing
+
+| Bucket | Entries | Low-conf | Corrections | Aborts | Signal-table verdict |
+|--------|---------|----------|-------------|--------|----------------------|
+| <bucket> | N | n | n | n | tighten / ok / split |
+```
+
+**Verdict rules:** `tighten` if corrections ≥ 2 or low-conf ≥ 3; `split` if corrections diverge (operators redirect the same bucket to two different skills); `ok` otherwise.
+
+5. For each `tighten` / `split` row, list the specific signal strings in § Orchestration protocol § 1 bucket table to revise (quote 1-2 example `User correction` lines as evidence). **Do not edit the bucket table from this mode** — surface the change request; the operator or `@ai-director - <request>` decides.
+6. No file writes. Update no HANDOFF. This mode never executes skills.
+
+### Completion checklist
+
+| # | Check |
+|---|-------|
+| 1 | Last N HANDOFF entries read |
+| 2 | Per-bucket counts computed |
+| 3 | Verdict assigned per rules |
+| 4 | No file writes |
+| 5 | Suggested bucket-table changes listed, not applied |
+
+---
 
 ## New skill protocol
 
@@ -193,12 +278,14 @@ If the user request genuinely cannot be fulfilled by any registered `.ai` skill,
 | # | Check |
 |---|-------|
 | 1 | User request classified correctly |
-| 2 | Prerequisites met for each skill in chain (gates respected) |
-| 3 | All skills invoked with correct mode syntax |
-| 4 | Blockers/gaps reported and routed (not silently skipped) |
-| 5 | `{HANDOFF}` updated with action summary |
-| 6 | `{ITERATION_CARRIER}` § Recommended next updated if applicable |
-| 7 | New skill registered properly (if created) |
+| 2 | Framework preflight passed for any non-`.ai` redirect (or `framework not installed here` reported) |
+| 3 | Confirm gate rendered and ack obtained (or `-y` / `--dry-run` honoured) |
+| 4 | Prerequisites met for each skill in chain (gates respected) |
+| 5 | All skills invoked with correct mode syntax |
+| 6 | Blockers/gaps reported and routed (not silently skipped) |
+| 7 | `{HANDOFF}` updated with action summary including `Routing confidence` + `User correction` |
+| 8 | `{ITERATION_CARRIER}` § Recommended next updated if applicable |
+| 9 | New skill registered properly (if created) |
 
 ## See also
 

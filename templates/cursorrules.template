@@ -65,6 +65,24 @@ These principles override all other instructions. They are non-negotiable.
 
 **Lost or unsure what to do? Read [`.ai/START_HERE.md`](.ai/START_HERE.md) first** — operator decision tree and recovery guide.
 
+**Free-text entry points:** If you don't know which skill to run, invoke `@ai-director - <describe what you want>` (Agent OS), `@ui-director - <describe what you want>` (UI Design OS), `@biz-director - <describe what you want>` (Business OS), or `@x-director - <describe what you want>` when the work spans frameworks. x-director resolves sibling-framework paths from the **Frameworks registry** below before routing.
+
+## Frameworks registry (cross-framework discovery)
+
+Sister frameworks live as siblings on disk. x-director and ai-director use this table to locate them; `.ai/` always refers to this framework (self in the self-hosted case). **Path is resolved at runtime** — an empty `Path` cell means "auto-discover" (see § Path resolution below).
+
+| Framework | Director | Path (relative to this `.ai/` parent, or absolute) | Bootstrap artifact |
+|-----------|----------|------------------------------------------------------|--------------------|
+| `.ai` (Agent OS) | `@ai-director` | *this directory* | `.ai/skills/README.md` |
+| `.ai.ui` (UI Design OS) | `@ui-director` | REPLACE:AI_UI_PATH (default: `../.ai.ui`) | `.ai.ui/skills/README.md` |
+| `.ai.biz` (Business OS) | `@biz-director` | REPLACE:AI_BIZ_PATH (default: `../.ai.biz`) | `.ai.biz/skills/README.md` |
+
+**Path resolution (in order):**
+
+1. Resolve from the replaceable cells above. Empty/unset cells → fall through.
+2. **Auto-discover from `.ai` parent:** `parent="$(cd "$REPO_ROOT/.ai/.." && pwd)"`; check `${parent}/.ai.ui` and `${parent}/.ai.biz`. Use whichever exists; treat missing as "framework not installed".
+3. **Preflight:** before routing to a director, verify its framework directory exists **and** its `skills/README.md` is readable. If absent, stop routing with a one-line `framework not installed here` message — never silently route into the void.
+
 Read these at the start of every conversation and when relevant:
 
 | File | Purpose |
@@ -140,6 +158,8 @@ Reusable agent skills live under `.ai/skills/`. Each skill is a subfolder contai
 | feature-spec | `.ai/skills/feature-spec/` | Author, review, amend feature SPECs |
 | concept-run | `.ai/skills/concept-run/` | Run MOD-01…MOD-06 concept prompts |
 | project-bootstrap | `.ai/skills/project-bootstrap/` | Copy `.work/` skeleton, `.cursorrules`, stack doc from templates |
+| ai-director | `.ai/skills/ai-director/` | Free-text request orchestrator; routes to correct `.ai` skill chain; new skill gap detection |
+| x-director | `.ai/skills/x-director/` | Cross-framework orchestrator (`.ai` + `.ai.ui` + `.ai.biz`); resolves sibling paths from § Frameworks registry |
 
 **Usage:** When a task matches a skill's purpose, read `skill.md` and follow the workflow. Skills are tool-agnostic (Cursor, Claude Code, Codex, opencode, etc.).
 
