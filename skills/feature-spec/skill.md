@@ -37,6 +37,7 @@ Orchestrate **feature SPEC** artifacts under `{FEATURE_SPEC_ROOT}/<feature-slug>
 | `@feature-spec` **amend** - \<path\> | amend | New amendment file |
 | `@feature-spec` **status** - \<path or slug\> | status | Read-only: exists? status header? §15? |
 | `@feature-spec` **approve** - \<path\> | approve | Set header Approved after review passes |
+| `@feature-spec` **document** - \<slug\> | document | Brownfield feature documentation (`.work/docs/features/<slug>/`) |
 
 **Slug:** kebab-case, informative (`user-auth`, not `feature1`).
 
@@ -52,6 +53,7 @@ Orchestrate **feature SPEC** artifacts under `{FEATURE_SPEC_ROOT}/<feature-slug>
 | **amend** | [Amend protocol](#amend-protocol) |
 | **status** | [Status protocol](#status-protocol) |
 | **approve** | Run **review** first; on pass, update `**Status:**` to `Approved` |
+| **document** | [Document protocol](#document-protocol) |
 
 ---
 
@@ -189,6 +191,50 @@ Read-only. Report: path, Status header, last modified, §15 present?, linked ADR
 
 ---
 
+## Document protocol (brownfield / existing features)
+
+Creates or updates `.work/docs/features/<slug>/README.md` — human-readable feature documentation without requiring formal SPEC lifecycle. Idempotent: updates existing doc in place (no amend system needed; this is not a binding SPEC).
+
+### D0 - Brownfield detection
+
+If `.work/docs/features/<slug>/README.md` already exists → read it, then offer: overwrite / amend / abort. Default: amend (append new findings).
+
+### D1 - Discover
+
+Scan the codebase for the feature's surface:
+- Entry points (routes, commands, UI paths)
+- Key source files (primary module, tests, migrations)
+- Any existing SPEC (`.work/features/<slug>/`) or ADR references
+
+Use `@plan-verify coverage` output if available. If the feature has an existing formal SPEC, read it and carry forward its §1 Purpose, §14 Implementation map, and §2 In scope.
+
+### D2 - Author
+
+Write (or update) `.work/docs/features/<slug>/README.md` with:
+
+| Section | Content |
+|---------|---------|
+| Purpose | One-paragraph description of what the feature does |
+| How to use | Usage instructions, examples, CLI/web UI paths |
+| Entry points | Layer → path table (routes, modules, screens) |
+| Key files | Important source files and their roles |
+| Changelog | Date + change rows (append-only) |
+
+If a formal SPEC exists at `.work/features/<slug>/`, link it as **Source SPEC**. Do NOT reproduce behavioural rules, data models, or §15 registry — that belongs in the SPEC.
+
+### D3 - Report
+
+```markdown
+## @feature-spec document - <slug>
+
+**Path:** `.work/docs/features/<slug>/README.md`
+**Status:** documented | updated
+**Source SPEC:** yes/no (link if yes)
+**Surface scanned:** <list of routes/modules checked>
+```
+
+---
+
 ## Integration
 
 | Skill / doc | When |
@@ -213,7 +259,8 @@ Read-only. Report: path, Status header, last modified, §15 present?, linked ADR
 
 | # | Check | Result |
 |---|-------|--------|
-| 1 | FEATURE_STANDARD §3 compliance | pass/fail |
-| 2 | §15 registry | pass/fail |
+| 1 | FEATURE_STANDARD §3 compliance (create/approve) | pass/fail/skip |
+| 2 | §15 registry (create/approve) | pass/fail/skip |
 | 3 | Slug/path valid | pass |
-| 4 | No unauthorized code changes | pass |
+| 4 | Surface scanned (document mode) | pass/skip |
+| 5 | No unauthorized code changes | pass |

@@ -1,0 +1,28 @@
+# <Feature Name>
+
+**Status:** Documented
+**Source SPEC:** `.work/features/<slug>/YYYYMMDD-SPEC.md` (optional)
+
+## Purpose
+
+<one-paragraph description of what this feature does>
+
+## How to use
+
+<usage instructions, examples, screenshots>
+
+## Entry points
+
+| Layer | Path |
+|-------|------|
+| <frontend/backend/etc> | <primary file paths> |
+
+## Key files
+
+<list of important source files and what they do>
+
+## Changelog
+
+| Date | Change |
+|------|--------|
+| YYYY-MM-DD | Initial documentation |

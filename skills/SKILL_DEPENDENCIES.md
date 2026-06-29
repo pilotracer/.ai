@@ -15,6 +15,7 @@
 | `{ITERATION_CARRIER}` | `.work/plans/NEXT.md` | `plans/NEXT.md`, bare `NEXT.md` at repo root |
 | `{PLANS_ROOT}` | `.work/plans/` | `plans/` |
 | `{FEATURE_SPEC_ROOT}` | `.work/features/` | `features/` |
+| `{DOCS_ROOT}` | `.work/docs/` | `docs/` |
 | `{DECISIONS_ROOT}` | `.work/decisions/` | `decisions/` |
 | `{PROMPTS_ROOT}` | `.work/prompts/` | `prompts/` |
 | `{MASTER_PLAN}` | `.work/plans/full/*-full-plan.md` (latest **Approved**) | `plans/full/…` |
@@ -97,7 +98,7 @@ foundation-complete  →  plan-master-ready  →  implementation-ready
 | **code-repair** `status` | - | Read-only |
 | **feature-spec** `intake` | None (free-text front door); classifies + routes, only writes a SPEC when class=`local` (then follows `create` gates) | - (read/route; records to `NEXT.md § Intake queue`) |
 | **feature-spec** `create` | FEATURE_STANDARD; **CR0** hard-stops if `<slug>/` folder exists; warns if `plan-master-ready: no` | **Required** (brownfield) + **Recommended** (readiness) |
-| **feature-spec** `review` / `amend` / `status` / `approve` | FEATURE_STANDARD; `approve` runs `review` first and only flips Status on pass | - |
+| **feature-spec** `review` / `amend` / `status` / `approve` / `document` | FEATURE_STANDARD; `approve` runs `review` first and only flips Status on pass; `document` has no gates (brownfield-friendly) | - |
 | **feature-spec** before **Approved** | §15 concept registry | **Required** per FEATURE_STANDARD |
 | **concept-run** `run` | Applicable trigger (SPEC §15, iteration registry, diff scope) | Per `.ai/concepts/README.md` |
 | **concept-run** `list` / `status` | - | Read-only |
@@ -111,6 +112,8 @@ foundation-complete  →  plan-master-ready  →  implementation-ready
 | **deploy-repo** `status` | - | Read-only |
 | **dev-stack** `init` | User request / `docker-compose*.yml` present; brownfield gate refuses to silently overwrite existing `bin/start.sh` | - |
 | **dev-stack** `status` | - | Read-only |
+| **docs** `create guide` / `create tutorial` / `create reference` | `.work/docs/` tree exists (created by `@project-bootstrap init`) | Recommended: `@project-bootstrap init` if `.work/docs/` missing |
+| **docs** `status` | - | Read-only |
 | **tauri-development** `status` | Tauri project with `src-tauri/` directory | Read-only; checks project structure and configuration |
 | **tauri-development** `help` | - | Read-only |
 | **process-router** `route` / `help` | - | Read-only |
@@ -164,6 +167,9 @@ foundation-complete  →  plan-master-ready  →  implementation-ready
 | `@plan-repair master` | Not plan-master-ready (formal) | `@plan-repair brownfield` **or** `@plan-repair foundation` → `@plan-foundation certify` |
 | Legacy repo, no `.work/plans/` | No formal planning | `@plan-verify brownfield` → `@plan-repair brownfield` |
 | Plan gaps during code work | Wrong layer | `@plan-repair` / `@plan-master revise` (not `code-repair`) |
+| "Write a guide / tutorial / reference doc" | No docs bucket existed | `@docs create guide - <slug>` or `@docs create tutorial - <slug>` or `@docs create reference - <slug>` |
+| "Complete feature definitions for this project" | Multiple features undocumented | `@feature-spec status` then `@feature-spec document - <slug>` per feature |
+| "Document an existing feature (brownfield)" | No feature doc exists | `@feature-spec document - <slug>` |
 | "I want to build something but don't know which skill" | Unsure which skill to use | `@ai-director - <describe what you want>` |
 | "I need UI work done" | UI work requires `.ai.ui` framework | `@ui-director` (via `.ai.ui` director) or `@x-director - <request>` |
 | "I need business strategy work" | Business work requires `.ai.biz` framework | `@biz-director` (via `.ai.biz` director) or `@x-director - <request>` |
@@ -179,7 +185,7 @@ All skills use the same verbs where applicable. This keeps muscle memory portabl
 
 | Canonical verb | Meaning | Skills that implement it |
 |----------------|---------|---------------------------|
-| `status` | Read-only: report current state | plan-foundation, plan-master, plan-verify, plan-repair, session-control, code-implementation, code-verify, code-repair, feature-spec, db-migration, concept-run, dev-stack, project-bootstrap |
+| `status` | Read-only: report current state | plan-foundation, plan-master, plan-verify, plan-repair, session-control, code-implementation, code-verify, code-repair, feature-spec, db-migration, concept-run, dev-stack, project-bootstrap, docs |
 | `repair` | Fix reported issues; re-verify | code-repair, plan-repair |
 | `verify` | Audit planning artifacts (foundation / master / alignment) | plan-verify |
 | `probe` | Adaptive gap-driven interrogation loop; scores knowledge/plan coverage, asks targeted questions, fills gaps into registries. **New verb** (distinct from `status` read-only, `continue` resume-phase, `integrity` auto-sweep). Engine: [`probe-protocol.md`](probe-protocol.md) | plan-foundation, plan-master |
@@ -192,7 +198,7 @@ All skills use the same verbs where applicable. This keeps muscle memory portabl
 | `plan` | Prepare next unit | code-implementation *(alias: `plan-iteration`)* |
 | `init` | One-time setup | project-bootstrap, db-migration, dev-stack |
 | `intake` | Classify a free-text feature request → route to the right executor; records to `NEXT.md § Intake queue` (does not auto-execute cross-cutting/brownfield paths) | feature-spec |
-| `create` | Make a new artifact | feature-spec, db-migration |
+| `create` | Make a new artifact | feature-spec, db-migration, docs |
 | `amend` | Modify an existing artifact | feature-spec |
 | `review` | Read-only audit of an artifact | feature-spec |
 | `revise` | Structured edit | plan-master |

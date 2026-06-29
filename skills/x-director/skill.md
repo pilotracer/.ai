@@ -81,7 +81,7 @@ The x-director knows about every framework in the workspace. **Path resolution i
 
 | Bucket | Signals | Route to |
 |--------|---------|----------|
-| `engineering` | backend, API, database, migration, server, code, plan, architecture | `@ai-director - <verbatim request>` |
+| `engineering` | backend, API, database, migration, server, code, plan, architecture, documentation, guide, tutorial, how-to, feature doc | `@ai-director - <verbatim request>` |
 | `ui` | UI, frontend, design, screen, component, visual, tailwind, CSS, a11y | `@ui-director - <verbatim request>` |
 | `business` | business, strategy, niche, offer, pricing, brand, community, referral, proposal, objection, deal, pipeline, discovery, validate, content, writing, idea, product | `@biz-director - <verbatim request>` |
 | `cross-framework` | Naturally requires ≥2 of the above | Coordinate across directors (see § ROUTE) |

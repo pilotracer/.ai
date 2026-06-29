@@ -127,13 +127,15 @@ Read `{HANDOFF}` and `{ITERATION_CARRIER}` for context. Classify the request int
 | `code-verify` | "check code", "verify milestone", "audit uncommitted", "pre-commit check" | `code-verify` |
 | `code-repair` | "fix findings", "repair code issues", "remediate" | `code-repair` |
 | `feature-spec` | "new feature idea", "spec out a feature", "intake a request", "feature SPEC" | `feature-spec` |
-| `feature-spec-create` | "create a SPEC for X", "document feature Y" | `feature-spec create` |
+| `feature-spec-create` | "create a SPEC for X", "new SPEC", "author SPEC" | `feature-spec create` |
 | `concept` | "run MOD prompt", "architecture check", "NFR concept" | `concept-run` |
 | `db-migration` | "schema change", "migration", "new table", "alter column" | `db-migration` |
 | `dev-stack` | "Docker setup", "dev environment", "compose config" | `dev-stack` |
 | `tauri-development` | "Tauri", "desktop app", "IPC setup", "shell strategy", "webview config", "bridge server" | `tauri-development` |
 | `process-router` | "how do I...?", "where is...?", "what skill...?" | `process-router` |
 | `deploy` | "deploy framework to another project", "copy to repo", "clone to path" | `deploy-files` / `deploy-repo` |
+| `docs` | "document", "guide", "tutorial", "how-to", "write docs", "user guide", "create docs" | `@docs` |
+| `feature-doc` | "document this feature", "brownfield feature doc", "existing feature docs", "catalog feature" | `@feature-spec document - <slug>` |
 | `ui-work` | "UI task", "design", "frontend", "screen", "component" | Redirect to `@ui-director` (via `.ai.ui`) |
 | `biz-work` | "business work", "strategy", "marketing", "pipeline", "brand" | Redirect to `@biz-director` (via `.ai.biz`) |
 | `cross-framework` | Spans multiple frameworks (e.g. "build a feature and its UI") | Route to `@x-director` for coordination |
@@ -177,6 +179,10 @@ Map the classified bucket to the correct skill chain. Respect the dependency gra
 | "Tauri development guidance" | `@tauri-development` |
 | "How do I start an iteration?" | `@process-router - how do I start an iteration?` |
 | "Deploy Agent OS to my other project" | `@deploy-files copy - <path>` or `@deploy-repo clone - <path>` |
+| "Write a guide / tutorial / reference doc" | `@docs create guide - <slug>` or `@docs create tutorial - <slug>` or `@docs create reference - <slug>` |
+| "Document features, guides, and tutorials" | `@feature-spec status` → `@feature-spec document - <slug>` per feature + `@docs create guide - <slug>` per guide + `@docs create tutorial - <slug>` per tutorial |
+| "Complete feature definitions (brownfield)" | `@feature-spec status` → `@feature-spec document - <slug>` for each undocumented feature |
+| "Document this feature (brownfield)" | `@feature-spec document - <slug>` |
 | "I need a UI for the login feature" | Redirect to `@ui-director` (via `.ai.ui` director) |
 | "Create a business strategy" | Redirect to `@biz-director` (via `.ai.biz` director) |
 

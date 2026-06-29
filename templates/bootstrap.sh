@@ -43,6 +43,8 @@ copy_if_missing "${TPL}/plans/UNKNOWNS.md.template" "${WORK}/plans/UNKNOWNS.md"
 copy_if_missing "${TPL}/decisions/README.md.template" "${WORK}/decisions/README.md"
 copy_if_missing "${TPL}/prompts/README.md.template" "${WORK}/prompts/README.md"
 copy_if_missing "${TPL}/features/README.md.template" "${WORK}/features/README.md"
+copy_if_missing "${TPL}/docs/README.md.template" "${WORK}/docs/README.md"
+copy_if_missing "${TPL}/docs/features/README.md.template" "${WORK}/docs/features/README.md"
 
 for dir in foundation full operations proposals archives; do
   mkdir -p "${WORK}/plans/${dir}"
@@ -53,6 +55,12 @@ done
 for dir in analysis scripts; do
   mkdir -p "${WORK}/${dir}"
   touch "${WORK}/${dir}/.gitkeep"
+done
+
+# Create docs subdirectories (populated by @docs skill)
+for dir in guides tutorials reference; do
+  mkdir -p "${WORK}/docs/${dir}"
+  touch "${WORK}/docs/${dir}/.gitkeep"
 done
 
 if [[ ! -f "${REPO_ROOT}/.cursorrules" ]]; then

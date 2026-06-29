@@ -110,6 +110,7 @@ Portable process docs: **`docs/guides/workflows/README.md`** (artifact matrix). 
 | `{PLANS_ROOT}` | `.work/plans/` |
 | `{FEATURE_SPEC_ROOT}` | `.work/features/` |
 | `{PROMPTS_ROOT}` | `.work/prompts/` |
+| `{DOCS_ROOT}` | `.work/docs/` |
 | `{DECISIONS_ROOT}` | `.work/decisions/` |
 | `{ITERATION_CARRIER}` | `.work/plans/NEXT.md` |
 | `{MASTER_PLAN}` | `.work/plans/full/*-full-plan.md` (latest **Approved**) |
@@ -161,6 +162,7 @@ Reusable agent skills live under `skills/`. Each skill is a subfolder containing
 | feature-spec | `skills/feature-spec/` | Author, review, amend feature SPECs |
 | concept-run | `skills/concept-run/` | Run MOD-01…MOD-06 concept prompts |
 | project-bootstrap | `skills/project-bootstrap/` | Copy `.work/` skeleton, `.cursorrules`, stack doc from templates |
+| docs | `skills/docs/` | Create/manage project docs: guides, tutorials, reference docs under `.work/docs/` |
 | ai-director | `skills/ai-director/` | Free-text request orchestrator; routes to correct `.ai` skill chain; new skill gap detection |
 | x-director | `skills/x-director/` | Cross-framework orchestrator (`.ai` + `.ai.ui` + `.ai.biz`); routes to directors, coordinates multi-framework work |
 
