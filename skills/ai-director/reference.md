@@ -131,8 +131,9 @@ Before `@code-implementation complete`, ensure these all pass:
 | "Tauri desktop development" | `tauri-development` | `@tauri-development` |
 | "How do I...?" | `process-router` | `@process-router - <question>` |
 | "Deploy to /path/to/project" | `deploy` | `@deploy-files copy - /path/to/project` |
-| "I need a UI" | `ui-work` | Route to `@ui-director` (`.ai.ui` framework) |
-| "Business strategy work" | `biz-work` | Route to `@biz-director` (`.ai.biz` framework) |
+| "I need a UI" | `not-.ai` | Route to `@x-director` (cross-framework router) |
+| "Business strategy work" | `not-.ai` | Route to `@x-director` (cross-framework router) |
+| "Community / social engagement work" | `not-.ai` | Route to `@x-director` (cross-framework router) |
 
 ---
 
@@ -164,15 +165,13 @@ Before `@code-implementation complete`, ensure these all pass:
 
 ## 9. Cross-framework routing
 
-When a user request spans multiple domains (e.g. "build a backend API and a UI for it"), the `ai-director` should:
+When a user request spans multiple domains or belongs to another framework (e.g. "build a backend API and a UI for it"), the `ai-director` should:
 
-1. Identify the primary domain (engineering)
-2. Route the engineering parts through `.ai` skills
-3. Route UI parts to `@ui-director` via `.ai.ui`
-4. Route business parts to `@biz-director` via `.ai.biz`
-5. Coordinate by updating all relevant HANDOFF files
+1. Classify the request as `not-.ai` or `cross-framework`
+2. Route the **entire request verbatim** to `@x-director` — it resolves sibling frameworks, runs preflight checks, and coordinates across directors
+3. Do **not** attempt to split or route to individual directors directly
 
-For complex cross-framework orchestration, escalate to `@x-director`.
+`@x-director` is the **sole cross-framework routing authority**. ai-director never resolves sibling frameworks or preflight-checks them.
 
 ---
 

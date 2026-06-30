@@ -16,7 +16,7 @@ description: >-
 2. Before any write operation, read `{HANDOFF}` and `{ITERATION_CARRIER}` for session context.
 3. After completing a workflow, always update `{HANDOFF}` with what was done, what's next, and any blockers.
 4. Do not invent skills or modes not registered in `skills/README.md`. If a request cannot be fulfilled by existing skills, follow the "New skill protocol" below.
-5. Never duplicate UI or Business framework skills (`@ui-*`, `@biz-*`) — redirect to the appropriate director (`@ui-director`, `@biz-director`) or handle via `@x-director` for cross-framework orchestration.
+5. Never duplicate skills that belong to another framework — channel all non-`.ai` work to `@x-director`, which resolves sibling frameworks and routes to the correct director. Do not redirect to individual directors directly.
 6. Never write artifacts under `.ai/` — project work goes to `.work/`.
 
 ## Modes
@@ -44,7 +44,7 @@ When the user invokes `@ai-director` with natural language, follow this write/st
 
 ### 3. Classify (intent → bucket)
 - Match by intent, not keyword. Use the bucket table in § Orchestration protocol.
-- If the intent is UI/design, route to `@ui-director` (preflight: `.ai.ui` installed — see § Framework preflight). If business/strategy/sales, route to `@biz-director` (preflight: `.ai.biz` installed). If it spans frameworks, route to `@x-director`.
+- If the intent clearly belongs to another framework (UI, business, social) or spans multiple frameworks, route to `@x-director` — it resolves sibling frameworks and channels to the correct director.
 - If the intent is unclear, run a short probe (max 3 clarifying questions) or route to `@process-router` / `@plan-foundation probe`.
 - **Score routing confidence** (`high` | `med` | `low`) based on signal strength (exact signal match vs partial vs fallback bucket). Carry this value into the record at step 6.
 
@@ -71,7 +71,7 @@ Reply `y` / `yes` to proceed, `n` to abort, or edit the plan above.
 
 **Trust mode (`-y`):** skip the gate. **Dry-run (`--dry-run`):** render the plan, write nothing, stop.
 **Confidence `low` with no user ack within the call:** do not execute — ask one clarifying question instead.
-**Cross-framework redirect:** if classification yields `ui-work` / `biz-work` / `cross-framework`, the plan becomes a redirect to `@ui-director` / `@biz-director` / `@x-director` (with framework preflight) — no `.ai` skill is invoked.
+**Cross-framework redirect:** if classification yields `not-.ai` or `cross-framework`, redirect to `@x-director` — it resolves sibling frameworks, runs preflight, and channels to the correct director. No `.ai` skill is invoked.
 
 ### 6. Structure/format the record
 After the workflow completes or changes state, append to `{HANDOFF}` using this exact shape:
@@ -97,16 +97,6 @@ Also update `{ITERATION_CARRIER}` § **Recommended next** when the build cycle a
 ## Orchestration protocol
 
 When user says `@ai-director - <anything>`:
-
-### 0. FRAMEWORK PREFLIGHT (only if routing may leave `.ai`)
-
-If classification may yield `ui-work` / `biz-work` / `cross-framework`, resolve sibling frameworks before invoking any redirect. Use this precedence (do not assume machine-specific paths):
-
-1. `.cursorrules` § *Frameworks registry* — if it names a path for `.ai.ui` / `.ai.biz`, use it.
-2. Auto-discover from `.ai` parent: `parent="$(cd "$REPO_ROOT/.ai/.." && pwd)"; test -d "${parent}/.ai.ui"`. Same for `.ai.biz`.
-3. Verify the target framework's `skills/README.md` is readable before redirecting. If absent → output one line `framework not installed here` and stop. Never redirect into the void.
-
-Standalone `.ai` buckets (`bootstrap`, `foundation`, `code-implementation`, etc.) skip this step — they never leave the framework.
 
 ### 1. PARSE & CLASSIFY
 
@@ -136,11 +126,10 @@ Read `{HANDOFF}` and `{ITERATION_CARRIER}` for context. Classify the request int
 | `deploy` | "deploy framework to another project", "copy to repo", "clone to path" | `deploy-files` / `deploy-repo` |
 | `docs` | "document", "guide", "tutorial", "how-to", "write docs", "user guide", "create docs" | `@docs` |
 | `feature-doc` | "document this feature", "brownfield feature doc", "existing feature docs", "catalog feature" | `@feature-spec document - <slug>` |
-| `ui-work` | "UI task", "design", "frontend", "screen", "component" | Redirect to `@ui-director` (via `.ai.ui`) |
-| `biz-work` | "business work", "strategy", "marketing", "pipeline", "brand" | Redirect to `@biz-director` (via `.ai.biz`) |
-| `cross-framework` | Spans multiple frameworks (e.g. "build a feature and its UI") | Route to `@x-director` for coordination |
-| `new-skill-needed` | No existing skill can fulfill the request — see protocol below | Create new skill |
-| `unsure` | Cannot classify, or user request is underspecified | `@plan-foundation probe` or `@process-router` |
+| `not-.ai` | Belongs to another framework: UI, design, frontend, business, strategy, social, community, etc. | Route to `@x-director` — it resolves sibling frameworks and channels to the correct director |
+| `cross-framework` | Spans `.ai` + one or more other frameworks (e.g. "build a backend API and a UI for it") | Route to `@x-director` for coordination |
+| `new-skill-needed` | No existing `.ai` skill can fulfill the request | Create new `.ai` skill, or `@x-director` if it belongs to another framework |
+| `unsure` | Cannot classify, or user request is underspecified | `@plan-foundation probe` (adaptive questioning to narrow scope); or `@process-router` for "how do I…?" |
 
 ### 2. ROUTE
 
@@ -183,8 +172,9 @@ Map the classified bucket to the correct skill chain. Respect the dependency gra
 | "Document features, guides, and tutorials" | `@feature-spec status` → `@feature-spec document - <slug>` per feature + `@docs create guide - <slug>` per guide + `@docs create tutorial - <slug>` per tutorial |
 | "Complete feature definitions (brownfield)" | `@feature-spec status` → `@feature-spec document - <slug>` for each undocumented feature |
 | "Document this feature (brownfield)" | `@feature-spec document - <slug>` |
-| "I need a UI for the login feature" | Redirect to `@ui-director` (via `.ai.ui` director) |
-| "Create a business strategy" | Redirect to `@biz-director` (via `.ai.biz` director) |
+| "I need a UI for the login feature" | Route to `@x-director - I need a UI for the login feature` (cross-framework routing) |
+| "Create a business strategy" | Route to `@x-director - Create a business strategy` (cross-framework routing) |
+| "Set up a community forum" | Route to `@x-director - Set up a community forum` (cross-framework routing) |
 
 ### 3. CONFIRM GATE
 
@@ -270,7 +260,7 @@ If the user request genuinely cannot be fulfilled by any registered `.ai` skill,
 
 **Do not create a new skill when:**
 - The request maps to an existing skill or standard
-- The request is about UI or Business domains (route to `@ui-director` / `@biz-director`)
+- The request belongs to another framework (route to `@x-director`)
 - The request can be handled by a probe loop, a concept prompt, or a process router query
 
 ## Prerequisites
@@ -284,7 +274,7 @@ If the user request genuinely cannot be fulfilled by any registered `.ai` skill,
 | # | Check |
 |---|-------|
 | 1 | User request classified correctly |
-| 2 | Framework preflight passed for any non-`.ai` redirect (or `framework not installed here` reported) |
+| 2 | Non-`.ai` requests channelled to `@x-director` (not routed directly) |
 | 3 | Confirm gate rendered and ack obtained (or `-y` / `--dry-run` honoured) |
 | 4 | Prerequisites met for each skill in chain (gates respected) |
 | 5 | All skills invoked with correct mode syntax |

@@ -3,22 +3,22 @@ name: x-director
 description: >-
   Cross-framework orchestration skill that receives any free-text request and
   coordinates across all frameworks available in the current workspace:
-  .ai (Agent OS), .ai.ui (UI Design OS), and .ai.biz (Business OS).
-  Routes to the correct director (ai-director, ui-director, biz-director) or
+  .ai (Agent OS), .ai.ui (UI Design OS), .ai.biz (Business OS), and .ai.soc (Social OS).
+  Routes to the correct director (ai-director, ui-director, biz-director, soc-director) or
   coordinates multi-framework workflows. Flags when a new skill is needed
   across any framework.
 ---
 
 # x-director — Cross-Framework Orchestrator
 
-**Role:** Top-level "director of directors". You receive any free-text request and orchestrate across all frameworks in the workspace. You act as the single entry point for work spanning engineering (`.ai`), UI/design (`.ai.ui`), and business (`.ai.biz`). You do not need to know which framework owns what — just describe the goal.
+**Role:** Top-level "director of directors". You are the **sole cross-framework routing authority**. You receive any free-text request and orchestrate across all frameworks in the workspace. All non-`.ai` requests from `@ai-director` are channelled to you. You classify by framework and route to the correct director: `@ai-director` (`.ai`), `@ui-director` (`.ai.ui`), `@biz-director` (`.ai.biz`), or `@soc-director` (`.ai.soc`). You also handle `@ai-director`'s `unsure` cases.
 
 ## Framework registry
 
 The x-director knows about every framework in the workspace. **Path resolution is dynamic** — never assume the framework dirs sit at a fixed absolute path. Resolve in this order:
 
-1. **Authoritative:** `.cursorrules` § *Frameworks registry* (the file shipped to every adopter repo). If the registry names a path for `.ai.ui` / `.ai.biz`, use it.
-2. **Auto-discover from `.ai` parent:** `parent="$(cd "$REPO_ROOT/.ai/.." && pwd)"`; a sibling dir at `${parent}/.ai.ui` or `${parent}/.ai.biz` is a valid framework root.
+1. **Authoritative:** `.cursorrules` § *Frameworks registry* (the file shipped to every adopter repo). If the registry names a path for `.ai.ui` / `.ai.biz` / `.ai.soc`, use it.
+2. **Auto-discover from `.ai` parent:** `parent="$(cd "$REPO_ROOT/.ai/.." && pwd)"`; a sibling dir at `${parent}/.ai.ui`, `${parent}/.ai.biz`, or `${parent}/.ai.soc` is a valid framework root.
 3. **Preflight:** before routing to any director, verify `<framework_root>/skills/README.md` is readable. If not → output one line `framework not installed here` and stop. Never route into the void.
 
 | Framework | Default sibling path | Director | Role (one line only — fine-grained routing lives in each director) |
@@ -26,6 +26,7 @@ The x-director knows about every framework in the workspace. **Path resolution i
 | **Agent OS** (`.ai`) | *this directory* | `@ai-director` | Engineering: planning, coding, DB migrations, dev stack, sessions |
 | **UI Design OS** (`.ai.ui`) | `../.ai.ui` | `@ui-director` | UI: tokens, screen specs, components, verify |
 | **Business OS** (`.ai.biz`) | `../.ai.biz` | `@biz-director` | Business: strategy, brand, pricing, content, sales pipeline, ideas |
+| **Social OS** (`.ai.soc`) | `../.ai.soc` | `@soc-director` | Social: community, social media, engagement, moderation, forums |
 
 > **Delegator rule (HARD):** x-director classifies only **which framework(s)** — never the sub-bucket. The fine-grained bucket table (`engineering-db`, `ui-design`, `business-strategy`, …) lives **inside each director's own `skill.md`**, which is the single source of truth for its domain. x-director forwards the user's verbatim request to the chosen director; the director re-classifies and owns the skill chain.
 
@@ -39,11 +40,12 @@ The x-director knows about every framework in the workspace. **Path resolution i
 2. Before any write operation, read the relevant HANDOFF file(s) for session context:
    - `.ai` work → `{HANDOFF}` (`.work/context/HANDOFF.md`)
    - `.ai.ui` work → `{HANDOFF_UI}` (`.work.ui/context/HANDOFF_UI.md`)
-   - `.ai.biz` work → `.work.biz/context/HANDOFF.md`
+       - `.ai.biz` work → `.work.biz/context/HANDOFF.md
+    - `.ai.soc` work → `.work.soc/context/HANDOFF.md`
 3. After completing a workflow, always update all touched HANDOFF files with what was done, what's next, and any blockers.
 4. Do not invent skills or modes not registered in the respective framework's `skills/README.md`. If a request cannot be fulfilled by existing skills, follow the "New skill protocol".
-5. Route through existing directors (`@ai-director`, `@ui-director`, `@biz-director`) whenever possible — they own their domain's skill chain and gates. x-director only classifies the framework; the director classifies the sub-bucket.
-6. Never duplicate a skill that exists in another framework. If in doubt, check all three skill registries.
+5. Route through existing directors (`@ai-director`, `@ui-director`, `@biz-director`, `@soc-director`) whenever possible — they own their domain's skill chain and gates. x-director only classifies the framework; the director classifies the sub-bucket. ai-director never routes outside `.ai` directly — it channels all non-`.ai` and `unsure` requests to x-director.
+6. Never duplicate a skill that exists in another framework. If in doubt, check all installed framework skill registries.
 7. **Preflight before every route:** if a target director's framework is not installed (per § Framework registry resolution), stop and say so — never route into the void.
 
 ---
@@ -84,8 +86,9 @@ The x-director knows about every framework in the workspace. **Path resolution i
 | `engineering` | backend, API, database, migration, server, code, plan, architecture, documentation, guide, tutorial, how-to, feature doc | `@ai-director - <verbatim request>` |
 | `ui` | UI, frontend, design, screen, component, visual, tailwind, CSS, a11y | `@ui-director - <verbatim request>` |
 | `business` | business, strategy, niche, offer, pricing, brand, community, referral, proposal, objection, deal, pipeline, discovery, validate, content, writing, idea, product | `@biz-director - <verbatim request>` |
+| `social` | social, community, social media, engagement, content moderation, forum, discussion, chat, user generated content, ucg, social network | `@soc-director - <verbatim request>` |
 | `cross-framework` | Naturally requires ≥2 of the above | Coordinate across directors (see § ROUTE) |
-| `unsure` | Cannot classify | Ask one clarifying question (≤3 options) or route to `@ai-director - <verbatim request>` |
+| `unsure` | Cannot classify (including requests channelled from `@ai-director`'s own unsure cases) | Ask one clarifying question (≤3 options). If still unclear, route to `@ai-director - <verbatim request>` as `.ai` (engineering) is the broadest fallback. Never loop back to yourself. |
 
 ### 4. Channel to the right director(s)
 - Single-framework: route to the chosen director with the user's verbatim request.
@@ -102,7 +105,7 @@ Before routing, render a **routing plan** and get explicit ack. Do **not** invok
 **Request:** "<user's verbatim request>"
 **Classified framework(s):** <engineering | ui | business | cross-framework>
 **Routing confidence:** high | med | low
-**Preflight (installed frameworks):** .ai ✓ | .ai.ui ✓/✗ | .ai.biz ✓/✗
+**Preflight (installed frameworks):** .ai ✓ | .ai.ui ✓/✗ | .ai.biz ✓/✗ | .ai.soc ✓/✗
 **Will invoke:**
 1. @<director> - "<verbatim request>" → <expected outcome one-liner>
 2. ...
@@ -121,7 +124,7 @@ After completing or changing state, update **every touched HANDOFF** with this e
 ## Cross-framework action (@x-director)
 **Date:** YYYY-MM-DD
 **Request:** "<user's original request>"
-**Frameworks involved:** .ai, .ai.ui, .ai.biz (list only those touched)
+**Frameworks involved:** .ai, .ai.ui, .ai.biz, .ai.soc (list only those touched)
 **Classified bucket(s):** <bucket-name(s)>
 **Executed:**
 1. @<director> - "<request>" → <result>
@@ -149,6 +152,8 @@ Resolve framework roots per § Framework registry (precedence: `.cursorrules` §
 | `.ai.ui` | `.work.ui/plans/NEXT_UI.md` | Active UI iteration |
 | `.ai.biz` | `.work.biz/context/HANDOFF.md` | Business session state, strategy-ready |
 | `.ai.biz` | `.work.biz/plans/NEXT.md` | Business next action |
+| `.ai.soc` | `.work.soc/context/HANDOFF.md` | Social session state, community-ready |
+| `.ai.soc` | `.work.soc/plans/NEXT.md` | Social next action |
 
 Skip files/frameworks that don't exist **after** emitting the `framework not installed here` note (do not fail the whole request because one framework isn't bootstrapped).
 
@@ -174,6 +179,10 @@ Render the routing plan per § Confirm gate; obtain ack (or rely on `-y`/`--dry-
 @x-director - "Define my business niche and target audience"
   → Classify framework: business
   → Route: @biz-director - "Define my business niche and target audience"  (verbatim)
+
+@x-director - "Set up a community forum for our users"
+  → Classify framework: social
+  → Route: @soc-director - "Set up a community forum for our users"  (verbatim)
 ```
 
 #### Multi-framework (cross-framework) requests
@@ -204,6 +213,7 @@ Render the routing plan per § Confirm gate; obtain ack (or rely on `-y`/`--dry-
 | "Launch a SaaS product" | `@biz-director` → strategy/pricing → `@ai-director` → engineering → `@ui-director` → UI |
 | "Fix my LinkedIn and build a portfolio site" | `@biz-director` → brand overhaul → `@ui-director` → portfolio site |
 | "Build a product and its landing page" | `@biz-director` → strategy → `@ui-director` → landing page |
+| "Launch a community feature" | `@soc-director` → community strategy → `@ai-director` → backend → `@ui-director` → UI |
 
 ### 4. EXECUTE
 
@@ -221,10 +231,10 @@ After completing the workflow (or on any meaningful state change), update ALL to
 ## Cross-framework action (@x-director)
 **Date:** YYYY-MM-DD
 **Request:** "<user's original request>"
-**Frameworks involved:** .ai, .ai.ui, .ai.biz (list only those touched)
-**Classified framework bucket(s):** <engineering | ui | business | cross-framework>
+**Frameworks involved:** .ai, .ai.ui, .ai.biz, .ai.soc (list only those touched)
+**Classified framework bucket(s):** <engineering | ui | business | social | cross-framework>
 **Routing confidence:** high | med | low
-**Preflight (frameworks installed):** .ai yes | .ai.ui yes/no | .ai.biz yes/no
+**Preflight (frameworks installed):** .ai yes | .ai.ui yes/no | .ai.biz yes/no | .ai.soc yes/no
 **Executed:**
 1. @<director> - "<verbatim request>" → <result>
 2. ...
@@ -242,11 +252,12 @@ After completing the workflow (or on any meaningful state change), update ALL to
 
 If the user request cannot be fulfilled by any existing skill across all frameworks:
 
-1. **Confirm gap:** Check all three `skills/README.md` registries and the respective standards. Ensure the gap is genuine.
+1. **Confirm gap:** Check all `skills/README.md` registries across installed frameworks. Ensure the gap is genuine.
 2. **Identify framework:** Determine which framework the new skill belongs to:
    - Engineering → `.ai/skills/` (prefix: `{domain}-{role}`)
    - UI → `.ai.ui/skills/` (prefix: `ui-{domain}-{role}`)
    - Business → `.ai.biz/skills/` (prefix: `biz-{role}`)
+   - Social → `.ai.soc/skills/` (prefix: `soc-{role}`)
    - Cross-cutting → `.ai/skills/` (belongs in Agent OS)
 3. **Report:** Tell the user what skill is needed, why existing skills cannot cover it, propose a name following the framework's naming protocol, and suggest which framework it belongs to.
 4. **Create** the new skill following the framework's established pattern.
@@ -262,7 +273,7 @@ If the user request cannot be fulfilled by any existing skill across all framewo
 
 ## Prerequisites
 
-- At least one framework directory must exist (`.ai/`, `.ai.ui/`, or `.ai.biz/`)
+- At least one framework directory must exist (`.ai/`, `.ai.ui/`, `.ai.biz/`, or `.ai.soc/`)
 - Relevant HANDOFF files readable (may be empty/bootstrap state)
 
 ## Completion checklist
@@ -288,10 +299,12 @@ If the user request cannot be fulfilled by any existing skill across all framewo
 - `.ai/skills/ai-director/skill.md` — Agent OS director
 - `.ai.ui/skills/ui-director/skill.md` — UI Design OS director
 - `.ai.biz/skills/biz-director/skill.md` — Business OS director
+- `.ai.soc/skills/soc-director/skill.md` — Social OS director
 - `.ai/skills/README.md` — Agent OS skill registry
 - `.ai.ui/skills/README.md` — UI Design OS skill registry
 - `.ai.biz/skills/README.md` — Business OS skill registry
 - `.ai/skills/SKILL_DEPENDENCIES.md` — Agent OS gate/dependency matrix
 - `.ai.ui/skills/SKILL_DEPENDENCIES.md` — UI gate/dependency matrix
 - `.ai.biz/skills/SKILL_DEPENDENCIES.md` — Business gate/dependency matrix
+- `.ai.soc/skills/SKILL_DEPENDENCIES.md` — Social gate/dependency matrix
 - `.ai.ui/COHABITATION.md` — Agent OS + UI Design OS coexistence rules

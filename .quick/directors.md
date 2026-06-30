@@ -9,9 +9,11 @@
 | If your request is about… | Invoke |
 |---------------------------|--------|
 | Engineering, planning, coding, DB, dev stack | `@ai-director - <describe what you want>` |
-| UI / design / frontend | `@ui-director - <describe what you want>` (`.ai.ui` must be installed) |
-| Business / strategy / content / sales | `@biz-director - <describe what you want>` (`.ai.biz` must be installed) |
-| Spans engineering + UI + business | `@x-director - <describe what you want>` (auto-resolves sibling frameworks; preflight-checks each before routing) |
+| UI / design / frontend | `@x-director - <describe what you want>` (channels to `.ai.ui` via `@ui-director`) |
+| Business / strategy / content / sales | `@x-director - <describe what you want>` (channels to `.ai.biz` via `@biz-director`) |
+| Social / community / engagement | `@x-director - <describe what you want>` (channels to `.ai.soc` via `@soc-director`) |
+| Spans multiple frameworks | `@x-director - <describe what you want>` (auto-resolves sibling frameworks; preflight-checks each before routing) |
+| Unsure which framework | `@x-director - <describe what you want>` (classifies framework for you) |
 
 **Flags (both directors):**
 - `-y` / `--yes` — skip the Confirm gate (trust-mode).
@@ -46,6 +48,11 @@
 @x-director - Create a landing page for my business
   → @biz-director - strategy and brand for landing page
   → @ui-director - design and build landing page
+
+@x-director - Launch a community feature with backend and UI
+  → @soc-director - community engagement strategy
+  → @ai-director - build community backend API
+  → @ui-director - build community UI screens
 ```
 
 ---

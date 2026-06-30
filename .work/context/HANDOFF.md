@@ -4,11 +4,11 @@
 
 ## Session status
 
-**Closed:** 2026-06-25 — Added `prepare-commit-msg` git hook for auto-ref from branch; clarified `auto_prefix_enabled` vs registry flags; added Task Refs section to cursorrules; added readability requirement for commit messages.
+**Closed:** 2026-06-30 — Added `.ai.soc` (Social OS) framework; refactored ai-director to channel non-.ai work to x-director; made x-director the sole cross-framework routing authority.
 
-**Updated:** 2026-06-25
+**Updated:** 2026-06-30
 
-**Repository state:** Agent OS framework repo (self-hosted). Session-control now supports `commit`/`commit push` (no close) and auto-prepends task refs to commit subjects. GitHub task registry discovery (optional) available for projects with `github_task_registry_enabled`. `scripts/framework-verify.sh` local recovery still pending in Trash.
+**Repository state:** Agent OS framework repo (self-hosted). `.ai.soc` now fully integrated as a sister framework — auto-discovery, bucket classification, routing, context paths. ai-director no longer routes to individual sister directors directly; all non-.ai work goes through x-director. `scripts/framework-verify.sh` local recovery still pending in Trash.
 
 **Recommended pick-up file:** `.work/plans/NEXT.md`
 
@@ -54,6 +54,7 @@ End with **`@session-control close`** (add `commit` / `commit push` only when re
 
 | Date | Session | Artifacts |
 |------|---------|-----------|
+| 2026-06-30 | .ai.soc integration + x-director sole router | `.cursorrules`, `templates/cursorrules.template`, `x-director/skill.md`, `ai-director/skill.md`, `ai-director/reference.md`, `SKILL_DEPENDENCIES.md`, `.quick/directors.md`, `skills/README.md`, `README.md`, `PROCESS_ROUTER.md`, `context/README.md` — .ai.soc added to frameworks registry, auto-discovery, bucket tables; ai-director refactored to channel non-.ai to x-director; x-director named sole cross-framework routing authority |
 | 2026-06-25 | prepare-commit-msg hook + cursorrules refs | `hooks/prepare-commit-msg` git hook; Task Refs section in cursorrules.template; human-readable commit rule; clarified `auto_prefix_enabled` docs |
 | 2026-06-25 | github registry polish | `API_BASE_URL` env var, simplified S4c, consistent M4/C4 extraction wording |
 | 2026-06-25 | session-control commit verb + task refs | `@session-control commit`/`commit push` standalone verb; auto task-ref extraction in commit messages (HANDOFF/branch/prior commit); optional GitHub task registry discovery; updated skill.md, reference.md, .cursorrules/template, SKILL_DEPENDENCIES.md, quick refs |

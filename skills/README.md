@@ -48,7 +48,7 @@ Use for **new** skills and for any **rename** (update `.cursorrules`, this READM
 | project-bootstrap | `project-bootstrap/` | Bootstrap `.work/`, `.cursorrules`, `DOCS_TECH_STACK.md` from templates |
 | docs | `docs/` | **Documentation:** create guides, tutorials, reference docs under `.work/docs/` |
 | ai-director | `ai-director/` | **Orchestrator:** free-text request → optimal `.ai` skill chain; new skill gap detection |
-| x-director | `x-director/` | **Cross-framework director:** orchestrates `.ai` + `.ai.ui` + `.ai.biz` via directors |
+| x-director | `x-director/` | **Cross-framework director:** orchestrates `.ai` + `.ai.ui` + `.ai.biz` + `.ai.soc` via directors |
 
 **Typical flow (greenfield):** `@project-bootstrap init` → `plan-foundation greenfield` → `certify plan-master-ready` → `plan-master greenfield` → `plan-master status` (implementation-ready) → `code-implementation plan` → `code-implementation start/continue/complete`.
 
