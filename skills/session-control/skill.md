@@ -157,30 +157,40 @@ If the session goal mentions coding, M1, implementation, or a feature task:
 2. If **implementation-ready: no** and no HANDOFF waiver for the named milestone → note in start report under **### Readiness (do not implement yet)** with redirect: `@plan-master status` → approve plan, or add HANDOFF waiver, or `@code-implementation plan - M{N}` only after prerequisites pass.
 3. Do **not** invoke `@code-implementation start` from session-control - route the user to that skill after gates pass.
 
-### S4c - GitHub task registry (mandatory)
+### S4c - Task registry lookup (mandatory, no-network)
 
-**Query the registry — no JWT required.** The endpoint returns an empty
-registry if the feature is disabled or no GitHub link is configured, so
-the query is always safe.
+Read `.github/task-registry.json` from the working tree. This is a local
+file in the repo — no API call, no network, no running stack.
 
 ```bash
-curl -s "${API_BASE_URL:-http://localhost:8300}/v1/projects/{project_id}/github/task-registry"
+REGISTRY=".github/task-registry.json"
+if [ ! -f "$REGISTRY" ]; then
+  echo "WARNING: no $REGISTRY — task/ticket refs unavailable for this session"
+else
+  python3 -c "
+import json
+with open('$REGISTRY') as f:
+    data = json.load(f)
+for kind in ('tasks', 'tickets'):
+    refs = data.get(kind, [])
+    for r in refs:
+        print(f'{r[\"ref\"]}|{r[\"title\"]}|{r.get(\"status\",\"?\")}')
+"
+fi
 ```
 
-Use `{project_id}` from HANDOFF or the current project context. If
-`API_BASE_URL` is not set, default to `http://localhost:8300`.
+**Match entries to choose the active ref:**
 
-**Match the response to choose the active ref:**
-
-1. Read the returned `tasks` and `tickets` arrays — each entry has
-   `ref`, `title`, `description`, `status`.
-2. Run `git diff HEAD --stat` to see which files changed this session.
+1. Read every `ref`, `title`, `description`, `status` from the output.
+2. Run `git diff HEAD --stat` to see which files changed.
 3. Compare changed file paths against entry `description` texts — pick
    the best match by title/description relevance.
    - If a single entry matches → use its `ref`.
    - If multiple match → prefer `in_progress` > `todo` > `open` status.
-   - If none match or the endpoint is unreachable → **ask the user
-     for the ref manually** — do NOT proceed without one.
+   - If none match → **ask the user for the ref manually** — do NOT
+     proceed without one.
+4. The only valid reason for zero matches is genuinely new work with no
+   ticket — the file is always readable.
 
 **Write the chosen ref to `.work/active-ref`:**
 
@@ -299,11 +309,19 @@ Look for an active task reference in this priority order:
    head -1 .work/active-ref 2>/dev/null | grep -oE '[A-Z][A-Z0-9_]*-(T-)?[0-9]+' || true
    ```
    Fastest priority — no network call. Written during `@session-control start` from registry + diff analysis.
-3. **GitHub task registry** (mandatory — no JWT needed) — query the project API:
-   ```bash
-   curl -s "${API_BASE_URL:-http://localhost:8300}/v1/projects/{project_id}/github/task-registry"
-   ```
-   Parse response, match against HANDOFF goal, changed files (`git diff --cached --stat`), or descriptions. If match found, use that ref. If unreachable or empty, continue.
+ 3. **Task registry** — read `.github/task-registry.json` (local file, always available):
+    ```bash
+    if [ -f ".github/task-registry.json" ]; then
+      python3 -c "
+import json, sys
+with open('.github/task-registry.json') as f:
+    data = json.load(f)
+for e in data.get('tasks', []) + data.get('tickets', []):
+    print(f'{e[\"ref\"]}|{e[\"title\"]}|{e.get(\"status\",\"?\")}')
+" 2>/dev/null
+    fi
+    ```
+    Parse entries, match against HANDOFF goal, changed files, or descriptions. If match found, use that ref. If no match, continue.
 4. **Branch name** — if current branch matches `(feature|fix|chore|docs)/[A-Z]+-[0-9]+` or `[A-Z]+-[0-9]+/`, extract the ref.
 5. **Last commit subject** — if `git log -1 --oneline` starts with `[A-Z]+-[0-9]+`, reuse it.
 6. **FAIL** — no ref found at any priority. **Ask the user for the ref manually.** Do NOT proceed without one. If the user cannot provide one, use a placeholder like `no-ref` but log a warning.
@@ -433,11 +451,19 @@ Look for an active task reference in this priority order:
    head -1 .work/active-ref 2>/dev/null | grep -oE '[A-Z][A-Z0-9_]*-(T-)?[0-9]+' || true
    ```
    Fastest priority — no network call. Written during `@session-control start`.
-3. **GitHub task registry** (mandatory — no JWT needed) — query the project API:
-   ```bash
-   curl -s "${API_BASE_URL:-http://localhost:8300}/v1/projects/{project_id}/github/task-registry"
-   ```
-   Parse response, match against HANDOFF goal, changed files, or descriptions. If match found, use that ref. If unreachable or empty, continue.
+ 3. **Task registry** — read `.github/task-registry.json` (local file, always available):
+    ```bash
+    if [ -f ".github/task-registry.json" ]; then
+      python3 -c "
+import json, sys
+with open('.github/task-registry.json') as f:
+    data = json.load(f)
+for e in data.get('tasks', []) + data.get('tickets', []):
+    print(f'{e[\"ref\"]}|{e[\"title\"]}|{e.get(\"status\",\"?\")}')
+" 2>/dev/null
+    fi
+    ```
+    Parse entries, match against HANDOFF goal, changed files, or descriptions. If match found, use that ref. If no match, continue.
 4. **Branch name** — if current branch matches `(feature|fix|chore|docs)/[A-Z]+-[0-9]+` or `[A-Z]+-[0-9]+/`, extract the ref.
 5. **Last commit subject** — if `git log -1 --oneline` starts with `[A-Z]+-[0-9]+`, reuse it.
 6. **FAIL** — no ref found at any priority. **Ask the user for the ref manually.** Do NOT proceed without one.
